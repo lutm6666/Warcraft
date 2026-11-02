@@ -351,7 +351,10 @@ const DUNGEONS=[
  {id:'brd',n:'黑石深淵',lv:52,il:56,rep:'thorium',cd:600,bg:['#1e1210','#5a2a18'],bosses:[['熔爐監工 哈格瑞','humanoid','#5a4a3a',{tusk:1}],['黑鐵議長 莫拉斯','dragonkin','#3a3a4a']]},
  {id:'mc',n:'熔火之心',lv:60,il:66,rep:'thorium',cd:1800,raid:1,bg:['#1a0a06','#6a1a08'],bosses:[['熔核巨犬 伊格納','beast','#c04a1a'],['熔岩領主 卡爾杜','elemental','#ff6a1a'],['炎魔督軍 瑟拉格','elemental','#ff3a0a',{big:1,horns:1}]]},
 ];
-const SUFFIX=[['之熊',{hp:1.4,def:.3}],['之猴',{crit:1}],['之虎',{atk:.6,crit:.6}],['之鷹',{atk:.9}],['之巨鯨',{hp:1,def:.6}],['之猛擊',{atk:1.1}]];
+const SUFFIX=[['野熊之',{hp:1.4,def:.3}],['靈猴之',{crit:1}],['猛虎之',{atk:.6,crit:.6}],['雄鷹之',{atk:.9}],['巨鯨之',{hp:1,def:.6}],['猛擊之',{atk:1.1}]];
+const OLDSUF={'之熊':'野熊之','之猴':'靈猴之','之虎':'猛虎之','之鷹':'雄鷹之','之巨鯨':'巨鯨之','之猛擊':'猛擊之'};
+const GBASE={plate:['新兵','民兵','重裝步兵','傭兵','騎士','衛士','領主'],mail:['新兵','民兵','重裝步兵','傭兵','騎士','衛士','領主'],
+  leather:['獵手','遊俠','斥候','游擊兵','追蹤者','暗影行者','夜行者'],cloth:['學徒','見習','祈禱者','秘法','法師','咒術師','大法師']};
 const MAT=['破舊的','亞麻','粗皮','鐵製','鋼鐵','秘銀','瑟銀','奧金'];
 const ADJ3=['寒鋼','碎星','銀月','風暴','守夜人','暮光','烈陽','深淵','古樹'];
 const ADJ4=['屠龍者的','泰坦鍛造的','虛空低語','永恆餘燼','先祖的','霜狼'];
@@ -404,7 +407,7 @@ function newSave(name,fac,cls,race){
   return s;
 }
 function save(){if(!S)return;S.last=Date.now();try{localStorage.setItem(KEY,JSON.stringify(D?{...S,idle:true}:S))}catch(e){}}
-function fixSave(s){if(!s.learned)s.learned=CLASSES[s.cls].sk.filter(k=>k[0]<=s.lv).map(k=>k[1]);if(!s.race||!RACES[s.race])s.race=racesFor(s.fac).find(r=>RACES[r].cls.includes(s.cls))||racesFor(s.fac)[0];return s}
+function fixSave(s){const fixN=it=>{if(!it||!it.name)return;for(const o in OLDSUF)if(it.name.endsWith(o)){it.name=OLDSUF[o]+it.name.slice(0,-o.length);break}};(s.inv||[]).forEach(fixN);Object.values(s.eq||{}).forEach(fixN);if(!s.learned)s.learned=CLASSES[s.cls].sk.filter(k=>k[0]<=s.lv).map(k=>k[1]);if(!s.race||!RACES[s.race])s.race=racesFor(s.fac).find(r=>RACES[r].cls.includes(s.cls))||racesFor(s.fac)[0];return s}
 function load(){try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===1)return fixSave(s)}}catch(e){}return null}
 
 /* ================= 角色數值 ================= */
@@ -459,8 +462,8 @@ function makeItem({slot,ilvl,rar,name}){
   const noun=slot==='weapon'?NOUN.weapon[wt]:NOUN[slot];
   if(name)it.name=name;
   else if(rar<=1){const mi=clamp(Math.floor(ilvl/9)+(rar===0?0:1),0,MAT.length-1);it.name=(rar===0?'破舊的':MAT[mi]+(MAT[mi].endsWith('的')?'':'')) + noun}
-  else if(rar===2)it.name=MAT[clamp(Math.floor(ilvl/9)+1,1,MAT.length-1)]+noun+suf[0];
-  else if(rar===3)it.name=pick(ADJ3)+noun+suf[0];
+  else if(rar===2)it.name=suf[0]+GBASE[ARMOR[S?S.cls:'warrior']][clamp(Math.floor(ilvl/9),0,6)]+noun;
+  else if(rar===3)it.name=suf[0]+pick(ADJ3)+noun;
   else it.name=pick(ADJ4)+noun;
   it.hp=Math.round(it.hp/10)*10;
   it.val=Math.round(Math.pow(ilvl,1.6)*(rar+1)*3+5);
