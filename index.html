@@ -41,12 +41,12 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .coin.g{background:#f5c542;box-shadow:inset -1px -1px 0 #a87a14}
 .coin.s{background:#cfd6de;box-shadow:inset -1px -1px 0 #7d8590}
 .coin.c{background:#c27a43;box-shadow:inset -1px -1px 0 #7a4520}
-.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.nav{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
 .nav button{background:transparent;border:1px solid transparent;border-radius:7px;padding:8px 4px;color:var(--dim);font-weight:500;position:relative}
 .nav button:hover{color:var(--fg);background:var(--panel2)}
 .nav button[aria-current="true"]{color:var(--gold2);background:#2c2a26;border-color:#5a4a2a}
 .nav .dot{position:absolute;top:5px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--ember)}
-@media (max-width:560px){.nav{grid-template-columns:repeat(5,1fr)}.nav button{font-size:13px;padding:7px 2px}}
+@media (max-width:560px){.nav{grid-template-columns:repeat(6,1fr)}.nav button{font-size:12.5px;padding:7px 1px}}
 
 /* stage */
 .stage{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
@@ -162,6 +162,7 @@ canvas#cv{width:100%;height:auto;display:block;image-rendering:pixelated;aspect-
 .list{display:flex;flex-direction:column;gap:8px}
 .li{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;flex-wrap:wrap}
 .li .main{min-width:0;flex:1 1 220px}
+.li .btn.main{flex:none}
 .li .main b{font-size:14px}
 .li .main p{margin:2px 0 0;color:var(--dim);font-size:12.5px}
 .li.here{border-color:#8a6a2a;background:#26231e}
@@ -210,7 +211,7 @@ label.ck{display:flex;gap:8px;align-items:center;cursor:pointer}
 <div class="wrap" id="app">
   <header class="top">
     <div class="brand"><h1>艾澤拉斯掛機錄</h1><small>單人同人掛機 RPG</small></div>
-    <div class="money" id="moneyTop"></div>
+    <div class="row"><button class="btn sm" id="sndBtn" data-act="snd" aria-pressed="false">♪ 音效：關</button><div class="money" id="moneyTop"></div></div>
   </header>
   <nav class="nav" id="nav"></nav>
   <section class="stage">
@@ -233,7 +234,7 @@ label.ck{display:flex;gap:8px;align-items:center;cursor:pointer}
     </div>
     <div class="abar" id="abar"></div>
     <div class="ctrl">
-      <span class="state"><i class="pulse" id="sPulse"></i><span id="sState">自動戰鬥中</span></span>
+      <span class="state"><i class="pulse" id="sPulse"></i><span id="sState">自動戰鬥中</span></span><span class="tag bad" id="durWarn" hidden>裝備耐久度低</span>
       <span class="spacer"></span>
       <button class="btn main" id="idleBtn" data-act="toggleIdle">暫停掛機</button>
     </div>
@@ -367,6 +368,7 @@ const CONS={potion:{n:'治療藥水',d:'生命低於設定值時自動使用，�
  sa100:{n:'護甲附魔卷軸 100%',d:'防具或飾品屬性 +小幅，必定成功。',rate:1,u:1,k:'a'},
  sa60:{n:'護甲附魔卷軸 60%',d:'防具或飾品屬性 +中幅，成功率 60%。',rate:.6,u:2,k:'a'},
  sa10:{n:'護甲附魔卷軸 10%',d:'防具或飾品屬性 +大幅，成功率 10%。',rate:.1,u:5,k:'a'},
+ band:{n:'繃帶',d:'脫戰時生命低於 60% 自動包紮，恢復大量生命值。用急救把布料做成繃帶。'},
  chest:{n:'神秘寶箱',d:'開出一件你等級附近的優秀以上裝備。'}};
 
 /* ================= 工具 ================= */
@@ -407,7 +409,7 @@ function newSave(name,fac,cls,race){
   return s;
 }
 function save(){if(!S)return;S.last=Date.now();try{localStorage.setItem(KEY,JSON.stringify(D?{...S,idle:true}:S))}catch(e){}}
-function fixSave(s){const fixN=it=>{if(!it||!it.name)return;for(const o in OLDSUF)if(it.name.endsWith(o)){it.name=OLDSUF[o]+it.name.slice(0,-o.length);break}};(s.inv||[]).forEach(fixN);Object.values(s.eq||{}).forEach(fixN);if(!s.learned)s.learned=CLASSES[s.cls].sk.filter(k=>k[0]<=s.lv).map(k=>k[1]);if(!s.race||!RACES[s.race])s.race=racesFor(s.fac).find(r=>RACES[r].cls.includes(s.cls))||racesFor(s.fac)[0];return s}
+function fixSave(s){const fixD=it=>{if(it&&it.dmax==null){it.dmax=DMAX[it.slot]||0;it.dur=it.dmax}};(s.inv||[]).forEach(fixD);Object.values(s.eq||{}).forEach(fixD);const fixN=it=>{if(!it||!it.name)return;for(const o in OLDSUF)if(it.name.endsWith(o)){it.name=OLDSUF[o]+it.name.slice(0,-o.length);break}};(s.inv||[]).forEach(fixN);Object.values(s.eq||{}).forEach(fixN);if(!s.learned)s.learned=CLASSES[s.cls].sk.filter(k=>k[0]<=s.lv).map(k=>k[1]);if(!s.race||!RACES[s.race])s.race=racesFor(s.fac).find(r=>RACES[r].cls.includes(s.cls))||racesFor(s.fac)[0];return s}
 function load(){try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===1)return fixSave(s)}}catch(e){}return null}
 
 /* ================= 角色數值 ================= */
@@ -427,7 +429,15 @@ function mods(){
   });
   return m;
 }
-function gearSum(){const g={atk:0,def:0,hp:0,crit:0};for(const k of SLOTS){const it=S.eq[k];if(!it)continue;g.atk+=it.atk+(it.eatk||0);g.def+=it.def+(it.edef||0);g.hp+=it.hp+(it.ehp||0);g.crit+=it.crit}return g}
+const DMAX={weapon:75,head:60,chest:100,legs:75,hands:35,feet:50,trinket:0};
+const broken=it=>it&&it.dmax>0&&it.dur<=0;
+function durLoss(f){let n=0;for(const k of SLOTS){const it=S.eq[k];if(!it||!it.dmax)continue;it.dur=Math.max(0,Math.round(it.dur-it.dmax*f));if(it.dur===0)n++}
+  if(n)log('bad',`有 ${n} 件裝備已損壞，屬性失效！請到商店找鐵匠修理。`);if(S.set.autoRepair)repairAll(true);UI.dirty=true}
+function repairCost(){let c=0;for(const k of SLOTS){const it=S.eq[k];if(it&&it.dmax)c+=(it.dmax-it.dur)*(it.ilvl*.6+1)*(1+it.rar*.3)}return Math.round(c)}
+function lowDur(){return SLOTS.some(k=>{const it=S.eq[k];return it&&it.dmax&&it.dur/it.dmax<.2})}
+function repairAll(auto){const c=repairCost();if(!c)return;if(S.copper<c){if(!auto)toast('金錢不足');return}S.copper-=c;for(const k of SLOTS){const it=S.eq[k];if(it&&it.dmax)it.dur=it.dmax}
+  log('sys',`${auto?'自動':''}修理所有裝備，花費 ${moneyTxt(c)}。`);if(!auto)toast('裝備已修理');UI.dirty=true}
+function gearSum(){const g={atk:0,def:0,hp:0,crit:0};for(const k of SLOTS){const it=S.eq[k];if(!it||broken(it))continue;g.atk+=it.atk+(it.eatk||0);g.def+=it.def+(it.edef||0);g.hp+=it.hp+(it.ehp||0);g.crit+=it.crit}return g}
 function stats(){
   const cl=CLASSES[S.cls],L=S.lv,m=mods(),g=gearSum(),r=role();const rb=(RACES[S.race]||{}).b||{},sm=setMods();
   m.atk+=(rb.atk||0)+sm.atk;m.crit+=(rb.crit||0)+sm.crit;m.def+=rb.def||0;m.hp+=(rb.hp||0)+sm.hp;m.haste+=rb.haste||0;m.regen+=rb.regen||0;m.taken+=rb.taken||0;m.dmg+=sm.dmg;
@@ -468,7 +478,7 @@ function makeItem({slot,ilvl,rar,name,boss}){
   else if(rar===2)it.name=(suf?suf[0]:'')+GBASE[ARMOR[S?S.cls:'warrior']][clamp(Math.floor(ilvl/9),0,6)]+noun;
   else if(rar===3)it.name=(suf?suf[0]:'')+pick(ADJ3)+noun;
   else it.name=pick(ADJ4)+noun;
-  it.hp=Math.round(it.hp/10)*10;
+  it.hp=Math.round(it.hp/10)*10;it.dmax=DMAX[slot];it.dur=it.dmax;
   it.val=Math.round(Math.pow(ilvl,1.6)*(rar+1)*3+5);
   return it;
 }
@@ -542,6 +552,7 @@ function battleTick(dt){
   if(!live.length){
     if(cl.res==='rage')S.res=Math.max(0,S.res-4*dt);
     S.hp=Math.min(st.hp,S.hp+st.hp*.035*(1+st.regen*2)*dt);
+    B.bandCd=Math.max(0,(B.bandCd||0)-dt);if(S.hp<st.hp*.6&&(S.cons.band||0)>0&&B.bandCd<=0){S.cons.band--;B.bandCd=8;const h=Math.round(st.hp*(.25+.05*(S.bandT||0)));S.hp=Math.min(st.hp,S.hp+h);num(heroX(),140,'+'+fmt(h),'heal');fx('heal',heroX(),180);S.psk=S.psk||{};skillUp('aid',0)}
     if(!S.idle)return;
     B.spawn-=dt;if(B.spawn<=0)spawnGroup();return}
   if(!S.idle)return;
@@ -564,7 +575,7 @@ function battleTick(dt){
     if(Math.random()<st.dodge/100){num(heroX(),130,'閃躲','miss');continue}
     S.hp-=d;num(heroX()+ri(-8,8),128,fmt(d),'hurt');m.lunge=.25;
     if(cl.res==='rage')S.res=Math.min(100,S.res+4);
-    if(S.hp<=0){S.hp=0;B.dead=8;S.stats.deaths++;log('bad',`你被 ${m.name} 擊敗了……8 秒後復活`);B.mobs.forEach(x=>x.hp=Math.min(x.hp,x.max));return}
+    if(S.hp<=0){S.hp=0;B.dead=8;S.stats.deaths++;sfx('die');log('bad',`你被 ${m.name} 擊敗了……8 秒後復活，裝備耐久度 -10%`);durLoss(.1);B.mobs.forEach(x=>x.hp=Math.min(x.hp,x.max));return}
   }}
   for(const m of B.mobs){if(m.lunge)m.lunge=Math.max(0,m.lunge-dt)}
 }
@@ -589,7 +600,7 @@ function heroAct(st,cl,targets){
     if(cl.res==='rage')S.res=Math.min(100,S.res+9);
     if(cl.res==='mana')S.res=Math.min(100,S.res+1.5);
     return}
-  S.res-=use[3];B.cd[use[1]]=use[4];
+  S.res-=use[3];B.cd[use[1]]=use[4];sfx(use[7]?'heal':'cast');
   if(use[7]){const h=Math.round(st.hp*use[2]*st.healMod);S.hp=Math.min(st.hp,S.hp+h);num(hx,140,'+'+fmt(h),'heal');fx('heal',hx,180);
     if(use[6]==='drain'){hit(targets[0],.8,st,'shadow',use[1])}
     log('battle',`${use[1]} → 恢復 ${fmt(h)} 生命值`);return}
@@ -607,7 +618,7 @@ function hit(m,mult,st,fxType,name,delay=0,isPet=false){
   const travel=ranged?.22:0;
   if(ranged)fx('proj',heroX()+20,148,{tx:m.x,ty:168,kind:fxType,delay});
   fx('impact',m.x,170,{kind:fxType,delay:delay+travel});
-  num(m.x+ri(-6,6),118-(m.stack=(m.stack||0)+1)%4*16,fmt(d),crit?'crit':'dmg',delay+travel);
+  num(m.x+ri(-6,6),118-(m.stack=(m.stack||0)+1)%4*16,fmt(d),crit?'crit':'dmg',delay+travel);if(!isPet)sfx(crit?'crit':'hit');
   if(name!=='普通攻擊'&&!isPet||crit)log('battle',`${name} → ${m.name}：${fmt(d)}${crit?'（致命一擊）':''} 傷害`);
   if(m.hp<=0){m.hp=0;killMob(m)}
 }
@@ -619,10 +630,11 @@ function killMob(m){
   const rb=Math.min(S.rested||0,xp);if(rb)S.rested-=rb;
   gainXp(xp+rb);S.copper+=cp;S.stats.copper+=cp;acc.cp+=cp;
   log('xp',`擊殺 ${m.name} → +${fmt(xp)} EXP${rb?`（+${fmt(rb)} 休息獎勵）`:''}，${moneyTxt(cp)}`);
+  gather(m,curZone());
   // 掉寶
   const dropC=.12*(m.elite?3:1)*(m.rare?8:1);
   if(Math.random()<dropC){const it=makeItem({ilvl:m.lv+ri(-1,1),rar:m.rare?Math.max(3,rollRarity(1)):rollRarity(m.elite?.5:0)});
-    log('loot',`撿取：【${it.name}】（${RAR[it.rar]}）`);if(it.rar>=3)toast(`獲得${RAR[it.rar]}裝備：${it.name}`);gainItem(it)}
+    log('loot',`撿取：【${it.name}】（${RAR[it.rar]}）`);if(it.rar>=3){toast(`獲得${RAR[it.rar]}裝備：${it.name}`);sfx('loot')}gainItem(it)}
   if(Math.random()<.04){S.cons.potion=(S.cons.potion||0)+1;log('loot','撿取：治療藥水 ×1')}
   if(Math.random()<.008){const k=pick(['sw10','sa10']);S.cons[k]=(S.cons[k]||0)+1;log('loot',`撿取：${CONS[k].n} ×1`);toast(`稀有掉落：${CONS[k].n}`)}
   else if(Math.random()<.03){const k=pick(['sw60','sa60','sw100','sa100']);S.cons[k]=(S.cons[k]||0)+1;log('loot',`撿取：${CONS[k].n} ×1`)}
@@ -635,7 +647,7 @@ function gainXp(x){
   if(S.lv>=60){return}
   S.xp+=x;S.stats.xp+=x;acc.xp+=x;
   while(S.lv<60&&S.xp>=xpNeed(S.lv)){S.xp-=xpNeed(S.lv);S.lv++;
-    const st=stats();S.hp=st.hp;if(B&&!D)fx('lvl',heroX(),GY);
+    const st=stats();S.hp=st.hp;if(B&&!D)fx('lvl',heroX(),GY);sfx('lvl');
     log('sys',`等級提升！你現在是 ${S.lv} 級。`);toast(`升級！等級 ${S.lv}`);
     const cl=CLASSES[S.cls];cl.sk.filter(s=>s[0]===S.lv&&!isLearned(s)).forEach(s=>{if(S.set.autoTrain&&learn(s,true))return;log('sys',`可以向職業訓練師學習：${s[1]}（${moneyTxt(trainCost(s))}）`);toast(`可學習新技能：${s[1]}`)});
     if(S.lv>=10)log('sys','獲得 1 點天賦點數。');
@@ -674,6 +686,60 @@ function rollLoot(d,it,personal){const me=ri(1,100);const k=personal?0:ri(0,2);l
   const won=me>=best;const who=won?null:pick(d.members.filter(m=>!m.me));d.rolls.push({it,me,best,won,who});
   if(won){log('loot',`你擲出 ${me}（需求），贏得了【${it.name}】`);gainItem(it)}
   else log('loot',`隊友${RACES[who.race].n}${CLASSES[who.cls].n}擲出 ${best}（需求），贏得了【${it.name}】。你擲出 ${me}。`)}
+// ===== 專業技能（材料名稱為經典版常見譯名，可能與台服用字不同） =====
+const PROFS={mining:{n:'採礦',req:[1,65,125,175,230],mats:['銅礦石','錫礦石','鐵礦石','秘銀礦石','瑟銀礦石'],d:'打怪時偶爾發現礦脈。'},
+  herb:{n:'草藥學',req:[1,70,125,170,230],mats:['寧神花','銀葉草','野鋼花','金棘草','夢葉草'],d:'打怪時偶爾發現草藥，高等草藥區有機會採到黑蓮花。'},
+  skin:{n:'剝皮',req:[1,75,125,175,230],mats:['輕皮','中皮','重皮','厚皮','硬甲皮'],d:'擊殺野獸、迅猛龍與陸行鳥後可以剝皮。'}};
+const CLOTH=['亞麻布','毛料','絲綢','魔紋布','符文布'];
+const MATV={};[...PROFS.mining.mats,...PROFS.herb.mats,...PROFS.skin.mats,...CLOTH].forEach((n,i)=>MATV[n]=[10,30,60,120,200][i%5]);MATV['黑蓮花']=5000;
+function zoneTier(z){return clamp(Math.floor(((z.lv[0]+z.lv[1])/2)/12),0,4)}
+function profSk(k){return (S.psk||{})[k]||0}
+function addMat(n,c=1){S.mats=S.mats||{};S.mats[n]=(S.mats[n]||0)+c}
+function skillUp(k,tierReq){const cur=profSk(k);if(cur>=300)return;const diff=cur-tierReq;const ch=diff<25?1:diff<50?.5:diff<75?.25:0;if(Math.random()<ch){S.psk[k]=cur+1;if((cur+1)%25===0)log('sys',`你的${k==='aid'?'急救':PROFS[k].n}技能提升到 ${cur+1}。`)}}
+function gather(m,z){
+  if(!S.profs)return;const zt=zoneTier(z);
+  for(const k of S.profs){const P=PROFS[k];
+    if(k==='skin'&&!(m.type==='beast'||m.type==='bird'))continue;
+    if(k!=='skin'&&Math.random()>.12)continue;
+    let t=zt;while(t>0&&profSk(k)<P.req[t])t--;
+    if(profSk(k)<P.req[t]){continue}
+    const n=k==='skin'?1:ri(1,3);addMat(P.mats[t],n);log('loot',`${k==='mining'?'採集礦脈':k==='herb'?'採集草藥':'剝皮'}：${P.mats[t]} ×${n}`);
+    if(k==='herb'&&zt>=4&&profSk(k)>=300&&Math.random()<.01){addMat('黑蓮花');log('loot','傳說中的黑蓮花！');toast('採到黑蓮花！')}
+    skillUp(k,P.req[t])}
+  if(m.type==='humanoid'&&Math.random()<.25){addMat(CLOTH[clamp(Math.floor(m.lv/12),0,4)],ri(1,2))}
+}
+function aidReq(t){return [0,50,125,175,225][t]}
+function craftList(){const z=curZone(),zt=zoneTier(z);const L=[];
+  const best=(arr)=>{for(let i=4;i>=0;i--)if((S.mats||{})[arr[i]]>0)return i;return -1};
+  const ci=best(CLOTH);if(ci>=0)L.push({id:'band',n:`${['亞麻','毛料','絲綢','魔紋','符文'][ci]}繃帶 ×2`,cost:[[CLOTH[ci],2]],give:()=>{S.cons.band=(S.cons.band||0)+2;S.bandT=Math.max(S.bandT||0,ci)},prof:'aid',req:aidReq(ci)});
+  const hi=best(PROFS.herb.mats);if(hi>=0)L.push({id:'pot',n:'交給鍊金術師：治療藥水 ×5',cost:[[PROFS.herb.mats[hi],3]],give:()=>{S.cons.potion=(S.cons.potion||0)+5}});
+  const mi=best(PROFS.mining.mats);if(mi>=0)L.push({id:'sw',n:`交給鐵匠：武器附魔卷軸 ${mi>=3?'10%':'60%'}`,cost:[[PROFS.mining.mats[mi],mi>=3?12:6]],give:()=>{const k=mi>=3?'sw10':'sw60';S.cons[k]=(S.cons[k]||0)+1}});
+  const si=best(PROFS.skin.mats);if(si>=0)L.push({id:'sa',n:`交給製皮匠：護甲附魔卷軸 ${si>=3?'10%':'60%'}`,cost:[[PROFS.skin.mats[si],si>=3?12:6]],give:()=>{const k=si>=3?'sa10':'sa60';S.cons[k]=(S.cons[k]||0)+1}});
+  if((S.mats||{})['黑蓮花']>0)L.push({id:'lotus',n:'交給鍊金術師：精鍊黑蓮花（神秘寶箱 ×2）',cost:[['黑蓮花',1]],give:()=>{S.cons.chest=(S.cons.chest||0)+2}});
+  return L}
+// ===== 拍賣場（單人模擬市場） =====
+const AHDUR=[[2,'2 小時'],[8,'8 小時'],[24,'24 小時']];
+function ahInit(){S.ah=S.ah||{mine:[],browse:{t:0,list:[]}};return S.ah}
+function marketPrice(x){if(x.kind==='mat')return Math.round(MATV[x.mat]*(x.mat==='黑蓮花'?4:2.5)*x.n);const it=x.item;return Math.round(it.val*[1,1.5,3,5,8,14][it.rar]*(1+(it.enh||0)*.15))}
+function ahPost(x,hours){const A=ahInit();const now=Date.now();const vend=x.kind==='mat'?MATV[x.mat]*x.n:x.item.val;const dep=Math.max(5,Math.round(vend*.05*hours/2));if(S.copper<dep){toast('保管費不足');return false}
+  S.copper-=dep;const base=marketPrice(x);const buyout=Math.round(base*rnd(.85,1.25));const chance=x.kind==='mat'?.85:[.2,.35,.6,.8,.9,.95][x.item.rar];const sell=Math.random()<chance;
+  A.mine.push({...x,id:Date.now()+Math.random(),buyout,dep,start:now,end:now+hours*3600e3,sellAt:sell?now+rnd(.08,1)*hours*3600e3:0});
+  log('sys',`拍賣場：上架${x.kind==='mat'?`${x.mat} ×${x.n}`:`【${x.item.name}】`}，直購價 ${moneyTxt(buyout)}，保管費 ${moneyTxt(dep)}`);return true}
+function ahProcess(){const A=S.ah;if(!A)return;const now=Date.now();let ch=false;
+  for(const l of A.mine){if(l.done)continue;const nm=l.kind==='mat'?`${l.mat} ×${l.n}`:`【${l.item.name}】`;
+    if(l.sellAt&&now>=l.sellAt){const got=Math.round(l.buyout*.95)+l.dep;S.copper+=got;S.stats.copper+=got;l.done='sold';ch=true;log('loot',`拍賣場：${nm} 已售出，入帳 ${moneyTxt(got)}（扣除 5% 手續費）`);toast(`拍賣成交：${moneyTxt(got)}`)}
+    else if(now>=l.end){l.done='expired';ch=true;log('sys',`拍賣場：${nm} 流標，可以到商店領回。`)}}
+  if(ch){A.mine=A.mine.filter(l=>l.done!=='sold');UI.dirty=true}}
+function ahBrowse(){const A=ahInit();if(Date.now()-A.browse.t>30*60e3||!A.browse.list.length){A.browse.t=Date.now();
+  A.browse.list=Array.from({length:8},()=>{const r=Math.random();const rar=r<.06?4:r<.4?3:2;const it=makeItem({ilvl:clamp(S.lv+ri(-2,3),1,63),rar});return {item:it,price:Math.round(it.val*[1,1.5,3,5,8,14][rar]*rnd(1.1,1.8)),seller:pick(['冰風','阿瑞克','小麥','月影','鐵錘','風行者','雷霆','灰燼','雜貨鋪老闆','夜歌'])}})}
+  return A.browse.list}
+function renderAH(){const A=ahInit();const sellable=S.inv.filter(it=>it.rar>=2);const mats=Object.entries(S.mats||{}).filter(([,c])=>c>0);const dur=UI.ahDur||8;
+  return `<section class="card" style="margin-top:12px"><h2>拍賣場</h2><p class="muted small">上架需付保管費，成交時退還並扣 5% 手續費；流標要自己領回。價格會依稀有度和市場波動變化，離線時也會照常結算。</p>
+   <div class="row" style="margin-bottom:8px"><span class="small muted">拍賣時間</span>${AHDUR.map(([h,n])=>`<button class="btn sm ${dur===h?'main':''}" data-act="ahDur" data-v="${h}">${n}</button>`).join('')}</div>
+   <h3>我的拍賣</h3>${A.mine.length?`<div class="list">${A.mine.map((l,i)=>`<div class="li" style="padding:7px 12px"><span class="main"><b class="${l.kind==='item'?'r'+l.item.rar:''}">${l.kind==='mat'?`${esc(l.mat)} ×${l.n}`:`【${esc(l.item.name)}】`}</b><p>直購價 ${moneyTxt(l.buyout)}・${l.done==='expired'?'已流標':`剩餘 ${durStr((l.end-Date.now())/1000)}`}</p></span>${l.done==='expired'?`<button class="btn sm" data-act="ahBack" data-v="${i}">領回</button>`:'<span class="tag warn">拍賣中</span>'}</div>`).join('')}</div>`:'<p class="muted small">目前沒有上架中的物品。</p>'}
+   <h3>上架</h3>${sellable.length||mats.length?`<div class="list">${sellable.map(it=>`<div class="li" style="padding:7px 12px"><span class="main"><b class="r${it.rar}">【${esc(it.name)}】</b><p>行情約 ${moneyTxt(marketPrice({kind:'item',item:it}))}・商人收購 ${moneyTxt(it.val)}</p></span><button class="btn sm main" data-act="ahPostItem" data-v="${it.id}">上架</button></div>`).join('')}
+     ${mats.map(([n,c])=>`<div class="li" style="padding:7px 12px"><span class="main"><b class="${n==='黑蓮花'?'r4':''}">${esc(n)} ×${c}</b><p>行情約 ${moneyTxt(marketPrice({kind:'mat',mat:n,n:c}))}・商人收購 ${moneyTxt(MATV[n]*c)}</p></span><button class="btn sm main" data-act="ahPostMat" data-v="${esc(n)}">全部上架</button></div>`).join('')}</div>`:'<p class="muted small">背包裡沒有優秀以上的裝備或材料可以上架。</p>'}
+   <h3>瀏覽（每 30 分鐘更新）</h3><div class="list">${ahBrowse().map((b,i)=>`<div class="li" style="padding:7px 12px"><span class="main"><b class="r${b.item.rar}">【${esc(b.item.name)}】</b><p>物品等級 ${b.item.ilvl}・需要等級 ${reqLv(b.item)}・賣家 ${esc(b.seller)}</p></span><span class="row"><button class="btn sm" data-act="ahView" data-v="${i}">查看</button>${money(b.price)}<button class="btn sm main" data-act="ahBuy" data-v="${i}" ${S.copper<b.price?'disabled':''}>直購</button></span></div>`).join('')}</div></section>`}
 function dungeonReady(dg){const t=S.dlock[dg.id]||0;return Math.max(0,(t-Date.now())/1000)}
 function startDungeon(dg){
   if(S.lv<dg.lv){toast(`需要等級 ${dg.lv}`);return}
@@ -710,8 +776,7 @@ function dungeonTick(dt){
   if((d.mech===0&&pct<.6)||(d.mech===1&&pct<.3)){d.mech++;const sk=pick(['烈焰新星','狂暴怒吼','暗影爆發','震地猛擊','毒雲']);partyHit(d,.38);
     d.fx.push({type:'shock',x:60,y:GY,age:0,life:.45});log('bad',`${d.dg.bosses[d.bi][0]} 施放了【${sk}】！全隊受到重創，治療正在搶救。`)}
   if(d.t>d.enrage){d.phase='end';d.res='wipe';
-    const repair=Math.round(S.lv*S.lv*8);S.copper=Math.max(0,S.copper-repair);
-    log('bad',`首領進入激怒狀態……團隊全滅。修理費 ${moneyTxt(repair)}。建議提升裝等或天賦後再來。`);
+    log('bad',`首領進入激怒狀態……團隊全滅。裝備耐久度 -10%，建議提升裝等或天賦後再來。`);durLoss(.1);
     S.dlock[d.dg.id]=Date.now()+60000;setTimeout(endDungeon,600);return}
   if(d.hp<=0){d.hp=0;bossDown()}
 }
@@ -732,7 +797,7 @@ function bossDown(){const d=D,dg=d.dg,bn=dg.bosses[d.bi][0];
   save()}
 function endDungeon(){if(!D)return;const d=D;D=null;S.idle=true;newBattle();
   showSheet(`<h2>${d.res==='win'?'地城通關':'團隊全滅'}：${esc(d.dg.n)}</h2>
-   <p class="muted">${d.res==='win'?'隊伍順利擊敗所有首領。':'首領在激怒前沒有被擊倒。提升戰力後再挑戰吧。'}</p>
+   <p class="muted">${d.res==='win'?'隊伍順利擊敗所有首領。':'首領在激怒前沒有被擊倒，全隊裝備耐久度 -10%。提升戰力後再挑戰吧。'}</p>
    <dl class="kv"><dt>經驗</dt><dd>+${fmt(d.xp)}</dd><dt>金錢</dt><dd>${money(d.cp)}</dd><dt>${esc(repName(d.dg.rep))} 聲望</dt><dd>+${d.rep}</dd></dl>
    ${d.rolls.length?`<h3>戰利品擲骰</h3><div class="list">${d.rolls.map(r=>`<div class="li" style="padding:8px 12px"><span class="main"><span class="r${r.it.rar}">【${esc(r.it.name)}】</span><p>你擲出 ${r.me}${r.best?`・隊友最高 ${r.best}`:'・沒有隊友需求'}</p></span><span class="tag ${r.won?'ok':'bad'}">${r.won?'獲得':`${esc(RACES[r.who.race].n+CLASSES[r.who.cls].n)}拿走`}</span></div>`).join('')}</div>`:''}
    <div class="row" style="margin-top:14px"><button class="btn main" data-act="closeSheet">回到掛機</button></div>`);
@@ -773,6 +838,8 @@ function offline(sec,report){
   const n=Math.min(150,Math.floor(kills*.12));let kept=0,soldC=0,best=null;QUIET=true;
   for(let i=0;i<n;i++){const ml=clamp(S.lv+ri(-2,1),z.lv[0],z.lv[1]);const it=makeItem({ilvl:ml,rar:rollRarity()});
     const before=S.inv.length,cb=S.copper;gainItem(it);if(S.inv.length>before)kept++;else soldC+=S.copper-cb;if(!best||it.rar>best.rar)best=it}
+  if(S.profs){for(const k of S.profs){const P=PROFS[k];let t=zoneTier(z);while(t>0&&profSk(k)<P.req[t])t--;const n=Math.round(kills*(k==='skin'?.35:.24));if(n>0&&profSk(k)>=P.req[t]){addMat(P.mats[t],n);for(let i=0;i<Math.min(n,60);i++)skillUp(k,P.req[t])}}}
+  addMat(CLOTH[zoneTier(z)],Math.round(kills*.08));
   QUIET=false;const pots=Math.min(60,Math.floor(kills*.01));S.cons.potion=(S.cons.potion||0)+pots;
   log('sys',`離線掛機 ${durStr(sec)}：擊殺 ${fmt(kills)}，+${fmt(xp)} EXP`);
   if(report)showSheet(`<h2>離線掛機報告</h2><p class="muted">你離開了 ${durStr(sec)}，角色在「${esc(z.n)}」持續戰鬥。${sec>=12*3600?'（離線收益最多計算 12 小時）':''}</p>
@@ -830,7 +897,7 @@ let g=ctx;
 const DPR=2;const OFF=document.createElement('canvas');OFF.width=300*DPR;OFF.height=300*DPR;const offg=OFF.getContext('2d');
 const OUTLINE='drop-shadow(2px 0 0 #120c08) drop-shadow(-2px 0 0 #120c08) drop-shadow(0 2px 0 #120c08) drop-shadow(0 -2px 0 #120c08)';
 function outlined(x,y,fn,alpha=1){offg.setTransform(1,0,0,1,0,0);offg.clearRect(0,0,OFF.width,OFF.height);offg.setTransform(DPR,0,0,DPR,0,0);g=offg;offg.save();offg.translate(150,270);fn();offg.restore();g=ctx;
-  ctx.save();ctx.globalAlpha=alpha;ctx.filter=OUTLINE;ctx.imageSmoothingEnabled=false;ctx.drawImage(OFF,Math.round(x-150),Math.round(y-270),300,300);ctx.restore()}
+  DC.save();DC.globalAlpha=alpha;DC.filter=OUTLINE;DC.imageSmoothingEnabled=false;DC.drawImage(OFF,Math.round(x-150),Math.round(y-270),300,300);DC.restore()}
 const SHC={};function sh(c,a){const k=c+a;return SHC[k]||(SHC[k]=shade(c,a))}
 const h2=v=>Math.round(v*2)/2;
 // 大於 3 單位的色塊自動加上受光面與陰影面，讓像素有立體感
@@ -839,16 +906,21 @@ function P(x,y,w,h,c){x=h2(x);y=h2(y);w=h2(w);h=h2(h);g.fillStyle=c;g.fillRect(x
 function Q(x,y,w,h,c){g.fillStyle=c;g.fillRect(h2(x),h2(y),h2(w),h2(h))}
 const RCOL=['#9d9d9d','#f2f2f2','#4fd65a','#4a95ff','#bd6bff','#ff9330'];
 const ARMOR={warrior:'plate',paladin:'plate',hunter:'mail',rogue:'leather',druid:'leather',mage:'cloth',warlock:'cloth',priest:'cloth'};
-function heroOpt(){const w=S&&S.eq.weapon;return {fac:S?S.fac:'A',wr:w?w.rar:1,enh:w?w.enh:0}}
+function heroOpt(){const w=S&&S.eq.weapon;const gr=k=>S&&S.eq[k]?S.eq[k].rar:-1;return {fac:S?S.fac:'A',wr:w?w.rar:1,enh:w?w.enh:0,noW:!!S&&!w,
+  g:{head:gr('head'),chest:gr('chest'),legs:gr('legs'),hands:gr('hands'),feet:gr('feet'),setN:S?Math.max(setCount('T0'),setCount('T1')):0,setT:S&&setCount('T1')>=3?'T1':'T0'}}}
+let DC=ctx;
 function drawHero(x,y,clsKey,raceKey,t,p,type,sc=1,o={}){
   const rc=RACES[raceKey]||RACES.human;const lunge=type==='melee'?Math.sin(p*Math.PI)*16*sc:0;
-  ctx.fillStyle='#00000055';ctx.beginPath();ctx.ellipse(x+lunge,y,15*sc*(rc.w||1),4*sc,0,0,7);ctx.fill();
+  DC.fillStyle='#00000055';DC.beginPath();DC.ellipse(x+lunge,y,15*sc*(rc.w||1),4*sc,0,0,7);DC.fill();
   outlined(x+lunge,y,()=>{g.scale(sc*(rc.w||1),sc*rc.h);heroBody(clsKey,rc,t,p,type,o)},o.alpha??1);
 }
 function heroBody(ck,rc,t,p,type,o){
   const cl=CLASSES[ck],ar=ARMOR[ck];const b=Math.round(Math.sin(t*3.2)*2)/2;const fc=o.fac==='H'?'#a8281e':'#2a52b0',fcl=o.fac==='H'?'#d8a040':'#e0c060';
-  const body=cl.c,dk=sh(cl.c,-60),lt=sh(cl.c,45);
-  const metal=ar==='plate'?'#aab2be':ar==='mail'?'#8e917c':'#6a4a32',metalD=sh(metal,-55),metalL=sh(metal,50);
+  const G=o.g||{head:3,chest:3,legs:3,hands:3,feet:3,setN:0};const cr=Math.max(0,G.chest);
+  const PL=['#86888a','#9aa0aa','#aab2be','#b0c6e6','#c4b0f0','#f0c890'],ML=['#76786a','#8e917c','#94a27c','#86a8bc','#a898cc','#d4b080'];
+  const body=G.chest<0?'#c8a878':sh(cl.c,(cr-2)*9),dk=sh(body,-60),lt=sh(body,45);
+  const metal=ar==='plate'?PL[cr]:ar==='mail'?ML[cr]:'#6a4a32',metalD=sh(metal,-55),metalL=sh(metal,50);
+  const trim=cr>=3?'#f0c040':null;
   const skin=rc.skin,sd=sh(rc.skin,-35),sl=sh(rc.skin,25);const gold='#e0b040',leath='#5a3a20',leathD='#3a2414';
   // 披風（內襯＋褶皺）
   if(ar!=='leather'){const sw=Math.sin(t*2.4)*2;g.fillStyle=sh(fc,-45);g.beginPath();g.moveTo(-8,-35+b);g.lineTo(-4,-35+b);g.lineTo(-9+sw,-3);g.lineTo(-18+sw,-5);g.closePath();g.fill();
@@ -857,15 +929,16 @@ function heroBody(ck,rc,t,p,type,o){
   // 後臂
   P(-12,-33+b,5,11,ar==='cloth'?dk:metalD);Q(-12,-23+b,5,3,ar==='plate'?metalD:leathD);
   // 腿
-  const legC=ar==='cloth'?sh(body,-35):ar==='plate'?metal:dk;
+  const legC=G.legs<0?'#6a5038':ar==='cloth'?sh(body,-35):ar==='plate'?metal:dk;
   P(-7,-16,6,12,legC);P(2,-16,6,12,legC);
-  if(ar==='plate'){P(-7.5,-12,7,3,metalL);P(1.5,-12,7,3,metalL);Q(-4.5,-11,1,1,gold);Q(4.5,-11,1,1,gold)}
-  else if(ar!=='cloth'){Q(-7,-10,6,.5,leathD);Q(2,-10,6,.5,leathD);for(let i=0;i<3;i++){Q(-5,-15+i*2,.5,.5,lt);Q(4,-15+i*2,.5,.5,lt)}}
+  if(ar==='plate'&&G.legs>=0){P(-7.5,-12,7,3,metalL);P(1.5,-12,7,3,metalL);Q(-4.5,-11,1,1,gold);Q(4.5,-11,1,1,gold)}
+  else if(ar!=='cloth'&&G.legs>=0){Q(-7,-10,6,.5,leathD);Q(2,-10,6,.5,leathD);for(let i=0;i<3;i++){Q(-5,-15+i*2,.5,.5,lt);Q(4,-15+i*2,.5,.5,lt)}}
   // 靴
-  const boot=ar==='plate'?metalD:leath;P(-8,-5,8,5,boot);P(1,-5,10,5,boot);Q(-8,-.5,8,.5,'#1a100a');Q(1,-.5,10,.5,'#1a100a');Q(-8,-5.5,8,1.5,ar==='plate'?metal:leathD);Q(1,-5.5,10,1.5,ar==='plate'?metal:leathD)
+  const boot=G.feet<0?'#7a5a3a':ar==='plate'?metalD:leath;P(-8,-5,8,5,boot);P(1,-5,10,5,boot);Q(-8,-.5,8,.5,'#1a100a');Q(1,-.5,10,.5,'#1a100a');Q(-8,-5.5,8,1.5,ar==='plate'?metal:leathD);Q(1,-5.5,10,1.5,ar==='plate'?metal:leathD)
   // 軀幹
   P(-9,-35+b,18,21,body);
-  if(ar==='plate'){P(-8,-34+b,16,9,metal);Q(-7,-33+b,5,3,metalL);Q(-.5,-34+b,1,9,metalD);for(let i=0;i<3;i++)Q(-8,-24+b+i*2.5,16,.5,metalD);Q(-7,-33+b,.8,.8,gold);Q(6.2,-33+b,.8,.8,gold)}
+  if(G.chest<0){Q(-3,-34+b,6,3,'#a88858');Q(-1,-34+b,2,6,'#a88858')}
+  else if(ar==='plate'){P(-8,-34+b,16,9,metal);Q(-7,-33+b,5,3,metalL);Q(-.5,-34+b,1,9,metalD);for(let i=0;i<3;i++)Q(-8,-24+b+i*2.5,16,.5,metalD);Q(-7,-33+b,.8,.8,gold);Q(6.2,-33+b,.8,.8,gold)}
   else if(ar==='mail'){for(let r=0;r<6;r++)for(let c=0;c<8;c++)Q(-8+c*2+(r%2),-33+b+r*2.5,1,1,sh(body,(r+c)%2?-35:15));Q(-9,-35+b,18,2,metal)}
   else if(ar==='leather'){P(-8,-33+b,16,15,dk);Q(-8,-33+b,16,1,lt);for(let i=0;i<6;i++)Q(-.5,-32+b+i*2.5,1,1,leath);Q(-6,-30+b,3,6,sh(dk,25))}
   else {Q(-9,-35+b,4,21,sh(body,-20));Q(5,-35+b,4,21,sh(body,-30));Q(-7,-34+b,3,6,lt)}
@@ -874,7 +947,7 @@ function heroBody(ck,rc,t,p,type,o){
   // 腰帶與腰包
   Q(-9,-17+b,18,3,leathD);Q(-9,-17+b,18,.5,leath);Q(-1.5,-17.5+b,3,4,gold);Q(-.5,-16.5+b,1,2,leathD);P(4,-17+b,4,4,leath);
   // 布甲長袍下擺
-  if(ar==='cloth'){P(-10,-14+b,20,11,body);Q(4,-14+b,6,11,dk);Q(-10,-4,20,1.5,lt);for(let i=0;i<5;i++)Q(-8+i*4,-5.5,1.5,1.5,fcl);P(-2.5,-14+b,5,9,fc)}
+  if(ar==='cloth'&&G.chest>=0){P(-10,-14+b,20,11,body);Q(4,-14+b,6,11,dk);Q(-10,-4,20,1.5,lt);for(let i=0;i<5;i++)Q(-8+i*4,-5.5,1.5,1.5,fcl);P(-2.5,-14+b,5,9,fc)}
   // 頭
   P(-6,-47+b,12,12,skin);Q(-6,-37+b,12,2,sd);Q(-6,-47+b,2,10,sd);Q(4,-44+b,1,4,sl);
   const eye=rc.glow||'#1a1410';
@@ -888,7 +961,8 @@ function heroBody(ck,rc,t,p,type,o){
   if(rc.beard){P(-4,-39+b,12,10,rc.hair);P(-1,-29+b,7,3,rc.hair);Q(1,-40+b,6,2,sh(rc.hair,25));for(let i=0;i<4;i++)Q(-2+i*2.5,-36+b,.5,6,sh(rc.hair,-30));Q(1,-31+b,2,2,gold)}
   if(rc.undead){Q(1,-37.5+b,6,2,'#e8e2d0');for(let i=0;i<4;i++)Q(1.5+i*1.5,-37.5+b,.5,2,'#3a3028');Q(-4,-44+b,2,5,sd);Q(-2,-40+b,1,3,sh(skin,-60))}
   // 頭部裝備
-  if(ar==='plate'){P(-7,-51+b,14,7,metal);Q(-7,-51+b,14,1,metalL);P(-7,-45+b,3,9,metal);Q(5,-45+b,2,3,metal);Q(-4,-46.5+b,11,1,metalD);
+  if(G.head<0){const hr=rc.hair||'#4a3020';Q(-6.5,-49.5+b,13,3.5,hr);Q(-7,-47+b,2,7,hr);Q(-6,-49.5+b,12,1,sh(hr,30));Q(4,-48+b,2,2,hr)}
+  else if(ar==='plate'){P(-7,-51+b,14,7,metal);Q(-7,-51+b,14,1,metalL);P(-7,-45+b,3,9,metal);Q(5,-45+b,2,3,metal);Q(-4,-46.5+b,11,1,metalD);
     for(let i=0;i<3;i++)Q(-5+i*4,-49+b,.8,.8,gold);
     if(o.fac==='H'){Q(-1,-56+b,2,5,metalD);Q(-2.5,-57+b,5,1.5,metalL)}else{Q(-1,-55+b,3,4,cl.c);Q(-2,-58+b,5,3,sh(cl.c,30));Q(-1,-60+b,2,2,sh(cl.c,50))}}
   else if(ck==='hunter'||ck==='rogue'){P(-8,-51+b,15,6,dk);P(-8,-46+b,4,14,dk);Q(-7,-51+b,13,1,body);Q(-8,-45.5+b,15,1,sh(dk,-30));if(ck==='rogue'){Q(-1,-40+b,8,3,dk);Q(-1,-40+b,8,.5,sh(dk,30))}else{Q(-9,-51+b,2,2,'#c06030');Q(-11,-53+b,2,2,'#e0a040')}}
@@ -897,17 +971,21 @@ function heroBody(ck,rc,t,p,type,o){
   if(rc.horns){P(-10,-54+b,3,8,'#e8e0c8');P(7,-54+b,3,8,'#e8e0c8');Q(-12,-57+b,3,4,'#e8e0c8');Q(9,-57+b,3,4,'#e8e0c8');Q(-10,-50+b,3,.6,'#a89a78');Q(7,-50+b,3,.6,'#a89a78')}
   if(rc.mohawk&&ar!=='plate'){P(-3,-59+b,5,8,rc.hair);Q(-2,-60+b,3,1,sh(rc.hair,30))}
   // 肩甲
-  if(ar==='plate'){for(const sx of [-15,5]){P(sx,-40+b,10,10,metal);Q(sx,-40+b,10,2,metalL);Q(sx,-32+b,10,1.5,metalD);Q(sx+1,-36+b,8,.5,metalD);Q(sx+2,-38.5+b,1,1,gold);Q(sx+7,-38.5+b,1,1,gold);
+  if(G.chest<0){}
+  else if(ar==='plate'){for(const sx of [-15,5]){P(sx,-40+b,10,10,metal);Q(sx,-40+b,10,2,metalL);Q(sx,-32+b,10,1.5,metalD);Q(sx+1,-36+b,8,.5,metalD);Q(sx+2,-38.5+b,1,1,gold);Q(sx+7,-38.5+b,1,1,gold);
       if(o.fac==='H'){Q(sx+2,-44+b,1.5,4,metalL);Q(sx+6,-45+b,1.5,5,metalL);Q(sx+2,-44+b,.5,4,'#fff')}else{Q(sx+3,-42+b,4,2,fcl)}}}
   else if(ar==='mail'){for(const sx of [-13,5]){P(sx,-38+b,8,7,metal);Q(sx,-38+b,8,1,metalL);for(let i=0;i<3;i++)Q(sx+.5,-36+b+i*2,7,.5,metalD)}}
   else if(ar==='leather'){for(const sx of [-12,6]){P(sx,-37+b,6,6,dk);Q(sx,-37+b,6,1,body);Q(sx+1,-33+b,4,.5,leath)}}
   else {for(const sx of [-11,6]){P(sx,-37+b,5,4,lt);Q(sx,-33.5+b,5,1,fcl)}}
+  if(trim&&G.chest>=0){Q(-9,-35.5+b,18,.8,trim);Q(-9,-14.5+b,18,.6,trim);if(cr>=4){g.save();g.shadowColor=RCOL[cr];g.shadowBlur=6;Q(-1.5,-27+b,3,3,RCOL[cr]);g.restore();Q(-1,-26.5+b,1,1,'#fff')}}
+  if(G.head>=3&&ar==='plate')Q(-7,-46+b,14,.8,'#f0c040');
+  if(G.setN>=3){const sc2=G.setT==='T1'?'#ff9a3a':'#7ab0ff';g.save();g.globalAlpha=.85;for(let i=0;i<6;i++){const a2=t*1.6+i*1.05;const rr=16+Math.sin(t*3+i)*2;Q(Math.cos(a2)*rr-.5,-28+Math.sin(a2)*rr*1.3,1.2,1.2,sc2)}g.restore()}
   weapon(ck,cl,t,p,type,b,o);
   // 前臂與手套
   P(4,-33+b,6,10,ar==='plate'?metal:body);Q(4,-28+b,6,.5,ar==='plate'?metalD:dk);
-  P(4,-24+b,6,4,ar==='plate'?metalD:leathD);Q(4,-24+b,6,1,ar==='plate'?metalL:leath);Q(10,-22+b,1.5,2,ar==='plate'?metalD:leathD);
+  P(4,-24+b,6,4,G.hands<0?skin:ar==='plate'?metalD:leathD);Q(4,-24+b,6,1,ar==='plate'?metalL:leath);Q(10,-22+b,1.5,2,ar==='plate'?metalD:leathD);
 }
-function weapon(ck,cl,t,p,type,b,o){
+function weapon(ck,cl,t,p,type,b,o){if(o.noW)return;
   g.save();g.translate(8,-22+b);
   const glow=o.wr>=2?RCOL[o.wr]:null;if(glow){g.shadowColor=glow;g.shadowBlur=(o.wr>=4?12:o.wr>=3?8:4)+(o.enh>=5?6:0)}
   const sw=type==='melee'?(-1.4+p*2.2):-.5;const gem=glow||'#c03030';
@@ -1061,6 +1139,49 @@ function drawNums(list){
     ctx.strokeText(n.text,n.x,y);ctx.fillStyle=fill;ctx.fillText(n.text,n.x,y);ctx.restore()}
 }
 let clouds=[];for(let i=0;i<5;i++)clouds.push({x:Math.random()*W,y:20+Math.random()*60,w:60+Math.random()*80,s:4+Math.random()*8});
+// ===== 晝夜與天氣 =====
+function dayPhase(){const d=new Date();const h=d.getHours()+d.getMinutes()/60;
+  if(h>=19.5||h<5)return {k:'night',a:.5,c:'#0a1030'};if(h<6.5)return {k:'dawn',a:.25,c:'#ff9a5a'};if(h>=17.5)return {k:'dusk',a:.28,c:'#ff7a3a'};return {k:'day',a:0,c:'#000'}}
+const WX={jungle:['rain','rain','clear'],forest:['drizzle','clear','clear'],desert:['sand','clear','clear'],hive:['sand','clear'],volcanic:['ember','ember'],plague:['fog','fog','clear'],plains:['clear','drizzle'],savanna:['clear','clear','sand']};
+let wxState={zone:'',k:'clear',until:0,parts:[]};const STARS=Array.from({length:40},()=>({x:Math.random()*720,y:Math.random()*120,s:Math.random()<.2?1.5:1}));
+function updWeather(z){const now=Date.now();if(wxState.zone!==z.id||now>wxState.until){const opts=WX[z.deco]||['clear'];wxState={zone:z.id,k:pick(opts),until:now+rnd(3,7)*60e3,parts:[]};}return wxState.k}
+function drawSky(z,t){const ph=dayPhase();if(ph.a>0&&z.deco!=='volcanic'){ctx.save();ctx.globalAlpha=ph.a;ctx.fillStyle=ph.c;ctx.fillRect(0,0,W,GY);ctx.restore();
+    if(ph.k==='night'){ctx.fillStyle='#fffbe8';for(const st of STARS){ctx.globalAlpha=.4+.6*Math.abs(Math.sin(t*.8+st.x));ctx.fillRect(st.x,st.y,st.s,st.s)}ctx.globalAlpha=1;
+      ctx.fillStyle='#f4f0d8';ctx.beginPath();ctx.arc(610,40,13,0,7);ctx.fill();ctx.fillStyle=ph.c;ctx.globalAlpha=.6;ctx.beginPath();ctx.arc(616,36,11,0,7);ctx.fill();ctx.globalAlpha=1}}}
+function drawLightOver(){const ph=dayPhase();if(ph.k==='night'){ctx.save();ctx.globalAlpha=.18;ctx.fillStyle=ph.c;ctx.fillRect(0,0,W,H);ctx.restore()}}
+function drawWeather(z,dt){const k=updWeather(z);const P=wxState.parts;
+  const spawn=(n,f)=>{for(let i=0;i<n;i++)P.push(f())};
+  if(k==='rain'){if(P.length<160)spawn(8,()=>({x:Math.random()*W*1.2,y:-10,vx:-60,vy:520,l:10}));}
+  else if(k==='drizzle'){if(P.length<60)spawn(2,()=>({x:Math.random()*W*1.2,y:-10,vx:-30,vy:360,l:6}))}
+  else if(k==='sand'){if(P.length<140)spawn(5,()=>({x:W+10,y:Math.random()*H,vx:-260-Math.random()*120,vy:20,l:2}))}
+  else if(k==='ember'){if(P.length<70)spawn(2,()=>({x:Math.random()*W,y:H+5,vx:(Math.random()-.5)*30,vy:-40-Math.random()*50,l:2}))}
+  else if(k==='fog'){if(P.length<8)spawn(1,()=>({x:-200,y:120+Math.random()*90,vx:15+Math.random()*15,vy:0,l:180}))}
+  ctx.save();
+  for(const q of P){q.x+=q.vx*dt;q.y+=q.vy*dt}
+  wxState.parts=P.filter(q=>q.y<H+20&&q.y>-30&&q.x>-260&&q.x<W+260);
+  if(k==='rain'||k==='drizzle'){ctx.strokeStyle=k==='rain'?'#c8d8f0aa':'#c8d8f088';ctx.lineWidth=1;ctx.beginPath();for(const q of wxState.parts){ctx.moveTo(q.x,q.y);ctx.lineTo(q.x-q.vx*.02,q.y-q.l)}ctx.stroke();
+    if(k==='rain'){ctx.fillStyle='#1a2a4022';ctx.fillRect(0,0,W,H)}}
+  else if(k==='sand'){ctx.fillStyle='#e8c88a99';for(const q of wxState.parts)ctx.fillRect(q.x,q.y,3,1);ctx.fillStyle='#d8a85a22';ctx.fillRect(0,0,W,H)}
+  else if(k==='ember'){ctx.globalCompositeOperation='lighter';for(const q of wxState.parts){ctx.fillStyle=Math.random()<.5?'#ffb040':'#ff6a1a';ctx.fillRect(q.x,q.y,2,2)}}
+  else if(k==='fog'){for(const q of wxState.parts){const gr=ctx.createRadialGradient(q.x,q.y,10,q.x,q.y,q.l);gr.addColorStop(0,'#a8d07a33');gr.addColorStop(1,'#a8d07a00');ctx.fillStyle=gr;ctx.fillRect(q.x-q.l,q.y-q.l,q.l*2,q.l*2)}}
+  ctx.restore()}
+const WXN={clear:'',rain:'暴雨',drizzle:'細雨',sand:'沙塵',ember:'火星',fog:'毒霧'};
+// ===== 合成音效 =====
+let AC=null,sfxOn=false,sfxBudget=0;
+function sfx(kind){if(!sfxOn||!AC)return;const now=AC.currentTime;if(kind==='hit'||kind==='crit'){if(sfxBudget>8)return;sfxBudget++}
+  const o=AC.createOscillator(),gn=AC.createGain();o.connect(gn);gn.connect(AC.destination);
+  const env=(a,d,v=.2)=>{gn.gain.setValueAtTime(0,now);gn.gain.linearRampToValueAtTime(v,now+a);gn.gain.exponentialRampToValueAtTime(.001,now+a+d)};
+  if(kind==='hit'||kind==='crit'){const len=kind==='crit'?.18:.09;const buf=AC.createBuffer(1,AC.sampleRate*len,AC.sampleRate);const dd=buf.getChannelData(0);for(let i=0;i<dd.length;i++)dd[i]=(Math.random()*2-1)*(1-i/dd.length);
+    const src=AC.createBufferSource();src.buffer=buf;const f=AC.createBiquadFilter();f.type='lowpass';f.frequency.value=kind==='crit'?2400:1200;src.connect(f);f.connect(gn);gn.gain.setValueAtTime(kind==='crit'?.35:.18,now);src.start(now);
+    o.type='square';o.frequency.setValueAtTime(kind==='crit'?220:140,now);o.frequency.exponentialRampToValueAtTime(60,now+len);env(.005,len,.08);o.start(now);o.stop(now+len+.05);return}
+  if(kind==='cast'){o.type='sine';o.frequency.setValueAtTime(400,now);o.frequency.exponentialRampToValueAtTime(900,now+.25);env(.02,.3,.08);o.start(now);o.stop(now+.4);return}
+  if(kind==='heal'){o.type='triangle';o.frequency.setValueAtTime(660,now);o.frequency.linearRampToValueAtTime(990,now+.3);env(.05,.4,.08);o.start(now);o.stop(now+.5);return}
+  if(kind==='die'){o.type='sawtooth';o.frequency.setValueAtTime(220,now);o.frequency.exponentialRampToValueAtTime(55,now+.9);env(.02,1,.12);o.start(now);o.stop(now+1.1);return}
+  o.disconnect();
+  const notes=kind==='lvl'?[523,659,784,1047,1319]:kind==='loot'?[880,1175,1568]:[660,880];
+  notes.forEach((f,i)=>{const oo=AC.createOscillator(),gg=AC.createGain();oo.type=kind==='lvl'?'triangle':'sine';oo.frequency.value=f;oo.connect(gg);gg.connect(AC.destination);const st=now+i*(kind==='lvl'?.09:.07);
+    gg.gain.setValueAtTime(0,st);gg.gain.linearRampToValueAtTime(.12,st+.02);gg.gain.exponentialRampToValueAtTime(.001,st+.6);oo.start(st);oo.stop(st+.7)})}
+setInterval(()=>{sfxBudget=0},1000);
 function render(t,dt){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnabled=false;
   if(!S){ctx.fillStyle='#141821';ctx.fillRect(0,0,W,H);return}
   if(D){
@@ -1086,7 +1207,7 @@ function render(t,dt){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnable
       ctx.fillText(`${D.dg.n}——前往首領 ${D.bi+1}／${D.dg.bosses.length}`,W/2,35)}
     drawFx(D.fx);drawParts(dt);drawNums(D.nums);ctx.save();ctx.translate(0,206);ctx.scale(.85,.85);drawFrames();ctx.restore();return}
   const z=curZone();const key='z-'+z.id;if(bgKey!==key){bgCache=buildBg(key,z);bgKey=key}
-  ctx.drawImage(bgCache,0,0);
+  ctx.drawImage(bgCache,0,0);drawSky(z,t);
   if(z.deco!=='volcanic'&&z.deco!=='plague'){ctx.fillStyle='#ffffffb0';for(const c of clouds){c.x-=c.s*dt;if(c.x<-c.w)c.x=W+10;ctx.fillRect(c.x,c.y,c.w,10);ctx.fillRect(c.x+12,c.y-8,c.w-30,9)}}
   for(const m of B.mobs){drawMob(m,t);}
   const pt=petInfo();if(pt&&!(B.dead>0)){const px=heroX()+92;drawMob({x:px,type:pt.type,color:pt.color,look:pt.look,hurt:0,dying:0,flip:1,lunge:(B.petP||0)*.25},t,pt.sc/MOBSC)}
@@ -1099,15 +1220,17 @@ function render(t,dt){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnable
   for(const f of B.fx)f.age+=dt;B.fx=B.fx.filter(f=>f.age<f.life);
   for(const n of B.nums)n.age+=dt;B.nums=B.nums.filter(n=>n.age<1);
   drawFx(B.fx);drawParts(dt);drawNums(B.nums);
+  drawLightOver();drawWeather(z,dt);
+  if(WXN[wxState.k]||dayPhase().k!=='day'){ctx.save();ctx.font='700 10px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.fillStyle='#000a';const lbl=[{night:'夜晚',dawn:'黎明',dusk:'黃昏',day:''}[dayPhase().k],WXN[wxState.k]].filter(Boolean).join('・');ctx.fillRect(W/2-34,H-18,68,14);ctx.fillStyle='#e8dcc2';ctx.fillText(lbl,W/2,H-7.5);ctx.restore()}
   drawFrames();
   if(!S.idle&&!D){ctx.fillStyle='#000a';ctx.fillRect(W/2-90,14,180,28);ctx.fillStyle='#e8dcc2';ctx.font='700 13px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.fillText('掛機已暫停',W/2,33)}
 }
 
 /* ================= 介面 ================= */
-const TABS=[['console','主控台'],['char','人物'],['talent','天賦'],['bag','背包'],['shop','商店'],['map','地圖'],['quest','任務'],['rep','聲望'],['dungeon','地城'],['set','設定']];
+const TABS=[['console','主控台'],['char','人物'],['talent','天賦'],['bag','背包'],['shop','商店'],['map','地圖'],['quest','任務'],['rep','聲望'],['dungeon','地城'],['prof','專業'],['set','設定']];
 function renderNav(){const z=S?curZone():null;let qReady=false;if(S){const q=qState(z),c=curQuest(z);qReady=q.p>=c.need}
   const talDot=S&&talPoints()>talUsed();const trDot=S&&learnable().some(s=>S.copper>=trainCost(s));
-  $('#nav').innerHTML=TABS.map(([k,n])=>`<button data-act="tab" data-v="${k}" aria-current="${UI.tab===k}">${n}${(k==='quest'&&qReady)||(k==='talent'&&talDot)||(k==='char'&&trDot)?'<i class="dot"></i>':''}</button>`).join('')}
+  $('#nav').innerHTML=TABS.map(([k,n])=>`<button data-act="tab" data-v="${k}" aria-current="${UI.tab===k}">${n}${(k==='quest'&&qReady)||(k==='talent'&&talDot)||(k==='char'&&trDot)||(k==='shop'&&S&&lowDur())?'<i class="dot"></i>':''}</button>`).join('')}
 const SKC={slash:['#8a8a90','#3a3a44'],shock:['#e0b040','#6a4a10'],whirl:['#c0c4cc','#40444e'],holy:['#ffe68a','#8a6a10'],heal:['#8af06a','#1a5a1a'],arrow:['#d8c090','#5a4020'],
   fire:['#ffb040','#8a2010'],frost:['#9ae4ff','#1a4a8a'],arcane:['#ff8aff','#5a1a7a'],shadow:['#b07aff','#2a1050'],nature:['#a0f07a','#2a5a1a'],drain:['#c08aff','#3a1a5a']};
 const SKCACHE={};
@@ -1174,6 +1297,7 @@ function renderStatus(){renderActionBar();
   if(D){pu.className='pulse';ss.textContent='地城挑戰中';ib.disabled=true;ib.textContent='地城進行中'}
   else if(B.dead>0){pu.className='pulse dead';ss.textContent='死亡（等待復活）';ib.disabled=false;ib.textContent=S.idle?'暫停掛機':'開始掛機'}
   else{ib.disabled=false;pu.className='pulse'+(S.idle?'':' off');ss.textContent=S.idle?'自動戰鬥中':'休息中';ib.textContent=S.idle?'暫停掛機':'開始掛機'}
+  $('#durWarn').hidden=!lowDur();
 }
 const ARMN={plate:'板甲',mail:'鎖甲',leather:'皮甲',cloth:'布甲'};
 const WSPD={sword:2.6,mace:2.7,dagger:1.8,bow:2.8,staff:3.0};const WTN={sword:'單手劍',mace:'單手錘',dagger:'匕首',bow:'弓',staff:'法杖'};
@@ -1197,6 +1321,7 @@ function itemTip(it,cmp){
    ${bind?`<div class="ln">${bind}</div>`:''}${body}
    ${it.crit?`<div class="ln green">裝備：使你造成致命一擊的機率提高 ${it.crit}%。</div>`:''}
    ${it.set?setLines(it):''}
+   ${it.dmax?`<div class="ln" style="color:${it.dur<=0?'#ff5a4a':'inherit'}">耐久度 ${it.dur} / ${it.dmax}${it.dur<=0?'（已損壞，屬性失效）':''}</div>`:''}
    <div class="ln" style="color:${need>S.lv?'#ff5a4a':'inherit'}">需要等級 ${need}</div>
    <div class="gray">物品等級 ${it.ilvl}・剩餘附魔次數 ${it.slots}${it.fail?`（失敗 ${it.fail}）`:''}</div>
    <div class="gray">販賣價格：${money(it.val)}</div>${diff}</div></div></div>`}
@@ -1239,7 +1364,7 @@ function renderPanel(){
   }
   else if(UI.tab==='char'){
     const st=stats();
-    h=`<section class="card"><h2>人物</h2><div class="grid2"><div><div class="slots">${SLOTS.map(k=>{const it=S.eq[k];return `<button class="slot" data-act="${it?'item':'tab'}" data-v="${it?it.id:'bag'}">${iconBtn(it)}<span class="meta"><b class="${it?'r'+it.rar:'muted'}">${it?esc(it.name)+(it.enh?' +'+it.enh:''):'（空）'}</b><small>${SLOTN[k]}${it?`・物品等級 ${it.ilvl}`:''}</small></span></button>`}).join('')}</div></div>
+    h=`<section class="card"><h2>人物</h2><div class="grid2"><div><canvas id="doll" width="640" height="440" style="width:100%;max-width:320px;aspect-ratio:320/220;display:block;margin:0 auto 10px;border-radius:10px;border:1px solid var(--line);image-rendering:pixelated" aria-label="角色外觀"></canvas><div class="slots">${SLOTS.map(k=>{const it=S.eq[k];return `<button class="slot" ${broken(it)?'style="border-color:#a03030;background:#2a1414"':''} data-act="${it?'item':'tab'}" data-v="${it?it.id:'bag'}">${iconBtn(it)}<span class="meta"><b class="${it?'r'+it.rar:'muted'}">${it?esc(it.name)+(it.enh?' +'+it.enh:''):'（空）'}</b><small>${SLOTN[k]}${it?`・物品等級 ${it.ilvl}`:''}</small></span></button>`}).join('')}</div></div>
       <div><dl class="kv"><dt>種族</dt><dd>${RACES[S.race].n}（${RACES[S.race].d}）</dd><dt>職業</dt><dd>${CLASSES[S.cls].n}（${ROLEN[st.role]}）</dd>${Object.keys(SETS).filter(t=>setCount(t)).map(t=>`<dt>${setName(t,S.cls)}</dt><dd>${setCount(t)}/5 件</dd>`).join('')}<dt>平均物品等級</dt><dd>${gearIlvl()}</dd><dt>生命值</dt><dd>${fmt(st.hp)}</dd><dt>${primN(S.cls)}（攻擊）</dt><dd>${fmt(st.atk)}</dd><dt>護甲</dt><dd>${fmt(st.def)}</dd><dt>致命一擊</dt><dd>${st.crit.toFixed(1)}%</dd><dt>攻擊速度</dt><dd>${st.spd.toFixed(2)} 次／秒</dd><dt>每秒傷害（估計）</dt><dd>${fmt(st.dps)}</dd><dt>死亡次數</dt><dd>${S.stats.deaths}</dd><dt>通關地城</dt><dd>${S.stats.dungeons}</dd></dl>
       <h3>職業訓練師</h3><div class="list">${CLASSES[S.cls].sk.map(s=>`<div class="li" style="padding:7px 10px"><span class="main" style="display:flex;align-items:center;gap:8px"><img src="${skillIcon(s[6],s[1])}" width="28" height="28" alt="" style="border-radius:3px;image-rendering:pixelated;${isLearned(s)&&S.lv>=s[0]?'':'filter:grayscale(1);opacity:.6'}"><b class="${S.lv>=s[0]&&isLearned(s)?'':'muted'}">${s[1]}</b> <span class="tag">${s[7]?'治療':s[5]?'群體':'單體'}</span></span><span class="small muted">${S.lv>=s[0]?(s[7]?`恢復 ${Math.round(s[2]*100)}% 生命`:`${Math.round(s[2]*100)}% 傷害`)+`・冷卻 ${s[4]} 秒`:`${s[0]} 級可學`}${S.lv>=s[0]&&!isLearned(s)?` <button class="btn sm main" data-act="learn" data-v="${esc(s[1])}" ${S.copper<trainCost(s)?'disabled':''}>學習 ${moneyTxt(trainCost(s))}</button>`:''}</span></div>`).join('')}</div></div></div></section>`;
   }
@@ -1264,9 +1389,10 @@ function renderPanel(){
     const L=S.lv;const items=[['potion',25*L+20],['sw100',60*L+150],['sa100',60*L+150],['sw60',220*L+800],['sa60',220*L+800],['chest',800*L+5000]];
     const bagP=[10000,50000,200000,800000][Math.min(3,(S.bagCap-32)/8)];
     h=`<section class="card"><h2>商店</h2><p class="muted small">價格依等級調整。10% 附魔卷軸只能從怪物、首領或聲望商人取得。</p><div class="list">
+      <div class="li" ${lowDur()?'style="border-color:#a03030"':''}><span class="main"><b>鐵匠：修理所有裝備</b><p>${SLOTS.filter(k=>S.eq[k]&&S.eq[k].dmax).map(k=>`${SLOTN[k]} ${S.eq[k].dur}/${S.eq[k].dmax}`).join('・')}</p></span><span class="row">${repairCost()?money(repairCost()):'<span class="muted small">不需修理</span>'}<button class="btn sm main" data-act="repair" ${repairCost()&&S.copper>=repairCost()?'':'disabled'}>修理</button></span></div>
       ${items.map(([k,p])=>`<div class="li"><span class="main"><b>${CONS[k].n}</b> <span class="num muted">持有 ${S.cons[k]||0}</span><p>${CONS[k].d}</p></span><span class="row">${money(p)}<button class="btn sm" data-act="buy" data-v="${k}" data-p="${p}" data-n="1" ${S.copper<p?'disabled':''}>購買</button>${k!=='chest'?`<button class="btn sm" data-act="buy" data-v="${k}" data-p="${p*10}" data-n="10" ${S.copper<p*10?'disabled':''}>×10</button>`:''}</span></div>`).join('')}
       <div class="li"><span class="main"><b>初級騎術與坐騎</b>${S.lv<40?'<span class="tag">需要 40 級</span>':''}<p>經典版的 40 級騎術，含訓練費與坐騎。擁有坐騎時敵人重生加快 40%。</p></span><span class="row">${S.mount?'<span class="muted small">已擁有</span>':money(900000)+`<button class="btn sm main" data-act="buyMount" ${S.lv<40||S.copper<900000?'disabled':''}>購買</button>`}</span></div>
-      <div class="li"><span class="main"><b>背包擴充 +8 格</b><p>目前 ${S.bagCap} 格，最多 64 格。</p></span><span class="row">${S.bagCap<64?money(bagP):''}<button class="btn sm" data-act="buyBag" ${S.bagCap>=64||S.copper<bagP?'disabled':''}>${S.bagCap>=64?'已滿':'購買'}</button></span></div></div></section>`;
+      <div class="li"><span class="main"><b>背包擴充 +8 格</b><p>目前 ${S.bagCap} 格，最多 64 格。</p></span><span class="row">${S.bagCap<64?money(bagP):''}<button class="btn sm" data-act="buyBag" ${S.bagCap>=64||S.copper<bagP?'disabled':''}>${S.bagCap>=64?'已滿':'購買'}</button></span></div></div></section>`+renderAH();
   }
   else if(UI.tab==='map'){
     h=`<section class="card"><h2>地圖</h2><p class="muted small">怪物等級比你高 3 級以上時，你造成的傷害會降低、受到的傷害會提高。等級標示：<span style="color:#5bd25b">綠＝輕鬆</span>、<span style="color:#f2e04a">黃＝適中</span>、<span style="color:#ff5a4a">紅＝危險</span>。</p><div class="list">
@@ -1303,10 +1429,22 @@ function renderPanel(){
         return `<div class="li"><span class="main"><b>${dg.n}</b>${dg.raid?'<span class="tag">團隊 20 人</span>':''}${tg}<p>建議等級 ${dg.lv}・掉落物品等級 ${dg.il}+・首領：${dg.bosses.map(b=>b[0]).join('、')}</p>${lvOk?`<p>你的戰力：<b class="num">${Math.round(ratio*100)}%</b>（建議 75% 以上）</p>`:''}</span>
           <button class="btn ${cd>0||!lvOk?'':'main'}" data-act="dungeon" data-v="${dg.id}" ${cd>0||!lvOk||D?'disabled':''}>${cd>0?'冷卻 '+durStr(cd):'進入'}</button></div>`}).join('')}</div></section>`;
   }
+  else if(UI.tab==='prof'){
+    S.profs=S.profs||[];S.psk=S.psk||{};const z=curZone(),zt=zoneTier(z);
+    const mats=Object.entries(S.mats||{}).filter(([,c])=>c>0);
+    h=`<section class="card"><h2>專業技能</h2><p class="muted small">最多學兩個主要專業。掛機打怪時自動採集，技能依採集次數提升到 300。目前地區「${esc(z.n)}」的材料等級：第 ${zt+1} 階。</p><div class="list">
+      ${Object.entries(PROFS).map(([k,P])=>{const has=S.profs.includes(k);let t=zt;while(t>0&&profSk(k)<P.req[t])t--;const ok=profSk(k)>=P.req[zt];
+        return `<div class="li ${has?'here':''}"><span class="main"><b>${P.n}</b>${has?`<span class="tag ok">${profSk(k)} / 300</span>`:''}<p>${P.d}${has?`<br>此地可採：${ok?P.mats[zt]:`${P.mats[t]}（${P.mats[zt]} 需要技能 ${P.req[zt]}）`}`:''}</p>${has?`<div class="prog"><i style="width:${profSk(k)/3}%"></i></div>`:''}</span>
+        ${has?`<button class="btn sm danger" data-act="unprof" data-v="${k}">放棄</button>`:`<button class="btn sm main" data-act="prof" data-v="${k}" ${S.profs.length>=2?'disabled':''}>學習（${moneyTxt(1000)}）</button>`}</div>`}).join('')}
+      <div class="li"><span class="main"><b>急救</b><span class="tag ok">${profSk('aid')} / 300</span><p>所有人都能學。人形怪會掉落布料，可做成繃帶；繃帶在脫戰時自動使用，持有 ${S.cons.band||0} 個。</p><div class="prog"><i style="width:${profSk('aid')/3}%"></i></div></span></div></div>
+      <h3>材料</h3>${mats.length?`<div class="list">${mats.map(([n,c])=>`<div class="li" style="padding:7px 12px"><span class="main"><b class="${n==='黑蓮花'?'r4':''}">${n}</b> <span class="num muted">×${c}</span></span><span class="row">${money(MATV[n]*c)}<button class="btn sm" data-act="sellMat" data-v="${esc(n)}">全部販賣</button></span></div>`).join('')}</div>`:'<p class="muted small">還沒有材料。學個採集專業，或在人形怪身上找布料。</p>'}
+      <h3>製作與工匠</h3>${craftList().length?`<div class="list">${craftList().map((c,i)=>{const can=c.cost.every(([n,q])=>(S.mats[n]||0)>=q);return `<div class="li" style="padding:7px 12px"><span class="main"><b>${c.n}</b><p>需要 ${c.cost.map(([n,q])=>`${n} ×${q}`).join('、')}${c.prof==='aid'?`・急救 ${c.req}`:''}</p></span><button class="btn sm main" data-act="craft" data-v="${c.id}" ${can&&(!c.prof||profSk('aid')>=c.req)?'':'disabled'}>製作</button></div>`}).join('')}</div>`:'<p class="muted small">取得材料後，這裡會出現可以製作或交換的物品。</p>'}</section>`;
+  }
   else if(UI.tab==='set'){
     h=`<section class="card"><h2>設定</h2><div class="grid2"><div class="list">
       <label class="ck"><input type="checkbox" id="setGray" data-act="set" data-v="sellGray" ${S.set.sellGray?'checked':''}>自動販賣粗糙（灰色）物品</label>
       <label class="ck"><input type="checkbox" id="setWhite" data-act="set" data-v="sellWhite" ${S.set.sellWhite?'checked':''}>自動販賣普通（白色）物品</label>
+      <label class="ck"><input type="checkbox" id="setRp" data-act="set" data-v="autoRepair" ${S.set.autoRepair?'checked':''}>死亡後自動修理裝備（錢夠時）</label>
       <label class="ck"><input type="checkbox" id="setTr" data-act="set" data-v="autoTrain" ${S.set.autoTrain?'checked':''}>升級時自動向訓練師學習新技能</label>
       <label class="ck"><input type="checkbox" id="setEq" data-act="set" data-v="autoEquip" ${S.set.autoEquip?'checked':''}>撿到更好的裝備時自動穿上</label>
       <label>生命低於 <b id="potV">${S.set.potAt}%</b> 自動喝藥水<input type="range" id="setPot" min="10" max="80" step="5" value="${S.set.potAt}" style="width:100%"></label></div>
@@ -1358,6 +1496,19 @@ const ACT={
   tab:d=>{UI.tab=d.v;closeSheet();renderAll();window.scrollTo({top:0,behavior:'smooth'})},
   toggleIdle:()=>{S.idle=!S.idle;if(!S.idle)B.mobs=[];log('sys',S.idle?'開始自動掛機。':'掛機暫停。');renderStatus()},
   logF:d=>{UI.logF=d.v;document.querySelectorAll('#logF button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===d.v));logDirty=true;renderLog()},
+  repair:()=>{repairAll(false);renderAll();save()},
+  prof:d=>{S.profs=S.profs||[];S.psk=S.psk||{};if(S.profs.length>=2||S.profs.includes(d.v)||S.copper<1000)return;S.copper-=1000;S.profs.push(d.v);S.psk[d.v]=S.psk[d.v]||1;toast(`學會 ${PROFS[d.v].n}`);renderAll();save()},
+  unprof:d=>{S.profs=S.profs.filter(k=>k!==d.v);S.psk[d.v]=0;toast(`已放棄 ${PROFS[d.v].n}`);renderAll();save()},
+  sellMat:d=>{const c=(S.mats||{})[d.v]||0;if(!c)return;S.copper+=MATV[d.v]*c;S.mats[d.v]=0;toast(`販賣 ${d.v} ×${c}`);renderAll();save()},
+  craft:d=>{const c=craftList().find(x=>x.id===d.v);if(!c)return;if(!c.cost.every(([n,q])=>(S.mats[n]||0)>=q))return;if(c.prof==='aid'&&profSk('aid')<c.req)return;
+    c.cost.forEach(([n,q])=>S.mats[n]-=q);c.give();if(c.prof==='aid'){S.psk=S.psk||{};skillUp('aid',c.req)}toast(`完成：${c.n}`);renderAll();save()},
+  ahDur:d=>{UI.ahDur=+d.v;renderPanel()},
+  ahPostItem:d=>{const f=findItem(d.v);if(!f||f.where!=='inv')return;if(ahPost({kind:'item',item:f.it},UI.ahDur||8)){S.inv.splice(f.i,1);renderAll();save()}},
+  ahPostMat:d=>{const n=(S.mats||{})[d.v]||0;if(!n)return;if(ahPost({kind:'mat',mat:d.v,n},UI.ahDur||8)){S.mats[d.v]=0;renderAll();save()}},
+  ahBack:d=>{const A=ahInit(),l=A.mine[+d.v];if(!l||l.done!=='expired')return;if(l.kind==='mat')addMat(l.mat,l.n);else{if(S.inv.length>=S.bagCap){toast('背包已滿');return}S.inv.push(l.item)}A.mine.splice(+d.v,1);toast('已領回');renderAll();save()},
+  ahView:d=>{const b=ahBrowse()[+d.v];if(!b)return;showSheet(`${itemTip(b.item,S.eq[b.item.slot]||null)}<div class="row" style="margin-top:12px"><span class="spacer"></span><button class="btn" data-act="closeSheet">關閉</button></div>`)},
+  ahBuy:d=>{const A=ahInit(),b=A.browse.list[+d.v];if(!b||S.copper<b.price)return;if(S.inv.length>=S.bagCap){toast('背包已滿');return}S.copper-=b.price;b.item.id=S.nid++;S.inv.push(b.item);A.browse.list.splice(+d.v,1);log('loot',`拍賣場：以 ${moneyTxt(b.price)} 買下【${b.item.name}】`);toast('購買成功');renderAll();save()},
+  snd:()=>{try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume()}catch(e){toast('這個瀏覽器不支援音效');return}sfxOn=!sfxOn;const b=$('#sndBtn');b.textContent=sfxOn?'♪ 音效：開':'♪ 音效：關';b.setAttribute('aria-pressed',sfxOn);if(sfxOn)sfx('loot')},
   learn:d=>{const sk=CLASSES[S.cls].sk.find(s=>s[1]===d.v);if(sk&&learn(sk)){renderAll();save()}},
   buyMount:()=>{const p=900000;if(S.lv<40||S.mount||S.copper<p)return;S.copper-=p;S.mount=true;toast('學會騎術，獲得坐騎！');log('sys','你學會了初級騎術並買下第一隻坐騎。敵人重生加快 40%。');renderAll();save()},
   skTog:d=>{S.skOff=S.skOff||{};S.skOff[d.v]=!S.skOff[d.v];toast(S.skOff[d.v]?`${d.v}：停止自動施放`:`${d.v}：恢復自動施放`);abarKey='';renderActionBar();save()},
@@ -1402,8 +1553,11 @@ document.addEventListener('change',e=>{const b=e.target.closest('input[data-act]
 
 /* ================= 主迴圈 ================= */
 let lastT=performance.now(),saveT=0,uiT=0,started=false;
+function drawDoll(t){const c=document.getElementById('doll');if(!c)return;const d=c.getContext('2d');d.setTransform(2,0,0,2,0,0);d.imageSmoothingEnabled=false;
+  const gr=d.createRadialGradient(160,150,10,160,140,170);gr.addColorStop(0,'#3a3a4a');gr.addColorStop(1,'#14161e');d.fillStyle=gr;d.fillRect(0,0,320,220);
+  d.fillStyle='#ffffff10';d.beginPath();d.ellipse(160,196,70,12,0,0,7);d.fill();DC=d;try{drawHero(160,196,S.cls,S.race,t,0,'',2.6,heroOpt())}finally{DC=ctx}}
 function loop(now){const dt=Math.min(.1,(now-lastT)/1000);lastT=now;
-  if(S&&started){render(now/1000,dt)}requestAnimationFrame(loop)}
+  if(S&&started){render(now/1000,dt);if(UI.tab==='char')drawDoll(now/1000)}requestAnimationFrame(loop)}
 let lastLogic=Date.now();
 function logic(){if(!S||!started)return;const now=Date.now();let dt=(now-lastLogic)/1000;lastLogic=now;
   if(dt>15){if(!D)offline(dt,dt>120);dt=0}
@@ -1414,7 +1568,7 @@ function logic(){if(!S||!started)return;const now=Date.now();let dt=(now-lastLog
   if(uiT>=1){uiT=0;if(UI.dirty&&!$('#sheet').innerHTML&&!['set','talent'].includes(UI.tab)&&!(UI.tab==='console'))renderAll();else if(UI.dirty){renderNav();UI.dirty=false}
     if(['dungeon','quest','rep'].includes(UI.tab)&&!$('#sheet').innerHTML)renderPanel();
     if(UI.tab==='console')renderConsoleStats()}
-  if(saveT>=10){saveT=0;save()}
+  if(saveT>=10){saveT=0;ahProcess();save()}
 }
 function start(fresh){started=true;newBattle();bgKey='';lastLogic=Date.now();
   if(fresh){log('sys',`歡迎來到艾澤拉斯，${S.name}。角色已開始自動戰鬥。`);log('sys','提示：背包裡有附魔卷軸，商店可補充治療藥水。')}
@@ -1426,6 +1580,7 @@ function boot(){
     demo();return}
   const away=(Date.now()-(S.last||Date.now()))/1000;
   start(false);log('sys',`歡迎回來，${S.name}。`);
+  ahProcess();
   if(away>60)offline(away,true);
   renderAll();
 }
