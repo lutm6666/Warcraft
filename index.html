@@ -243,31 +243,50 @@ const RES={rage:{n:'怒氣',max:100,regen:0,cls:'rage'},energy:{n:'能量',max:1
 // 技能: [等級,名稱,倍率,消耗,冷卻,群體,特效,治療]
 const CLASSES={
  warrior:{n:'戰士',res:'rage',c:'#c79c6e',w:'sword',melee:1,hp:110,hpG:22,atk:11,atkG:2.5,def:8,defG:1.6,crit:5,spd:.9,hood:0,
-  sk:[[1,'英勇打擊',1.6,15,0,0,'slash'],[6,'雷霆一擊',1.0,20,6,1,'shock'],[14,'順劈斬',1.25,20,4,1,'slash'],[24,'致死打擊',2.5,30,6,0,'slash'],[40,'劍刃風暴',2.1,40,18,1,'whirl']],
-  specs:[['武器','dps',['武器精通','穿刺','深度創傷','狂暴揮舞','橫掃攻擊']],['狂怒','dps',['殘暴','狂亂','雙持專精','血之狂熱','嗜血']],['防護','tank',['盾牌專精','堅韌','強化盾牌','戰鬥專注','最後防線']]]},
+  sk:[[1,'英勇打擊',1.6,15,0,0,'slash'],[6,'雷霆一擊',1.0,20,6,1,'shock'],[14,'順劈斬',1.25,20,4,1,'slash'],[24,'致死打擊',2.5,30,6,0,'slash'],[36,'旋風斬',2.0,35,10,1,'whirl']],
+  specs:[['武器','dps',['強化英勇打擊','穿刺','深度創傷','雙手武器專精','致死打擊']],['狂怒','dps',['殘暴','狂亂','雙武器專精','血之狂熱','嗜血']],['防護','tank',['盾牌專精','堅韌','強化盾牌格擋','最後防線','盾牌猛擊']]]},
  paladin:{n:'聖騎士',res:'mana',c:'#f08cba',w:'mace',melee:1,hp:110,hpG:22,atk:11,atkG:2.5,def:8,defG:1.6,crit:5,spd:.9,hood:0,
-  sk:[[1,'十字軍打擊',1.6,10,4,0,'holy'],[6,'奉獻',.9,18,8,1,'holy'],[10,'聖光術',.32,22,8,0,'heal',1],[24,'審判',2.3,15,8,0,'holy'],[40,'神聖風暴',1.9,30,15,1,'holy']],
-  specs:[['神聖','heal',['神聖智慧','聖光照耀','治療之光','精神專注','神聖震擊']],['防護','tank',['堅毅','虔誠光環','奉獻護盾','神聖之盾','復仇之盾']],['懲戒','dps',['正義之力','定罪','聖印精通','聖潔怒火','十字軍之心']]]},
+  sk:[[1,'正義聖印',1.4,8,2,0,'holy'],[4,'審判',2.0,12,8,0,'holy'],[8,'聖光術',.32,22,8,0,'heal',1],[20,'奉獻',.9,18,8,1,'holy'],[40,'神聖震擊',2.4,18,10,0,'holy'],[50,'神聖憤怒',1.8,30,15,1,'holy']],
+  specs:[['神聖','heal',['神聖智慧','聖光照耀','治療之光','精神專注','神聖震擊']],['防護','tank',['盾牌專精','強化虔誠光環','精準','神聖之盾','王者祝福']],['懲戒','dps',['強化力量祝福','定罪','命令聖印','復仇','懺悔']]]},
  hunter:{n:'獵人',res:'focus',c:'#abd473',w:'bow',melee:0,hp:95,hpG:18,atk:12,atkG:2.8,def:5,defG:1.1,crit:6,spd:.95,hood:1,
-  sk:[[1,'秘法射擊',1.6,15,4,0,'arrow'],[6,'多重射擊',1.05,25,7,1,'arrow'],[16,'瞄準射擊',2.6,30,10,0,'arrow'],[28,'爆裂射擊',1.9,25,8,0,'fire'],[40,'亂射',1.7,40,15,1,'arrow']],
-  specs:[['野獸控制','dps',['兇猛','狂野呼喚','野性之心','狂暴野獸','狂野怒火']],['射擊','dps',['致命射擊','精準','強化瞄準','穩固之手','強擊光環']],['生存','dps',['獵殺本能','反射','致死陷阱','迅捷狩獵','黑鴉之擊']]]},
+  sk:[[1,'毒蛇釘刺',1.3,10,4,0,'nature'],[6,'秘法射擊',1.7,15,5,0,'arcane'],[18,'多重射擊',1.05,25,7,1,'arrow'],[20,'瞄準射擊',2.6,30,10,0,'arrow'],[40,'亂射',1.7,40,15,1,'arrow']],
+  specs:[['野獸控制','dps',['兇暴','強化治療寵物','野性之心','兇猛','狂野怒火']],['射擊','dps',['致命射擊','效率','強化秘法射擊','射擊專精','強擊光環']],['生存','dps',['獵殺本能','誘捕','致死陷阱','殺手本能','翼龍釘刺']]]},
  rogue:{n:'盜賊',res:'energy',c:'#fff569',w:'dagger',melee:1,hp:90,hpG:17,atk:12,atkG:2.8,def:5,defG:1.1,crit:8,spd:1.1,hood:1,
-  sk:[[1,'邪惡攻擊',1.45,35,0,0,'slash'],[6,'刀扇',1.0,40,5,1,'slash'],[14,'剔骨',2.6,35,8,0,'slash'],[30,'劍刃亂舞',1.6,30,14,1,'whirl'],[44,'暗影之刃',2.2,40,12,1,'shadow']],
-  specs:[['刺殺','dps',['惡毒','致命','精通毒藥','冷血','殺戮盛宴']],['戰鬥','dps',['精確','匕首專精','劍刃專精','活力','腎上腺素']],['敏銳','dps',['敏捷','偽裝大師','暗影步','精確打擊','暗影之舞']]]},
+  sk:[[1,'邪惡攻擊',1.45,35,0,0,'slash'],[4,'背刺',2.0,45,4,0,'slash'],[14,'剔骨',2.6,35,8,0,'slash'],[30,'劍刃亂舞',1.6,30,14,1,'whirl']],
+  specs:[['刺殺','dps',['惡毒','致命','強化毒藥','冷血','封印命運']],['戰鬥','dps',['精確','匕首專精','劍專精','活力','腎上腺素衝刺']],['敏銳','dps',['機會','偽裝大師','預備','出血','預謀']]]},
  mage:{n:'法師',res:'mana',c:'#69ccf0',w:'staff',melee:0,hp:80,hpG:15,atk:13,atkG:2.9,def:3,defG:.7,crit:6,spd:.8,hood:1,
-  sk:[[1,'火球術',1.8,8,2,0,'fire'],[6,'魔爆術',1.1,15,5,1,'arcane'],[14,'冰錐術',1.4,18,8,1,'frost'],[24,'炎爆術',3.0,25,12,0,'fire'],[40,'暴風雪',1.9,30,18,1,'frost']],
-  specs:[['秘法','dps',['秘法專注','秘法心智','秘法飛彈','秘法冥想','秘法強化']],['火焰','dps',['強化火球','點燃','燃燒','烈焰衝擊','燃火']],['冰霜','dps',['強化寒冰箭','冰霜穿透','碎裂','急速冷卻','寒冰屏障']]]},
+  sk:[[1,'火球術',1.8,8,2,0,'fire'],[4,'寒冰箭',1.6,8,2,0,'frost'],[14,'魔爆術',1.1,15,5,1,'arcane'],[26,'冰錐術',1.4,18,8,1,'frost'],[30,'炎爆術',3.0,25,12,0,'fire'],[40,'暴風雪',1.9,30,18,1,'frost']],
+  specs:[['秘法','dps',['秘法專注','秘法心智','強化秘法飛彈','秘法冥想','秘法強化']],['火焰','dps',['強化火球術','點燃','燃燒','烈焰衝擊','燃火']],['冰霜','dps',['強化寒冰箭','冰霜穿透','碎裂','急速冷卻','寒冰屏障']]]},
  warlock:{n:'術士',res:'mana',c:'#9482c9',w:'staff',melee:0,hp:85,hpG:16,atk:13,atkG:2.9,def:3,defG:.7,crit:5,spd:.8,hood:1,
-  sk:[[1,'暗影箭',1.7,8,2,0,'shadow'],[4,'吸取生命',.25,15,10,0,'drain',1],[14,'地獄烈焰',1.0,18,8,1,'fire'],[26,'混亂箭',2.8,22,10,0,'shadow'],[40,'火焰之雨',1.9,30,18,1,'fire']],
-  specs:[['痛苦','dps',['強化腐蝕','強化吸取','黑暗契約','陰影掌握','痛苦災厄']],['惡魔學識','dps',['惡魔皮膚','魔精','惡魔掌控','靈魂連結','惡魔犧牲']],['毀滅','dps',['強化暗影箭','災難','毀滅','餘燼','灰燼轉化']]]},
+  sk:[[1,'暗影箭',1.7,8,2,0,'shadow'],[4,'獻祭',1.5,10,5,0,'fire'],[14,'吸取生命',.25,15,10,0,'drain',1],[20,'火焰之雨',1.9,30,18,1,'fire'],[30,'地獄烈焰',1.0,18,8,1,'fire'],[40,'暗影灼燒',2.6,22,10,0,'shadow']],
+  specs:[['痛苦','dps',['強化腐蝕術','強化吸取生命','詛咒增幅','暗影掌握','黑暗契約']],['惡魔學識','dps',['惡魔皮膚','魔精','惡魔掌控','靈魂連結','惡魔犧牲']],['毀滅','dps',['強化暗影箭','災難','毀滅','餘燼','燃燒']]]},
  priest:{n:'牧師',res:'mana',c:'#f4f4f4',w:'staff',melee:0,hp:80,hpG:15,atk:12,atkG:2.8,def:3,defG:.7,crit:5,spd:.8,hood:1,
-  sk:[[1,'懲擊',1.5,8,2,0,'holy'],[4,'快速治療',.3,18,6,0,'heal',1],[10,'神聖新星',.9,18,8,1,'holy'],[20,'心靈震爆',2.3,18,8,0,'shadow'],[40,'精神灼燒',1.8,28,15,1,'shadow']],
-  specs:[['戒律','heal',['精神集中','心靈之力','真言術：盾','禱念','能量灌注']],['神聖','heal',['神聖專精','治療專注','強化治療','靈魂救贖','光束泉']],['暗影','dps',['暗影專精','虛弱精神','精神鞭笞','暗影之觸','暗影形態']]]},
+  sk:[[1,'懲擊',1.5,8,2,0,'holy'],[1,'次級治療術',.25,15,6,0,'heal',1],[4,'暗言術：痛',1.4,10,4,0,'shadow'],[10,'心靈震爆',2.3,18,8,0,'shadow'],[20,'神聖新星',.9,18,8,1,'holy'],[30,'精神鞭笞',1.8,20,6,0,'shadow']],
+  specs:[['戒律','heal',['精神集中','心靈之力','強化真言術：盾','禱念','能量灌注']],['神聖','heal',['神聖專精','治療專注','強化治療術','靈魂救贖','光束泉']],['暗影','dps',['暗影專精','暗影集中','精神鞭笞','吸血鬼之擁','暗影形態']]]},
  druid:{n:'德魯伊',res:'mana',c:'#ff7d0a',w:'staff',melee:0,hp:95,hpG:18,atk:12,atkG:2.7,def:5,defG:1.1,crit:5,spd:.85,hood:1,
-  sk:[[1,'憤怒',1.5,8,2,0,'nature'],[4,'回春術',.3,15,8,0,'heal',1],[10,'揮擊',1.0,15,6,1,'slash'],[20,'星火術',2.4,18,8,0,'arcane'],[40,'颶風',1.8,30,18,1,'nature']],
-  specs:[['平衡','dps',['自然之怒','月之怒','強化星火','自然之握','月光形態']],['野性戰鬥','tank',['兇蠻','野性本能','厚皮','狂暴','領袖之心']],['恢復','heal',['自然賜福','強化回春','寧靜之魂','自然迅捷','迅癒']]]},
+  sk:[[1,'憤怒',1.5,8,2,0,'nature'],[4,'月火術',1.4,10,4,0,'arcane'],[4,'回春術',.3,15,8,0,'heal',1],[10,'揮擊',1.0,15,6,1,'slash'],[20,'星火術',2.4,18,8,0,'arcane'],[40,'颶風',1.8,30,18,1,'nature']],
+  specs:[['平衡','dps',['自然之怒','月之怒','強化星火術','自然之握','梟獸形態']],['野性戰鬥','tank',['兇蠻','野性本能','厚皮','致命之爪','領袖之心']],['恢復','heal',['自然賜福','強化回春術','寧靜之魂','自然迅捷','迅癒']]]},
 };
 const ROLEN={tank:'坦克',heal:'治療',dps:'輸出'};
+const RACES={
+ human:{n:'人類',fac:'A',skin:'#e8b98f',hair:'#6a4a2a',h:1,cls:['warrior','paladin','rogue','priest','mage','warlock'],b:{crit:1},d:'致命一擊 +1%'},
+ dwarf:{n:'矮人',fac:'A',skin:'#e6a880',hair:'#b0552a',h:.82,w:1.18,beard:1,cls:['warrior','paladin','hunter','rogue','priest'],b:{def:.06},d:'護甲 +6%'},
+ nelf:{n:'夜精靈',fac:'A',skin:'#9d8ad0',hair:'#d0e4f0',h:1.1,ears:'long',glow:'#e8f8ff',cls:['warrior','hunter','rogue','priest','druid'],b:{dodge:2},d:'閃躲 +2%'},
+ gnome:{n:'地精',fac:'A',skin:'#f0c8a8',hair:'#ff6aa8',h:.68,w:1.05,ears:'big',mohawk:1,cls:['warrior','rogue','mage','warlock'],b:{regen:.12},d:'資源回復 +12%'},
+ orc:{n:'獸人',fac:'H',skin:'#6f9a4a',hair:'#1a1a1a',h:1.03,w:1.15,tusk:1,cls:['warrior','hunter','rogue','warlock'],b:{atk:.03},d:'攻擊強度 +3%'},
+ tauren:{n:'牛頭人',fac:'H',skin:'#8a6440',hair:'#4a3020',h:1.2,w:1.3,horns:1,snout:1,cls:['warrior','hunter','druid'],b:{hp:.05},d:'生命值 +5%'},
+ troll:{n:'食人妖',fac:'H',skin:'#5a8fa8',hair:'#e0602a',h:1.12,ears:'long',tusk:'big',mohawk:1,cls:['warrior','hunter','rogue','priest','mage'],b:{haste:.03},d:'攻擊速度 +3%'},
+ undead:{n:'不死族',fac:'H',skin:'#9aa88a',hair:'#3a3a30',h:.98,undead:1,glow:'#ffe060',cls:['warrior','rogue','priest','mage','warlock'],b:{taken:.04},d:'受到傷害 -4%'},
+};
+const racesFor=fac=>Object.keys(RACES).filter(k=>RACES[k].fac===fac);
+// 經典版套裝（名稱為暫譯，可能與台服用字不同）
+const SETS={T0:{tier:'地城一',rar:3,n:{warrior:'勇氣',paladin:'光鑄',hunter:'獵獸者',rogue:'暗影',mage:'博學者',warlock:'恐霧',priest:'虔誠',druid:'野性之心'},
+   bon:[[2,'攻擊強度 +5%',{atk:.05}],[4,'致命一擊 +3%',{crit:3}],[5,'生命值 +8%',{hp:.08}]]},
+ T1:{tier:'T1',rar:4,n:{warrior:'力量',paladin:'秩序',hunter:'巨人追獵者',rogue:'夜幕殺手',mage:'秘法師',warlock:'惡魔之心',priest:'預言',druid:'塞納里奧'},
+   bon:[[2,'攻擊強度 +8%',{atk:.08}],[4,'致命一擊 +5%',{crit:5}],[5,'所有傷害 +10%',{dmg:.1}]]}};
+const SET_SLOTS=['head','chest','legs','hands','feet'];
+const SETNOUN={plate:{head:'頭盔',chest:'胸甲',legs:'腿甲',hands:'護手',feet:'戰靴',suf:'戰甲'},mail:{head:'頭盔',chest:'鎖甲',legs:'護腿',hands:'手套',feet:'長靴',suf:'護甲'},
+  leather:{head:'頭罩',chest:'外衣',legs:'護腿',hands:'手套',feet:'長靴',suf:'套裝'},cloth:{head:'頭冠',chest:'法袍',legs:'長褲',hands:'手套',feet:'便鞋',suf:'法衣'}};
 const TAL_MAX=[5,5,3,5,1], TAL_REQ=[0,3,6,10,15];
 function talDesc(role,i){
   return [
@@ -284,23 +303,23 @@ const STANDING=[[0,'中立'],[3000,'友善'],[9000,'尊敬'],[21000,'崇敬'],[4
 // 怪物: [名稱,型態,顏色,最低,最高,外觀]
 const ZONES=[
  {id:'elwynn',fac:'A',n:'艾爾文森林',lv:[1,10],rep:'home',deco:'forest',sky:['#86bde6','#d8ecf4'],hill:'#4c7a3d',ground:'#6f9a3c',soil:'#6a4a2c',
-  mobs:[['森林狼','beast','#8a8f99',1,4],['狗頭人苦工','humanoid','#b08a55',3,7,{snout:1}],['迪菲亞走私者','humanoid','#9b3b34',6,10,{mask:1}]],
-  q:[['狼群之患','邊境農場的羊接連失蹤，清除附近的森林狼。',0,10],['礦坑裡的蠟燭','狗頭人佔據了舊礦坑，收集他們頭上的蠟燭。',1,8,'狗頭人蠟燭'],['紅巾密信','追查迪菲亞走私者的動向。',2,10]]},
+  mobs:[['森林狼','beast','#8a8f99',1,4],['狗頭人苦工','humanoid','#b08a55',3,7,{snout:1}],['迪菲亞暴徒','humanoid','#9b3b34',6,10,{mask:1}]],
+  q:[['狼群之患','邊境農場的羊接連失蹤，清除附近的森林狼。',0,10],['礦坑裡的蠟燭','狗頭人佔據了舊礦坑，收集他們頭上的蠟燭。',1,8,'狗頭人蠟燭'],['紅巾密信','迪菲亞兄弟會在農場附近活動，擊退迪菲亞暴徒。',2,10]]},
  {id:'durotar',fac:'H',n:'杜洛塔',lv:[1,10],rep:'home',deco:'savanna',sky:['#e9a873','#f6dcb0'],hill:'#9a5b34',ground:'#b07a45',soil:'#6a3a1c',
-  mobs:[['杜洛塔野豬','beast','#7a4a2e',1,4,{tusk:1}],['紅岩蠍','spider','#c96a2c',3,7,{tail:1}],['燃刃信徒','humanoid','#5a2a4a',6,10,{hood:1}]],
-  q:[['野豬肉排','營地的廚子缺肉，獵捕杜洛塔野豬。',0,10],['蠍尾毒液','收集紅岩蠍的毒囊給巫醫。',1,8,'蠍子毒囊'],['剷除邪教','燃刃信徒在洞穴裡集會，打散他們。',2,10]]},
+  mobs:[['雜斑野豬','beast','#7a4a2e',1,4,{tusk:1}],['蠍子工人','spider','#c96a2c',3,7,{tail:1}],['燃刃信徒','humanoid','#5a2a4a',6,10,{hood:1}]],
+  q:[['野豬肉排','營地的廚子缺肉，獵捕雜斑野豬。',0,10],['蠍尾毒液','收集蠍子工人的毒囊給巫醫。',1,8,'蠍子毒囊'],['剷除邪教','燃刃信徒在洞穴裡集會，打散他們。',2,10]]},
  {id:'westfall',fac:'A',n:'西部荒野',lv:[10,20],rep:'home',deco:'plains',sky:['#f0c88a','#fbe9c6'],hill:'#a08a4a',ground:'#b5a256',soil:'#7a5a30',
-  mobs:[['收割傀儡','construct','#8a7a6a',10,14],['河爪豺狼人','humanoid','#7a6a4a',13,17,{snout:1}],['迪菲亞劫掠者','humanoid','#a03a2a',16,20,{mask:1}]],
-  q:[['失控的農具','被改造的收割傀儡在田裡亂走，拆了它們。',0,12],['豺狼人的鬃毛','民兵需要證據，收集豺狼人鬃毛。',1,10,'豺狼人鬃毛'],['哨塔之戰','迪菲亞劫掠者在攻打哨塔，前去支援。',2,14]]},
+  mobs:[['魚人劫掠者','murloc','#4a8a7a',10,14],['收割傀儡','construct','#8a7a6a',13,17],['河爪豺狼人','humanoid','#7a6a4a',16,20,{snout:1}]],
+  q:[['海岸的騷擾','魚人劫掠者在海岸襲擊漁民，把牠們趕回海裡。',0,12],['失控的農具','被改造的收割傀儡在田裡亂走，收集它們的齒輪。',1,10,'收割傀儡齒輪'],['豺狼人的威脅','河爪豺狼人在攻打哨塔，前去支援。',2,14]]},
  {id:'barrens',fac:'H',n:'貧瘠之地',lv:[10,20],rep:'home',deco:'savanna',sky:['#f3d08f','#fbeac8'],hill:'#b08a4a',ground:'#c2a35c',soil:'#7a5a30',
-  mobs:[['草原迅猛龍','beast','#5b8a3a',10,14,{raptor:1}],['斑紋鬣狗','beast','#9a7a4a',13,17],['剃刀沼澤野豬人','humanoid','#8a5a3a',16,20,{tusk:1}]],
-  q:[['迅猛龍之爪','十字路口的守衛想要迅猛龍爪做項鍊。',0,12,'迅猛龍爪'],['鬣狗出沒','斑紋鬣狗在商路上襲擊商隊。',1,12],['刺背之圍','野豬人在綠洲旁築起了營地。',2,14]]},
+  mobs:[['平原陸行鳥','bird','#a08060',10,14],['草原潛行者','beast','#c09a50',13,17],['鋼鬃野豬人','humanoid','#8a5a3a',16,20,{tusk:1}]],
+  q:[['陸行鳥的喙','十字路口的守衛要收集平原陸行鳥的喙。',0,12,'陸行鳥喙'],['獅群出沒','草原潛行者在商路上襲擊商隊。',1,12],['鋼鬃之圍','鋼鬃野豬人在綠洲旁築起了營地。',2,14]]},
  {id:'ashenvale',fac:null,n:'灰谷',lv:[20,30],rep:'home',deco:'forest',sky:['#4a6a8a','#9ab3c4'],hill:'#2e4a3a',ground:'#3f5f3a',soil:'#3a2e24',
   mobs:[['夜刃豹','beast','#3a3550',20,24],['熊怪','humanoid','#6a4a32',23,27,{snout:1,big:1}],['邪惡薩特','humanoid','#7a3a8a',26,30,{horns:1}]],
   q:[['林中暗影','夜刃豹在古樹間伏擊旅人。',0,14],['受汙染的圖騰','從熊怪身上回收受汙染的圖騰。',1,12,'汙染圖騰'],['惡魔的低語','薩特正在召喚更多惡魔，阻止他們。',2,15]]},
  {id:'stv',fac:null,n:'荊棘谷',lv:[30,40],rep:'steamwheedle',deco:'jungle',sky:['#7fc4b0','#d4f0e2'],hill:'#2f6a3f',ground:'#4a7a2f',soil:'#4a3420',
-  mobs:[['叢林迅猛龍','beast','#3f7a3a',30,34,{raptor:1}],['血頂巨魔','humanoid','#3a7a6a',33,37,{tusk:1}],['藏寶海灣海盜','humanoid','#2a4a7a',36,40,{mask:1}]],
-  q:[['獵人營地的委託','營地的獵人想看看你的本事。',0,15],['巨魔的護符','收集血頂巨魔的骨製護符。',1,12,'骨製護符'],['海盜賞金','熱砂集團懸賞港口附近的海盜。',2,16]]},
+  mobs:[['叢林迅猛龍','beast','#3f7a3a',30,34,{raptor:1}],['血頂巨魔','humanoid','#3a7a6a',33,37,{tusk:1}],['血帆海盜','humanoid','#2a4a7a',36,40,{mask:1}]],
+  q:[['獵人營地的委託','營地的獵人想看看你的本事。',0,15],['巨魔的護符','收集血頂巨魔的骨製護符。',1,12,'骨製護符'],['血帆賞金','熱砂集團懸賞藏寶海灣附近的血帆海盜。',2,16]]},
  {id:'tanaris',fac:null,n:'塔納利斯',lv:[40,50],rep:'steamwheedle',deco:'desert',sky:['#f7c98a','#fff0d2'],hill:'#d1a05a',ground:'#e0b872',soil:'#a0743a',
   mobs:[['沙漠巨蠍','spider','#a8733a',40,44,{tail:1}],['沙怒巨魔','humanoid','#4a8a7a',43,47,{tusk:1}],['土元素','elemental','#a07a4a',46,50]],
   q:[['加基森的水源','巨蠍在水井附近築巢。',0,15],['沙怒的寶藏','從沙怒巨魔身上取回被搶的貨物。',1,12,'失竊貨箱'],['躁動的大地','土元素從沙丘裡湧出。',2,16]]},
@@ -308,8 +327,8 @@ const ZONES=[
   mobs:[['黑龍人','dragonkin','#3a3a4a',50,53],['熾熱火元素','elemental','#ff7a2a',51,54],['黑石獸人','humanoid','#4a6a3a',52,55,{tusk:1}]],
   q:[['龍人的血','瑟銀兄弟會需要黑龍人血液做研究。',0,15,'黑龍人之血'],['熄滅火焰','火元素讓礦坑無法開工。',1,15],['黑石要塞前哨','削弱黑石獸人的前線。',2,16]]},
  {id:'epl',fac:null,n:'東瘟疫之地',lv:[55,60],rep:'argent',deco:'plague',sky:['#5a6a4a','#a8b28a'],hill:'#3a4232',ground:'#4a4f3a',soil:'#2e2a22',
-  mobs:[['天災食屍鬼','undead','#7a9a6a',55,58,{ghoul:1}],['骷髏戰士','undead','#d8d0b8',56,59],['憎惡','undead','#c08aa0',58,60,{big:1,ghoul:1}]],
-  q:[['淨化土地','銀色黎明要求清除遊蕩的食屍鬼。',0,16],['天災石','收集骷髏戰士身上的天災石。',1,14,'天災石'],['縫合的怪物','消滅在村莊遊蕩的憎惡。',2,12]]},
+  mobs:[['天譴食屍鬼','undead','#7a9a6a',55,58,{ghoul:1}],['骷髏戰士','undead','#d8d0b8',56,59],['憎惡','undead','#c08aa0',58,60,{big:1,ghoul:1}]],
+  q:[['淨化土地','銀色黎明要求清除遊蕩的食屍鬼。',0,16],['天譴石','收集骷髏戰士身上的天譴石。',1,14,'天譴石'],['縫合的怪物','消滅在村莊遊蕩的憎惡。',2,12]]},
  {id:'silithus',fac:null,n:'希利蘇斯',lv:[58,60],rep:'cenarion',deco:'hive',sky:['#c9a46a','#f2dcae'],hill:'#9a7040',ground:'#b38a50',soil:'#6a4a2a',
   mobs:[['異種蠍','insect','#8a6a3a',58,60],['暮光邪教徒','humanoid','#5a3a7a',58,60,{hood:1}],['塵土風元素','elemental','#d8d0c0',59,60]],
   q:[['蟲巢的威脅','塞納里奧議會要求削減異種蠍數量。',0,16],['暮光密文','從邪教徒身上找出他們的密文。',1,14,'暮光密文'],['風暴之源','擊潰在沙漠肆虐的風元素。',2,14]]},
@@ -357,12 +376,12 @@ function durStr(s){s=Math.max(0,Math.floor(s));const h=Math.floor(s/3600),m=Math
 /* ================= 狀態 ================= */
 const KEY='azeroth-idle-save-v1';
 let S=null; // 存檔
-let UI={tab:'console',logF:'all',sel:null,bagSel:null,create:{fac:'A',cls:'warrior',name:''},dirty:true};
+let UI={tab:'console',logF:'all',sel:null,bagSel:null,create:{fac:'A',race:'human',cls:'warrior',name:''},dirty:true};
 let B=null; // 戰鬥（不存檔）
 let D=null; // 地城（不存檔）
 let LOG=[];
-function newSave(name,fac,cls){
-  const s={v:1,name,fac,cls,lv:1,xp:0,copper:500,hp:1,res:0,zone:fac==='A'?'elwynn':'durotar',
+function newSave(name,fac,cls,race){
+  const s={v:1,name,fac,cls,race,lv:1,xp:0,copper:500,hp:1,res:0,zone:fac==='A'?'elwynn':'durotar',
     inv:[],eq:{},cons:{potion:5,sw100:2,sa100:2},tal:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
     quests:{},rep:{home:0,steamwheedle:0,thorium:0,argent:0,cenarion:0},dlock:{},bagCap:32,
     stats:{kills:0,xp:0,copper:0,deaths:0,dungeons:0,born:Date.now()},
@@ -375,7 +394,8 @@ function newSave(name,fac,cls){
   return s;
 }
 function save(){if(!S)return;S.last=Date.now();try{localStorage.setItem(KEY,JSON.stringify(D?{...S,idle:true}:S))}catch(e){}}
-function load(){try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===1)return s}}catch(e){}return null}
+function fixSave(s){if(!s.race||!RACES[s.race])s.race=racesFor(s.fac).find(r=>RACES[r].cls.includes(s.cls))||racesFor(s.fac)[0];return s}
+function load(){try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===1)return fixSave(s)}}catch(e){}return null}
 
 /* ================= 角色數值 ================= */
 function role(){const t=S.tal;let best=-1,bi=-1;for(let i=0;i<3;i++){const p=t[i].reduce((a,b)=>a+b,0);if(p>best){best=p;bi=i}}
@@ -396,7 +416,8 @@ function mods(){
 }
 function gearSum(){const g={atk:0,def:0,hp:0,crit:0};for(const k of SLOTS){const it=S.eq[k];if(!it)continue;g.atk+=it.atk+(it.eatk||0);g.def+=it.def+(it.edef||0);g.hp+=it.hp+(it.ehp||0);g.crit+=it.crit}return g}
 function stats(){
-  const cl=CLASSES[S.cls],L=S.lv,m=mods(),g=gearSum(),r=role();
+  const cl=CLASSES[S.cls],L=S.lv,m=mods(),g=gearSum(),r=role();const rb=(RACES[S.race]||{}).b||{},sm=setMods();
+  m.atk+=(rb.atk||0)+sm.atk;m.crit+=(rb.crit||0)+sm.crit;m.def+=rb.def||0;m.hp+=(rb.hp||0)+sm.hp;m.haste+=rb.haste||0;m.regen+=rb.regen||0;m.taken+=rb.taken||0;m.dmg+=sm.dmg;
   const rm=r==='tank'?{d:.85,t:.75,h:1.25}:r==='heal'?{d:.8,t:1,h:1}:{d:1.1,t:1,h:1};
   const hp=Math.round((cl.hp+cl.hpG*(L-1)+g.hp)*(1+m.hp)*rm.h);
   const atk=Math.round((cl.atk+cl.atkG*(L-1)+g.atk)*(1+m.atk));
@@ -405,7 +426,7 @@ function stats(){
   const spd=cl.spd*(1+m.haste);
   const dmgMod=(1+m.dmg)*rm.d, skillMod=1+m.skill, takenMod=(1-m.taken)*rm.t, healMod=(1+m.heal)*(r==='heal'?1.5:1);
   const dps=atk*1.35*spd*(1+crit/100)*dmgMod*(1+m.skill*.5);
-  return {hp,atk,def,crit,spd,dmgMod,skillMod,takenMod,healMod,regen:m.regen,role:r,dps};
+  return {hp,atk,def,crit,spd,dmgMod,skillMod,takenMod,healMod,regen:m.regen,role:r,dps,dodge:6+(rb.dodge||0)};
 }
 function gearIlvl(){let s=0;for(const k of SLOTS){const it=S.eq[k];if(it)s+=it.ilvl}return Math.round(s/SLOTS.length)}
 function refDps(L,il){const atk=12+2.65*(L-1)+(4+1.2*il)*2.0;return atk*1.35*.9*1.08*1.1}
@@ -434,7 +455,12 @@ function makeItem({slot,ilvl,rar,name}){
   it.val=Math.round(Math.pow(ilvl,1.6)*(rar+1)*3+5);
   return it;
 }
-function itemScore(it){if(!it)return 0;return (it.atk+(it.eatk||0))*1.5+(it.def+(it.edef||0))*.9+(it.hp+(it.ehp||0))*.22+it.crit*14}
+function makeSetItem(tier,slot,ilvl){const T=SETS[tier],ar=ARMOR[S.cls],nn=SETNOUN[ar];
+  const it=makeItem({slot,ilvl:ilvl+2,rar:T.rar,name:T.n[S.cls]+nn[slot]});it.set=tier;it.scls=S.cls;it.hp=Math.round(it.hp*1.12);it.def=Math.round(it.def*1.12);it.atk+=Math.round(ilvl*.25);return it}
+function setName(tier,cls){return SETS[tier].n[cls]+SETNOUN[ARMOR[cls]].suf}
+function setCount(tier){let n=0;for(const k of SET_SLOTS){const it=S.eq[k];if(it&&it.set===tier&&it.scls===S.cls)n++}return n}
+function setMods(){const m={atk:0,crit:0,hp:0,dmg:0};for(const tr in SETS){const c=setCount(tr);for(const [n,,mm] of SETS[tr].bon)if(c>=n)for(const k in mm)m[k]+=mm[k]}return m}
+function itemScore(it){if(!it)return 0;return (it.set?40+it.ilvl*.6:0)+ (it.atk+(it.eatk||0))*1.5+(it.def+(it.edef||0))*.9+(it.hp+(it.ehp||0))*.22+it.crit*14}
 function rollRarity(boost=0){const r=Math.random();
   const t=[.0004*(1+boost*8),.004*(1+boost*6),.03*(1+boost*3),.2+boost*.1,.55];// 傳說,史詩,精良,優秀,普通
   if(r<t[0])return 5;if(r<t[0]+t[1])return 4;if(r<t[0]+t[1]+t[2])return 3;if(r<t[0]+t[1]+t[2]+t[3])return 2;if(r<t[0]+t[1]+t[2]+t[3]+t[4])return 1;return 0}
@@ -514,7 +540,7 @@ function battleTick(dt){
   for(const m of arrived){m.at-=dt;if(m.at<=0){m.at=rnd(1.6,2.1);
     const dm=lvlDiffMods(m.lv);let d=m.atk*rnd(.85,1.15)*dm.take*st.takenMod;
     const red=st.def/(st.def+60+12*m.lv);d=Math.max(1,Math.round(d*(1-red)));
-    if(Math.random()<.06){num(heroX(),130,'閃躲','miss');continue}
+    if(Math.random()<st.dodge/100){num(heroX(),130,'閃躲','miss');continue}
     S.hp-=d;num(heroX()+ri(-8,8),128,fmt(d),'hurt');m.lunge=.25;
     if(cl.res==='rage')S.res=Math.min(100,S.res+4);
     if(S.hp<=0){S.hp=0;B.dead=8;S.stats.deaths++;log('bad',`你被 ${m.name} 擊敗了……8 秒後復活`);B.mobs.forEach(x=>x.hp=Math.min(x.hp,x.max));return}
@@ -558,7 +584,7 @@ function hit(m,mult,st,fxType,name,delay=0){
   m.hp-=d;m.hurt=1;
   const ranged=!CLASSES[S.cls].melee;
   const travel=ranged?.22:0;
-  if(ranged)fx('proj',heroX()+18,160,{tx:m.x,ty:170,kind:fxType,delay});
+  if(ranged)fx('proj',heroX()+20,148,{tx:m.x,ty:168,kind:fxType,delay});
   fx('impact',m.x,170,{kind:fxType,delay:delay+travel});
   num(m.x+ri(-6,6),118-(m.stack=(m.stack||0)+1)%4*16,fmt(d),crit?'crit':'dmg',delay+travel);
   log('battle',`${name} → ${m.name}：${fmt(d)}${crit?'（致命一擊）':''} 傷害`);
@@ -587,7 +613,7 @@ function gainXp(x){
   if(S.lv>=60){return}
   S.xp+=x;S.stats.xp+=x;acc.xp+=x;
   while(S.lv<60&&S.xp>=xpNeed(S.lv)){S.xp-=xpNeed(S.lv);S.lv++;
-    const st=stats();S.hp=st.hp;
+    const st=stats();S.hp=st.hp;if(B&&!D)fx('lvl',heroX(),GY);
     log('sys',`等級提升！你現在是 ${S.lv} 級。`);toast(`升級！等級 ${S.lv}`);
     const cl=CLASSES[S.cls];cl.sk.filter(s=>s[0]===S.lv).forEach(s=>{log('sys',`學會新技能：${s[1]}`);toast(`新技能：${s[1]}`)});
     if(S.lv>=10)log('sys','獲得 1 點天賦點數。');
@@ -625,8 +651,8 @@ function startDungeon(dg){
   const st=stats(),r=st.role,cl=CLASSES[S.cls];
   const pool=Object.keys(CLASSES).filter(k=>k!==S.cls);
   const need=dg.raid?{tank:2,heal:4,dps:14}:{tank:1,heal:1,dps:3};need[r]--;
-  const members=[{cls:S.cls,role:r,me:1}];
-  for(const ro of ['tank','heal','dps'])for(let i=0;i<need[ro];i++){const cands=Object.keys(CLASSES).filter(k=>CLASSES[k].specs.some(s=>s[1]===ro));members.push({cls:pick(cands),role:ro})}
+  const members=[{cls:S.cls,race:S.race,role:r,me:1}];const fr=racesFor(S.fac);
+  for(const ro of ['tank','heal','dps'])for(let i=0;i<need[ro];i++){const cands=Object.keys(CLASSES).filter(k=>CLASSES[k].specs.some(s=>s[1]===ro)&&fr.some(rr=>RACES[rr].cls.includes(k)));const c=pick(cands);members.push({cls:c,race:pick(fr.filter(rr=>RACES[rr].cls.includes(c))),role:ro})}
   const size=members.length;
   const P=st.dps, ref=refDps(dg.lv,dg.il);
   const partyF=(size/5)*3.7*(r==='dps'?1:1.15);
@@ -661,6 +687,8 @@ function bossDown(){const d=D,dg=d.dg,bn=dg.bosses[d.bi][0];
   const n=dg.raid?2:1;
   for(let i=0;i<n;i++){const rr=Math.random();const rar=dg.raid?(rr<.04?5:rr<.75?4:3):(rr<.12?4:3);
     const it=makeItem({ilvl:dg.il+ri(0,2),rar});d.loot.push(it);log('loot',`首領掉落：【${it.name}】（${RAR[it.rar]}）`);gainItem(it)}
+  const tier=dg.raid?'T1':dg.il>=48?'T0':null;
+  if(tier&&(dg.raid||Math.random()<.5)){const it=makeSetItem(tier,pick(SET_SLOTS),dg.il);d.loot.push(it);log('loot',`套裝掉落：【${it.name}】（${setName(tier,S.cls)}）`);toast(`套裝：${it.name}`);gainItem(it)}
   if(Math.random()<.35){const k=pick(['sw10','sa10','sw60','sa60']);S.cons[k]=(S.cons[k]||0)+1;log('loot',`首領掉落：${CONS[k].n}`)}
   d.bi++;
   if(d.bi>=dg.bosses.length){d.phase='end';d.res='win';S.stats.dungeons++;S.dlock[dg.id]=Date.now()+dg.cd*1000;
@@ -719,7 +747,7 @@ function offline(sec,report){
 }
 
 /* ================= 繪圖 ================= */
-const cv=$('#cv'),ctx=cv.getContext('2d');const W=720,H=270,GY=205;
+const cv=$('#cv'),ctx=cv.getContext('2d');const W=720,H=270,GY=205,MOBSC=1.15,HEROSC=1.25;
 let bgCache=null,bgKey='';
 function seeded(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>(s=s*16807%2147483647)/2147483647}
 function hash(str){let h=7;for(const c of str)h=(h*31+c.charCodeAt(0))>>>0;return h}
@@ -761,67 +789,121 @@ function buildBg(key,z,dg){
   for(let y=GY+14;y<H;y+=12)for(let x=(y%24)?0:20;x<W;x+=40){g.fillStyle=shade(z.soil,R()*20-14|0);g.fillRect(x,y,36,9)}
   return c}
 
-function P(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
-function drawHero(x,y,clsKey,fac,t,p,type,sc=1,face=1){
-  const cl=CLASSES[clsKey];ctx.save();ctx.translate(x,y);ctx.scale(sc*face,sc);
-  const b=Math.round(Math.sin(t*3.2)*1);const skin=fac==='H'?'#7fa35a':'#e8b98f';
-  const body=cl.c,trim=shade(cl.c,-60),dark='#2a2420';
-  const lunge=type==='melee'?Math.sin(p*Math.PI)*16:0;ctx.translate(lunge,0);
-  ctx.fillStyle='#00000055';ctx.beginPath();ctx.ellipse(0,0,15,4,0,0,7);ctx.fill();
-  P(-7,-14,5,14,dark);P(2,-14,5,14,dark);P(-8,-3,7,3,'#1a1410');P(2,-3,7,3,'#1a1410');
-  P(-9,-32+b,18,19,body);P(-9,-17+b,18,3,trim);P(-3,-30+b,6,12,shade(body,-25));
-  if(!cl.hood){P(-12,-33+b,7,7,trim);P(5,-33+b,7,7,trim)}
-  P(-6,-44+b,12,12,skin);P(2,-40+b,2,2,'#1a1410');
-  if(fac==='H')P(3,-35+b,2,3,'#f0f0e0');
-  if(cl.hood){P(-8,-47+b,15,6,body);P(-8,-44+b,4,12,body);P(-9,-47+b,4,4,trim)}
-  else {P(-7,-47+b,14,6,'#9aa0aa');P(-7,-42+b,3,6,'#9aa0aa');P(-2,-50+b,4,4,cl.c)}
-  // 武器
-  const hx=7,hy=-23+b;
-  ctx.save();ctx.translate(hx,hy);
+let g=ctx;
+const OFF=document.createElement('canvas');OFF.width=300;OFF.height=300;const offg=OFF.getContext('2d');
+const OUTLINE='drop-shadow(1px 0 0 #120c08) drop-shadow(-1px 0 0 #120c08) drop-shadow(0 1px 0 #120c08) drop-shadow(0 -1px 0 #120c08)';
+function outlined(x,y,fn,alpha=1){offg.setTransform(1,0,0,1,0,0);offg.clearRect(0,0,300,300);g=offg;offg.save();offg.translate(150,270);fn();offg.restore();g=ctx;
+  ctx.save();ctx.globalAlpha=alpha;ctx.filter=OUTLINE;ctx.drawImage(OFF,Math.round(x-150),Math.round(y-270));ctx.restore()}
+function P(x,y,w,h,c){g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h))}
+const RCOL=['#9d9d9d','#f2f2f2','#4fd65a','#4a95ff','#bd6bff','#ff9330'];
+const ARMOR={warrior:'plate',paladin:'plate',hunter:'mail',rogue:'leather',druid:'leather',mage:'cloth',warlock:'cloth',priest:'cloth'};
+function heroOpt(){const w=S&&S.eq.weapon;return {fac:S?S.fac:'A',wr:w?w.rar:1,enh:w?w.enh:0}}
+function drawHero(x,y,clsKey,raceKey,t,p,type,sc=1,o={}){
+  const rc=RACES[raceKey]||RACES.human;const lunge=type==='melee'?Math.sin(p*Math.PI)*16*sc:0;
+  ctx.fillStyle='#00000055';ctx.beginPath();ctx.ellipse(x+lunge,y,15*sc*(rc.w||1),4*sc,0,0,7);ctx.fill();
+  outlined(x+lunge,y,()=>{g.scale(sc*(rc.w||1),sc*rc.h);heroBody(clsKey,rc,t,p,type,o)},o.alpha??1);
+}
+function heroBody(ck,rc,t,p,type,o){
+  const cl=CLASSES[ck],ar=ARMOR[ck];const b=Math.round(Math.sin(t*3.2));const fc=o.fac==='H'?'#a8281e':'#2a52b0',fcl=o.fac==='H'?'#d8a040':'#e0c060';
+  const body=cl.c,dk=shade(cl.c,-60),lt=shade(cl.c,45);
+  const metal=ar==='plate'?'#aab2be':ar==='mail'?'#8e917c':'#6a4a32',metalD=shade(metal,-55),metalL=shade(metal,50);
+  const skin=rc.skin,sd=shade(rc.skin,-35);
+  // 披風
+  if(ar!=='leather'){const sw=Math.sin(t*2.4)*2;g.fillStyle=shade(fc,-30);g.beginPath();g.moveTo(-8,-35+b);g.lineTo(-4,-35+b);g.lineTo(-9+sw,-4);g.lineTo(-17+sw,-6);g.closePath();g.fill();
+    g.fillStyle=fcl;g.fillRect(Math.round(-16+sw),-7,8,2)}
+  P(-12,-33+b,5,12,ar==='cloth'?dk:metalD);
+  // 腿與靴
+  const legC=ar==='cloth'?shade(body,-35):ar==='plate'?metal:dk;
+  P(-7,-16,6,12,legC);P(2,-16,6,12,legC);
+  if(ar==='plate'){P(-7,-12,6,2,metalD);P(2,-12,6,2,metalD);P(-6,-16,2,4,metalL);P(3,-16,2,4,metalL)}
+  const boot=ar==='plate'?metalD:'#3a2416';P(-8,-5,8,5,boot);P(1,-5,10,5,boot);
+  // 軀幹
+  P(-9,-35+b,18,21,body);P(-7,-33+b,5,9,lt);P(4,-33+b,4,17,dk);
+  if(ar==='mail'){for(let i=0;i<4;i++)P(-8,-31+b+i*4,15,1,dk)}
+  if(ar==='plate'){P(-9,-35+b,18,3,metalL);P(-6,-30+b,12,8,metal);P(-5,-29+b,4,3,metalL)}
+  P(-2,-34+b,5,18,fc);P(-1,-31+b,3,3,fcl);
+  P(-9,-17+b,18,3,'#3a2416');P(-1,-17+b,3,3,'#e0b040');
+  if(ar==='cloth'){P(-10,-15+b,20,12,body);P(4,-15+b,6,12,dk);P(-10,-5,20,2,lt);P(-2,-15+b,5,10,fc)}
+  // 頭
+  P(-6,-47+b,12,12,skin);P(-6,-37+b,12,2,sd);P(-6,-47+b,2,10,sd);
+  const eye=rc.glow||'#1a1410';P(2,-43+b,2,2,eye);if(rc.glow){g.fillStyle=rc.glow+'66';g.fillRect(1,-44+b,4,4)}
+  if(rc.ears==='long'){P(-11,-44+b,6,2,skin);P(-14,-46+b,4,2,skin)}
+  if(rc.ears==='big'){P(-11,-46+b,5,5,skin);P(-10,-45+b,2,3,sd)}
+  if(rc.tusk){P(4,-38+b,2,4,'#f2ecd8');if(rc.tusk==='big'){P(5,-42+b,2,4,'#f2ecd8');P(2,-39+b,2,3,'#f2ecd8')}}
+  if(rc.snout){P(4,-42+b,6,6,shade(skin,-18));P(8,-40+b,1,2,'#1a1410');P(5,-37+b,4,1,'#e0d0b0')}
+  if(rc.beard){P(-4,-39+b,12,10,rc.hair);P(-1,-29+b,7,3,rc.hair);P(1,-40+b,6,2,shade(rc.hair,25))}
+  if(rc.undead){P(1,-37+b,6,2,'#e8e2d0');P(2,-36+b,1,1,'#3a3028');P(4,-36+b,1,1,'#3a3028');P(-4,-44+b,2,5,sd)}
+  // 頭部裝備
+  if(ar==='plate'){P(-7,-51+b,14,7,metal);P(-7,-51+b,14,1,metalL);P(-7,-45+b,3,9,metal);P(5,-45+b,2,3,metal);P(-1,-55+b,3,4,cl.c);P(-2,-56+b,5,2,shade(cl.c,30))}
+  else if(ck==='hunter'||ck==='rogue'){P(-8,-51+b,15,6,dk);P(-8,-46+b,4,14,dk);P(-7,-51+b,13,1,body);if(ck==='rogue')P(-1,-40+b,8,3,dk)}
+  else if(ck==='druid'){P(-7,-50+b,13,4,rc.hair||'#5a3a20');P(-6,-54+b,2,5,'#7aaa3a');P(-8,-56+b,3,2,'#7aaa3a');P(4,-55+b,2,6,'#7aaa3a');P(5,-57+b,3,2,'#7aaa3a')}
+  else {P(-8,-52+b,15,7,body);P(-8,-46+b,4,14,body);P(-8,-52+b,15,1,lt);P(-1,-51+b,3,2,lt)}
+  if(rc.horns){P(-10,-54+b,3,8,'#e8e0c8');P(7,-54+b,3,8,'#e8e0c8');P(-12,-57+b,3,4,'#e8e0c8');P(9,-57+b,3,4,'#e8e0c8')}
+  if(rc.mohawk&&ar!=='plate')P(-3,-58+b,5,7,rc.hair);
+  // 肩甲
+  if(ar==='plate'){P(-15,-39+b,10,9,metal);P(5,-39+b,10,9,metal);P(-15,-39+b,10,2,metalL);P(5,-39+b,10,2,metalL);P(-15,-32+b,10,2,metalD);P(5,-32+b,10,2,metalD);
+    if(o.fac==='H'){P(-13,-43+b,2,4,metalL);P(9,-43+b,2,4,metalL)}else{P(-11,-41+b,3,2,fcl);P(8,-41+b,3,2,fcl)}}
+  else if(ar==='mail'){P(-13,-38+b,8,7,metal);P(5,-38+b,8,7,metal);P(-13,-38+b,8,1,metalL);P(5,-38+b,8,1,metalL)}
+  else if(ar==='leather'){P(-12,-37+b,6,6,dk);P(6,-37+b,6,6,dk);P(-12,-37+b,6,1,body)}
+  else {P(-11,-37+b,5,4,lt);P(6,-37+b,5,4,lt)}
+  weapon(ck,cl,t,p,type,b,o);
+  P(4,-33+b,6,10,ar==='plate'?metal:body);P(4,-24+b,6,4,ar==='plate'?metalD:'#3a2416');
+}
+function weapon(ck,cl,t,p,type,b,o){
+  g.save();g.translate(8,-22+b);
+  const glow=o.wr>=2?RCOL[o.wr]:null;if(glow){g.shadowColor=glow;g.shadowBlur=(o.wr>=4?12:o.wr>=3?8:4)+(o.enh>=5?6:0)}
   const sw=type==='melee'?(-1.4+p*2.2):-.5;
-  if(cl.w==='sword'||cl.w==='mace'||cl.w==='dagger'){ctx.rotate(sw);
-    if(cl.w==='sword'){P(-1,-26,4,24,'#d8dde4');P(-1,-26,1,24,'#ffffff');P(-4,-3,10,3,'#8a6a2a');P(0,0,2,6,'#4a3020')}
-    else if(cl.w==='mace'){P(0,-22,3,24,'#6a4a2a');P(-4,-30,11,10,'#c0c4cc');P(-2,-32,7,3,'#f0d070')}
-    else {P(0,-14,3,13,'#d8dde4');P(-2,-2,7,2,'#5a4a3a')}}
-  else if(cl.w==='bow'){ctx.strokeStyle='#7a4a20';ctx.lineWidth=3;ctx.beginPath();ctx.arc(2,0,18,-1.3,1.3);ctx.stroke();ctx.strokeStyle='#e0e0d0';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(2+18*Math.cos(-1.3),18*Math.sin(-1.3));ctx.lineTo(type==='cast'?-6*p:2,0);ctx.lineTo(2+18*Math.cos(1.3),18*Math.sin(1.3));ctx.stroke()}
-  else {P(1,-30,3,40,'#6a4a2a');const oc=clsKey==='mage'?'#8ad8ff':clsKey==='warlock'?'#b48aff':clsKey==='priest'?'#fff2b0':'#9af07a';
-    ctx.fillStyle=oc;ctx.beginPath();ctx.arc(2.5,-33,5+(type==='cast'?p*3:0),0,7);ctx.fill();
-    if(type==='cast'&&p>0){ctx.fillStyle=oc+'55';ctx.beginPath();ctx.arc(2.5,-33,12*p+6,0,7);ctx.fill()}}
-  ctx.restore();
-  P(4,-30+b,5,9,body);
-  ctx.restore();
+  if(cl.w==='sword'){g.rotate(sw);P(-1,-32,5,30,'#cfd6de');P(0,-32,1,30,'#fff');P(2,-32,2,30,'#9aa2ae');P(-1,-35,5,3,'#cfd6de');P(-6,-3,15,3,'#c09030');P(-6,-5,3,2,'#c09030');P(6,-5,3,2,'#c09030');P(0,0,3,8,'#4a3020');P(-1,8,5,3,'#c09030')}
+  else if(cl.w==='mace'){g.rotate(sw);P(0,-24,3,30,'#6a4a2a');P(-5,-34,13,11,'#c0c4cc');P(-5,-34,13,2,'#eef0f4');P(-7,-31,2,5,'#9aa0aa');P(9,-31,2,5,'#9aa0aa');P(-1,-37,5,3,'#f0d070')}
+  else if(cl.w==='dagger'){g.rotate(sw*1.2);P(0,-16,3,15,'#dfe4ea');P(0,-16,1,15,'#fff');P(-3,-2,9,2,'#8a6a2a');P(0,0,3,5,'#3a2416')}
+  else if(cl.w==='bow'){g.shadowBlur&&(g.shadowBlur*=.7);g.strokeStyle='#5a3416';g.lineWidth=4;g.beginPath();g.arc(2,0,21,-1.25,1.25);g.stroke();g.strokeStyle='#a8763a';g.lineWidth=1.5;g.beginPath();g.arc(2,0,21,-1.25,1.25);g.stroke();
+    g.shadowBlur=0;g.strokeStyle='#e8e4d0';g.lineWidth=1;const pull=type==='cast'?-8*p:0;g.beginPath();g.moveTo(2+21*Math.cos(-1.25),21*Math.sin(-1.25));g.lineTo(2+pull,0);g.lineTo(2+21*Math.cos(1.25),21*Math.sin(1.25));g.stroke();
+    if(type==='cast'&&p>.2){P(pull,-1,22,2,'#d8c8a0');P(20+pull,-2,4,4,'#c0c4cc')}}
+  else {const oc=ck==='mage'?'#8ad8ff':ck==='warlock'?'#9a6aff':ck==='priest'?'#fff0a8':'#9af07a';
+    P(1,-34,3,46,'#5a3a1e');P(2,-34,1,46,'#7a5a2e');P(-2,-37,9,4,'#c09030');
+    g.shadowColor=oc;g.shadowBlur=10+(type==='cast'?p*14:0);g.fillStyle=oc;g.beginPath();g.arc(2.5,-41,5+(type==='cast'?p*3:0),0,7);g.fill();
+    g.fillStyle='#ffffffcc';g.fillRect(0,-44,2,2)}
+  g.restore();
 }
 function drawMob(m,t,scale=1){
-  const x=m.x,y=GY;const sc=(m.look.big?1.3:1)*(m.elite?1.2:1)*(m.rare?1.3:1)*scale;
-  const a=m.dying?Math.max(0,1-m.dying/.45):1;
-  ctx.save();ctx.globalAlpha=a;ctx.translate(x-(m.lunge?Math.sin(m.lunge/.25*Math.PI)*12:0),y);ctx.scale(sc,sc);
+  const x=m.x,y=GY;const sc=(m.look.big?1.3:1)*(m.elite?1.2:1)*(m.rare?1.3:1)*scale*MOBSC;
+  const a=m.dying?Math.max(0,1-m.dying/.45):1;const lx=x-(m.lunge?Math.sin(m.lunge/.25*Math.PI)*12:0);
+  ctx.save();ctx.globalAlpha=a;ctx.fillStyle='#00000055';ctx.beginPath();ctx.ellipse(lx,y,18*sc,4*sc,0,0,7);ctx.fill();ctx.restore();
+  if(m.elite||m.rare){ctx.save();ctx.globalAlpha=a*.35;ctx.fillStyle=m.rare?'#b0c0ff':'#ffcf4a';ctx.beginPath();ctx.ellipse(lx,y,24*sc,6*sc,0,0,7);ctx.fill();ctx.restore()}
+  outlined(lx,y,()=>{g.scale(sc,sc);
   const c=m.hurt>0?'#ffffff':m.color,d=shade(m.color,-45),l=shade(m.color,35);const b=Math.round(Math.sin(t*3+x)*1);
-  ctx.fillStyle='#00000055';ctx.beginPath();ctx.ellipse(0,0,18,4,0,0,7);ctx.fill();
   const tp=m.type,L=m.look;
   if(tp==='beast'){
     if(L.raptor){P(-6,-14,4,14,d);P(4,-14,4,14,d);P(-12,-30+b,26,16,c);P(-24,-40+b,14,10,c);P(-28,-36+b,6,5,c);P(-22,-38+b,2,2,'#200');P(12,-26+b,14,5,c);P(-8,-18+b,3,6,d)}
     else{P(-14,-10,4,10,d);P(-6,-10,4,10,d);P(4,-10,4,10,d);P(11,-10,4,10,d);P(-16,-24+b,32,15,c);P(-12,-26+b,22,4,l);P(-28,-28+b,14,12,c);P(-33,-23+b,6,6,c);P(-24,-33+b,4,6,d);P(-26,-25+b,2,2,'#200');P(15,-25+b,9,4,c);
       if(L.tusk){P(-33,-20+b,3,4,'#f0e8d0')}}}
   else if(tp==='spider'){
-    ctx.strokeStyle=d;ctx.lineWidth=3;for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(-4+i*4,-12+b);ctx.lineTo(-14+i*8,-22+b);ctx.lineTo(-18+i*9,0);ctx.stroke()}
-    ctx.fillStyle=c;ctx.beginPath();ctx.ellipse(6,-14+b,14,10,0,0,7);ctx.fill();ctx.beginPath();ctx.ellipse(-12,-12+b,8,7,0,0,7);ctx.fill();
+    g.strokeStyle=d;g.lineWidth=3;for(let i=0;i<4;i++){g.beginPath();g.moveTo(-4+i*4,-12+b);g.lineTo(-14+i*8,-22+b);g.lineTo(-18+i*9,0);g.stroke()}
+    g.fillStyle=c;g.beginPath();g.ellipse(6,-14+b,14,10,0,0,7);g.fill();g.beginPath();g.ellipse(-12,-12+b,8,7,0,0,7);g.fill();
     P(-17,-15+b,2,2,'#f22');P(-14,-16+b,2,2,'#f22');
-    if(L.tail){ctx.strokeStyle=c;ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(18,-14+b);ctx.quadraticCurveTo(34,-34,14,-44+b);ctx.stroke();P(10,-48+b,7,6,d)}}
+    if(L.tail){g.strokeStyle=c;g.lineWidth=6;g.beginPath();g.moveTo(18,-14+b);g.quadraticCurveTo(34,-34,14,-44+b);g.stroke();P(10,-48+b,7,6,d)}}
   else if(tp==='insect'){
-    for(let i=0;i<3;i++){ctx.fillStyle=i===1?l:c;ctx.beginPath();ctx.ellipse(-12+i*14,-16+b-i*2,9,8,0,0,7);ctx.fill()}
-    ctx.strokeStyle=d;ctx.lineWidth=2;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(-6+i*8,-12);ctx.lineTo(-10+i*10,0);ctx.stroke()}
+    for(let i=0;i<3;i++){g.fillStyle=i===1?l:c;g.beginPath();g.ellipse(-12+i*14,-16+b-i*2,9,8,0,0,7);g.fill()}
+    g.strokeStyle=d;g.lineWidth=2;for(let i=0;i<3;i++){g.beginPath();g.moveTo(-6+i*8,-12);g.lineTo(-10+i*10,0);g.stroke()}
     P(-24,-22+b,6,3,d);P(-24,-14+b,6,3,d);P(-16,-20+b,2,2,'#ff0')}
   else if(tp==='elemental'){
-    const fl=Math.sin(t*8+x)*2;ctx.fillStyle=c+'66';ctx.beginPath();ctx.arc(0,-28,22+fl,0,7);ctx.fill();
-    ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(-14,0);ctx.lineTo(-18,-30+b);ctx.lineTo(-8,-48+b+fl);ctx.lineTo(0,-38+b);ctx.lineTo(8,-52+b-fl);ctx.lineTo(18,-28+b);ctx.lineTo(12,0);ctx.fill();
-    ctx.fillStyle=l;ctx.fillRect(-7,-32+b,4,4);ctx.fillRect(1,-32+b,4,4);
+    const fl=Math.sin(t*8+x)*2;g.fillStyle=c+'66';g.beginPath();g.arc(0,-28,22+fl,0,7);g.fill();
+    g.fillStyle=c;g.beginPath();g.moveTo(-14,0);g.lineTo(-18,-30+b);g.lineTo(-8,-48+b+fl);g.lineTo(0,-38+b);g.lineTo(8,-52+b-fl);g.lineTo(18,-28+b);g.lineTo(12,0);g.fill();
+    g.fillStyle=l;g.fillRect(-7,-32+b,4,4);g.fillRect(1,-32+b,4,4);
     if(L.horns){P(-14,-56+b,4,10,d);P(10,-58+b,4,10,d)}}
   else if(tp==='construct'){
     P(-8,-12,5,12,d);P(4,-12,5,12,d);P(-14,-40+b,28,28,c);P(-10,-36+b,20,4,l);P(-8,-52+b,16,12,d);P(-5,-48+b,3,3,'#ff4');P(2,-48+b,3,3,'#ff4');
-    ctx.strokeStyle=l;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-24+b,6,0,7);ctx.stroke();P(-24,-34+b,10,4,d);P(-28,-38+b,4,18,'#9aa0aa')}
+    g.strokeStyle=l;g.lineWidth=2;g.beginPath();g.arc(0,-24+b,6,0,7);g.stroke();P(-24,-34+b,10,4,d);P(-28,-38+b,4,18,'#9aa0aa')}
+  else if(tp==='murloc'){
+    P(-7,-12,5,12,d);P(3,-12,5,12,d);P(-10,-34+b,22,22,c);P(-6,-28+b,12,10,l);
+    P(-16,-44+b,22,16,c);P(-18,-34+b,8,5,'#f0c8a0');P(-12,-42+b,4,4,'#fff');P(-11,-41+b,2,2,'#200');
+    P(-2,-52+b,3,10,shade(m.color,-20));P(2,-50+b,3,8,shade(m.color,-20));P(6,-48+b,3,6,shade(m.color,-20));
+    g.save();g.translate(-12,-26+b);g.rotate(m.lunge?-.3-m.lunge*4:.4);P(-1,-18,3,20,'#7a5a3a');P(-3,-22,7,5,'#c0c4cc');g.restore()}
+  else if(tp==='bird'){
+    P(-6,-24,3,24,d);P(4,-24,3,24,d);P(-12,-38+b,24,16,c);P(-10,-36+b,18,4,l);P(-22,-54+b,8,20,c);P(-26,-56+b,10,8,c);P(-34,-53+b,9,4,'#e0a030');P(-23,-54+b,2,2,'#200');P(10,-40+b,10,6,d)}
   else { // humanoid / undead / dragonkin
     const und=tp==='undead',dra=tp==='dragonkin';
-    if(dra){ctx.fillStyle=d;ctx.beginPath();ctx.moveTo(4,-34+b);ctx.lineTo(26,-56+b);ctx.lineTo(22,-26+b);ctx.fill()}
+    if(dra){g.fillStyle=d;g.beginPath();g.moveTo(4,-34+b);g.lineTo(26,-56+b);g.lineTo(22,-26+b);g.fill()}
     const hunch=L.ghoul?6:0;
     P(-7,-14,5,14,und&&!L.ghoul?'#d8d0b8':d);P(2,-14,5,14,und&&!L.ghoul?'#d8d0b8':d);
     P(-9+(-hunch),-32+b+hunch,18,19,c);
@@ -835,12 +917,13 @@ function drawMob(m,t,scale=1){
     if(L.hood){P(-8-hunch,-47+b+hunch,16,6,shade(c,-20));P(4-hunch,-44+b+hunch,4,12,shade(c,-20))}
     if(L.mask)P(-6-hunch,-39+b+hunch,12,4,'#a02a20');
     // 武器
-    ctx.save();ctx.translate(-10-hunch,-24+b);ctx.rotate(m.lunge?-.2-m.lunge*4:.5);P(-1,-20,3,22,und?'#9aa0aa':'#5a3a20');P(-4,-24,9,6,und?'#c0c4cc':'#7a5a3a');ctx.restore();
+    g.save();g.translate(-10-hunch,-24+b);g.rotate(m.lunge?-.2-m.lunge*4:.5);P(-1,-20,3,22,und?'#9aa0aa':'#5a3a20');P(-4,-24,9,6,und?'#c0c4cc':'#7a5a3a');g.restore();
   }
-  ctx.restore();
+  },a);
 }
+
 function nameplate(m,scale=1){
-  const live=m.hp>0;const w=56,x=m.x-w/2,y=GY-(m.look.big?92:72)*(m.elite?1.15:1)*(m.rare?1.2:1)*scale;
+  const live=m.hp>0;const w=56,x=m.x-w/2,y=GY-(m.look.big?92:72)*(m.elite?1.15:1)*(m.rare?1.2:1)*scale*MOBSC;
   const diff=m.lv-S.lv;const col=diff>=5?'#ff5a4a':diff>=3?'#ff9a3a':diff>=-2?'#f2e04a':diff>=-6?'#5bd25b':'#a0a0a0';
   ctx.font='700 10px "Noto Sans TC",sans-serif';ctx.textAlign='center';
   ctx.fillStyle='#000a';ctx.fillText(m.name,m.x+1,y-5);ctx.fillStyle=m.rare?'#d0d6ff':m.elite?'#ffd27a':'#f2ead8';ctx.fillText(m.name,m.x,y-6);
@@ -850,20 +933,41 @@ function nameplate(m,scale=1){
   if(m.elite||m.rare){ctx.strokeStyle=m.rare?'#c0c8ff':'#e0b040';ctx.lineWidth=1.5;ctx.strokeRect(x-2,y-2,w+4,9)}
 }
 const FXC={slash:'#ffffff',fire:'#ff8a2a',frost:'#9ae4ff',shadow:'#a06aff',holy:'#ffe68a',arrow:'#e8d8b0',arcane:'#ff8aff',nature:'#8af06a',shock:'#ffd27a',drain:'#b07aff'};
-function fx(type,x,y,o={}){const list=D?D.fx:B.fx;list.push({type,x,y,age:-(o.delay||0),life:type==='heal'?.8:type==='whirl'||type==='shock'?.45:type==='proj'?.22:.3,...o})}
+function fx(type,x,y,o={}){const list=D?D.fx:B.fx;list.push({type,x,y,age:-(o.delay||0),life:type==='lvl'?1.4:type==='heal'?.8:type==='whirl'||type==='shock'?.45:type==='proj'?.22:.35,...o})}
 function num(x,y,text,kind,delay=0){B.nums.push({x,y,text,kind,age:-delay})}
 function num2(x,y,text,kind){D.nums.push({x,y,text,kind,age:0})}
+let PARTS=[];
+const PCOL={fire:['#fff0a0','#ffb040','#ff6a1a','#c8301a'],frost:['#ffffff','#c8f0ff','#7ad0ff'],shadow:['#e0c0ff','#a06aff','#5a2aa0'],holy:['#ffffff','#fff0a0','#ffd040'],
+  arcane:['#ffffff','#ffb0ff','#d050ff'],nature:['#e0ffb0','#8af06a','#3aa03a'],arrow:['#ffffff','#f0e0b0'],slash:['#ffffff','#fff2c0','#ffd27a'],shock:['#fff2c0','#ffd27a','#c8902a'],drain:['#e0c0ff','#b07aff']};
+function burst(x,y,kind,n,spd=110,grav=160,size=3){const cs=PCOL[kind]||PCOL.slash;if(PARTS.length>500)return;
+  for(let i=0;i<n;i++){const a=Math.random()*6.28,v=spd*(.35+Math.random()*.9);PARTS.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-spd*.35,g:grav,life:.3+Math.random()*.45,age:0,c:pick(cs),s:size*(Math.random()<.3?1.6:1)})}}
+function drawParts(dt){for(const q of PARTS){q.age+=dt;q.vy+=q.g*dt;q.x+=q.vx*dt;q.y+=q.vy*dt}PARTS=PARTS.filter(q=>q.age<q.life);
+  ctx.save();ctx.globalCompositeOperation='lighter';for(const q of PARTS){ctx.globalAlpha=Math.max(0,1-q.age/q.life);ctx.fillStyle=q.c;ctx.fillRect(q.x|0,q.y|0,q.s|0||1,q.s|0||1)}ctx.restore()}
 function drawFx(list){
-  for(const f of list){if(f.age<0)continue;const k=f.age/f.life,col=FXC[f.kind]||FXC[f.type]||'#fff';ctx.save();
-    if(f.type==='proj'){const x=f.x+(f.tx-f.x)*k,y=f.y+(f.ty-f.y)*k;ctx.fillStyle=col;
-      if(f.kind==='arrow'){ctx.translate(x,y);P(-10,-1,16,2,'#d8c8a0');P(6,-2,4,4,'#c0c4cc')}else{ctx.globalAlpha=.4;ctx.beginPath();ctx.arc(x,y,9,0,7);ctx.fill();ctx.globalAlpha=1;ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill()}}
-    else if(f.type==='impact'){ctx.globalAlpha=1-k;ctx.strokeStyle=col;ctx.lineWidth=3;
-      if(f.kind==='slash'){ctx.beginPath();ctx.arc(f.x+8,f.y-10,22,-2.2+k,-0.6+k);ctx.stroke();ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(f.x+10,f.y-12,16,-2.2+k,-0.6+k);ctx.stroke()}
-      else if(f.kind==='holy'){ctx.fillStyle=col+'88';ctx.fillRect(f.x-8,0,16,f.y+30);ctx.fillStyle=col;ctx.fillRect(f.x-3,0,6,f.y+30)}
-      else {ctx.fillStyle=col;for(let i=0;i<8;i++){const a=i/8*6.28;const r=6+k*22;ctx.fillRect(f.x+Math.cos(a)*r-2,f.y-10+Math.sin(a)*r-2,4,4)}}}
-    else if(f.type==='whirl'){ctx.globalAlpha=1-k;ctx.strokeStyle='#fff';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(f.x+80,f.y-20,40+k*150,14+k*10,0,0,7);ctx.stroke()}
-    else if(f.type==='shock'){ctx.globalAlpha=1-k;ctx.strokeStyle=FXC.shock;ctx.lineWidth=4;ctx.beginPath();ctx.ellipse(f.x+60,f.y,30+k*220,6+k*12,0,0,7);ctx.stroke()}
-    else if(f.type==='heal'){ctx.globalAlpha=1-k;ctx.fillStyle='#8af06a';for(let i=0;i<7;i++){const xx=f.x-18+i*6,yy=f.y-10-k*60-(i%3)*10;ctx.fillRect(xx,yy,3,7);ctx.fillRect(xx-2,yy+2,7,3)}}
+  for(const f of list){if(f.age<0)continue;const k=Math.min(1,f.age/f.life),col=FXC[f.kind]||FXC[f.type]||'#fff';ctx.save();
+    if(f.type==='proj'){const x=f.x+(f.tx-f.x)*k,y=f.y+(f.ty-f.y)*k-Math.sin(k*Math.PI)*10;
+      if(f.kind==='arrow'){ctx.translate(x,y);P(-12,-1,18,2,'#d8c8a0');P(6,-2,5,4,'#e0e4ea');P(-14,-3,4,2,'#e05a3a');P(-14,1,4,2,'#e05a3a')}
+      else{const cs=PCOL[f.kind]||PCOL.fire;ctx.globalCompositeOperation='lighter';ctx.shadowColor=cs[1];ctx.shadowBlur=16;ctx.fillStyle=cs[2]||cs[1];ctx.beginPath();ctx.arc(x,y,9,0,7);ctx.fill();
+        ctx.fillStyle=cs[1];ctx.beginPath();ctx.arc(x,y,6,0,7);ctx.fill();ctx.fillStyle=cs[0];ctx.beginPath();ctx.arc(x+2,y-1,3,0,7);ctx.fill();
+        if(f.kind==='frost'){ctx.fillStyle=cs[0];ctx.beginPath();ctx.moveTo(x+12,y);ctx.lineTo(x,y-5);ctx.lineTo(x-6,y);ctx.lineTo(x,y+5);ctx.fill()}
+        if(Math.random()<.9)PARTS.push({x:x-6,y:y+(Math.random()-.5)*8,vx:-40-Math.random()*40,vy:(Math.random()-.5)*30,g:f.kind==='fire'?-40:20,life:.3,age:0,c:pick(cs),s:3})}}
+    else if(f.type==='impact'){
+      if(!f.done){f.done=1;const n=f.kind==='slash'?8:f.kind==='arrow'?6:16;burst(f.x,f.y-14,f.kind,n,f.kind==='fire'?150:110,f.kind==='fire'?-60:160)}
+      ctx.globalAlpha=1-k;ctx.strokeStyle=col;ctx.lineWidth=4;ctx.globalCompositeOperation='lighter';
+      if(f.kind==='slash'){ctx.shadowColor='#fff';ctx.shadowBlur=10;ctx.beginPath();ctx.arc(f.x+8,f.y-14,26,-2.3+k,-0.5+k);ctx.stroke();ctx.lineWidth=2;ctx.beginPath();ctx.arc(f.x+12,f.y-16,18,-2.2+k,-0.6+k);ctx.stroke()}
+      else if(f.kind==='holy'){const gr=ctx.createLinearGradient(0,0,0,f.y+30);gr.addColorStop(0,'#fff8c000');gr.addColorStop(1,'#fff0a0cc');ctx.fillStyle=gr;ctx.fillRect(f.x-14,0,28,f.y+30);ctx.fillStyle='#ffffffcc';ctx.fillRect(f.x-3,0,6,f.y+30);
+        ctx.strokeStyle='#ffe68a';ctx.beginPath();ctx.ellipse(f.x,f.y+30,12+k*30,4+k*6,0,0,7);ctx.stroke()}
+      else {const cs=PCOL[f.kind]||PCOL.slash;const gr=ctx.createRadialGradient(f.x,f.y-12,1,f.x,f.y-12,14+k*26);gr.addColorStop(0,cs[0]);gr.addColorStop(.4,cs[1]+'cc');gr.addColorStop(1,cs[1]+'00');ctx.fillStyle=gr;ctx.beginPath();ctx.arc(f.x,f.y-12,14+k*26,0,7);ctx.fill()}}
+    else if(f.type==='whirl'){ctx.globalAlpha=1-k;ctx.globalCompositeOperation='lighter';ctx.shadowColor='#fff';ctx.shadowBlur=12;ctx.strokeStyle='#ffffff';ctx.lineWidth=3;
+      for(let i=0;i<3;i++){ctx.beginPath();ctx.ellipse(f.x+10,f.y-24+i*8,30+k*70+i*8,8+i*2,0,k*9+i,k*9+i+4);ctx.stroke()}}
+    else if(f.type==='shock'){ctx.globalAlpha=1-k;ctx.globalCompositeOperation='lighter';ctx.strokeStyle=FXC.shock;ctx.shadowColor=FXC.shock;ctx.shadowBlur=14;ctx.lineWidth=5;ctx.beginPath();ctx.ellipse(f.x+60,f.y,30+k*240,6+k*14,0,0,7);ctx.stroke();
+      if(!f.done){f.done=1;for(let i=0;i<5;i++)burst(f.x+40+i*50,f.y,'shock',4,80,200)}}
+    else if(f.type==='heal'){if(!f.done){f.done=1;burst(f.x,f.y-30,'nature',14,70,-80)}ctx.globalAlpha=1-k;ctx.globalCompositeOperation='lighter';ctx.fillStyle='#8af06a';
+      for(let i=0;i<7;i++){const xx=f.x-18+i*6,yy=f.y-10-k*60-(i%3)*10;ctx.fillRect(xx,yy,3,7);ctx.fillRect(xx-2,yy+2,7,3)}
+      const gr=ctx.createRadialGradient(f.x,f.y-30,2,f.x,f.y-30,40);gr.addColorStop(0,'#b0ff9a66');gr.addColorStop(1,'#b0ff9a00');ctx.fillStyle=gr;ctx.fillRect(f.x-40,f.y-70,80,80)}
+    else if(f.type==='lvl'){if(!f.done){f.done=1;burst(f.x,f.y-30,'holy',40,160,60,4)}ctx.globalAlpha=1-k;ctx.globalCompositeOperation='lighter';
+      const gr=ctx.createLinearGradient(0,0,0,f.y);gr.addColorStop(0,'#ffe08a00');gr.addColorStop(1,'#ffe08add');ctx.fillStyle=gr;ctx.fillRect(f.x-26,0,52,f.y);
+      ctx.strokeStyle='#fff2b0';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(f.x,f.y,20+k*40,5+k*8,0,0,7);ctx.stroke()}
     ctx.restore()}
 }
 function drawNums(list){
@@ -881,12 +985,12 @@ function render(t,dt){
     const key='dg-'+D.dg.id;if(bgKey!==key){bgCache=buildBg(key,null,D.dg);bgKey=key}
     ctx.drawImage(bgCache,0,0);
     // 隊伍
-    D.members.slice(0,5).forEach((m,i)=>{const x=110+((i%3)*52)+(i>2?26:0),y=GY-(i>2?-6:12);drawHero(x,y+(i>2?6:0),m.cls,S.fac,t+i,D.phase==='fight'?(Math.sin(t*6+i)*.5+.5):0,CLASSES[m.cls].melee?'melee':'cast',.85)});
+    const POS=[[250,GY-6],[170,GY-16],[90,GY-16],[205,GY+10],[125,GY+10]];[2,1,0,4,3].filter(i=>D.members[i]).forEach(i=>{const m=D.members[i];const [x,y]=POS[i];drawHero(x,y,m.cls,m.race,t+i,D.phase==='fight'?(Math.sin(t*6+i)*.5+.5):0,CLASSES[m.cls].melee?'melee':'cast',.95,i===0?heroOpt():{fac:S.fac,wr:3,enh:0})});
     if(D.members.length>5){ctx.fillStyle='#f3d27e';ctx.font='700 12px "Noto Sans TC",sans-serif';ctx.textAlign='left';ctx.fillText(`＋${D.members.length-5} 名團隊成員`,60,GY+40)}
     if(D.phase==='fight'||D.phase==='end'){
       const bd=D.dg.bosses[Math.min(D.bi,D.dg.bosses.length-1)];
       const bm={x:560,type:bd[1],color:bd[2],look:bd[3]||{},hurt:0,lunge:Math.sin(t*2)>.9?.12:0,dying:0};
-      if(D.hp>0||D.res==='wipe')drawMob(bm,t,1.9);
+      if(D.hp>0||D.res==='wipe')drawMob(bm,t,1.65);
       // 首領血條
       const w=420,x=(W-w)/2;ctx.fillStyle='#000c';ctx.fillRect(x-4,10,w+8,40);
       ctx.fillStyle='#f3d27e';ctx.font='900 14px "Noto Serif TC",serif';ctx.textAlign='left';ctx.fillText(bd[0],x+2,26);
@@ -895,20 +999,20 @@ function render(t,dt){
       ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='700 10px "Noto Sans TC",sans-serif';ctx.fillText(`${(Math.max(0,D.hp)/D.max*100).toFixed(1)}%`,x+w/2,42);
     } else {ctx.fillStyle='#000a';ctx.fillRect(W/2-150,14,300,30);ctx.fillStyle='#f3d27e';ctx.font='900 15px "Noto Serif TC",serif';ctx.textAlign='center';
       ctx.fillText(`${D.dg.n}——前往首領 ${D.bi+1}／${D.dg.bosses.length}`,W/2,35)}
-    drawFx(D.fx);drawNums(D.nums);return}
+    drawFx(D.fx);drawParts(dt);drawNums(D.nums);return}
   const z=curZone();const key='z-'+z.id;if(bgKey!==key){bgCache=buildBg(key,z);bgKey=key}
   ctx.drawImage(bgCache,0,0);
   if(z.deco!=='volcanic'&&z.deco!=='plague'){ctx.fillStyle='#ffffffb0';for(const c of clouds){c.x-=c.s*dt;if(c.x<-c.w)c.x=W+10;ctx.fillRect(c.x,c.y,c.w,10);ctx.fillRect(c.x+12,c.y-8,c.w-30,9)}}
   for(const m of B.mobs){drawMob(m,t);}
-  if(B.dead>0){ctx.save();ctx.globalAlpha=.55;drawHero(heroX(),GY,S.cls,S.fac,0,0,'',1);ctx.restore();
+  if(B.dead>0){drawHero(heroX(),GY,S.cls,S.race,0,0,'',HEROSC,{...heroOpt(),alpha:.45});
     ctx.fillStyle='#000a';ctx.fillRect(W/2-120,90,240,44);ctx.fillStyle='#ffb0a8';ctx.font='900 16px "Noto Serif TC",serif';ctx.textAlign='center';ctx.fillText(`靈魂狀態——${Math.ceil(B.dead)} 秒後復活`,W/2,118)}
-  else drawHero(heroX(),GY,S.cls,S.fac,t,B.hero.p,B.hero.type,1);
+  else drawHero(heroX(),GY,S.cls,S.race,t,B.hero.p,B.hero.type,HEROSC,heroOpt());
   for(const m of B.mobs)nameplate(m);
   // 玩家名牌
-  ctx.font='700 11px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.fillStyle='#000a';ctx.fillText(S.name,heroX()+1,GY+21);ctx.fillStyle=S.fac==='A'?'#9ac0ff':'#ff9a8a';ctx.fillText(S.name,heroX(),GY+20);
+  ctx.font='700 11px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.fillStyle='#000a';ctx.fillText(S.name,heroX()+1,GY+23);ctx.fillStyle=S.fac==='A'?'#9ac0ff':'#ff9a8a';ctx.fillText(S.name,heroX(),GY+22);
   for(const f of B.fx)f.age+=dt;B.fx=B.fx.filter(f=>f.age<f.life);
   for(const n of B.nums)n.age+=dt;B.nums=B.nums.filter(n=>n.age<1);
-  drawFx(B.fx);drawNums(B.nums);
+  drawFx(B.fx);drawParts(dt);drawNums(B.nums);
   if(!S.idle&&!D){ctx.fillStyle='#000a';ctx.fillRect(W/2-90,14,180,28);ctx.fillStyle='#e8dcc2';ctx.font='700 13px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.fillText('掛機已暫停',W/2,33)}
 }
 
@@ -919,7 +1023,7 @@ function renderNav(){const z=S?curZone():null;let qReady=false;if(S){const q=qSt
   $('#nav').innerHTML=TABS.map(([k,n])=>`<button data-act="tab" data-v="${k}" aria-current="${UI.tab===k}">${n}${(k==='quest'&&qReady)||(k==='talent'&&talDot)?'<i class="dot"></i>':''}</button>`).join('')}
 function renderStatus(){
   const st=stats(),cl=CLASSES[S.cls],rs=RES[cl.res];
-  $('#sLv').textContent=S.lv;$('#sCls').textContent=`${S.fac==='A'?'聯盟':'部落'}・${cl.n}・${ROLEN[st.role]}`;$('#sName').textContent=S.name;
+  $('#sLv').textContent=S.lv;$('#sCls').textContent=`${S.fac==='A'?'聯盟':'部落'}・${RACES[S.race].n}${cl.n}・${ROLEN[st.role]}`;$('#sName').textContent=S.name;
   if(S.hp>st.hp)S.hp=st.hp;
   $('#sHp').style.width=(S.hp/st.hp*100)+'%';$('#sHpT').textContent=`${fmt(S.hp)}/${fmt(st.hp)}`;
   $('#sResN').textContent=rs.n;const mp=$('#sMp');mp.className='fill '+rs.cls;mp.style.width=S.res+'%';$('#sMpT').textContent=`${Math.floor(S.res)}/100`;
@@ -940,8 +1044,11 @@ function itemTip(it,cmp){
   return `<div class="tip"><div class="nm r${it.rar}">${esc(it.name)}${it.enh?` +${it.enh}`:''}</div>
    <div class="gray">${RAR[it.rar]}・${SLOTN[it.slot]}　物品等級 ${it.ilvl}</div>
    ${st('攻擊強度',it.atk,it.eatk)}${st('護甲',it.def,it.edef)}${st('生命值',it.hp,it.ehp)}${it.crit?`<div class="ln green">裝備：致命一擊機率提高 ${it.crit}%</div>`:''}
+   ${it.set?setLines(it):''}
    <div class="gray">剩餘附魔次數 ${it.slots}${it.fail?`（失敗 ${it.fail}）`:''}</div>
    <div class="gray">販賣價格 ${money(it.val)}</div>${diff}</div>`}
+function setLines(it){const T=SETS[it.set];const c=it.scls===S.cls?setCount(it.set):0;
+  return `<div style="margin-top:6px;color:#f3d27e">${setName(it.set,it.scls)}（${c}/5）</div>`+T.bon.map(([n,t])=>`<div class="ln" style="color:${c>=n?'var(--r2)':'var(--faint)'}">(${n}) 套裝：${t}</div>`).join('')}
 function iconBtn(it){return `<span class="ico b${it?it.rar:0} ${it?'r'+it.rar:''}">${it?ICON[it.slot]:''}${it&&it.enh?`<i class="plus">+${it.enh}</i>`:''}</span>`}
 
 function renderPanel(){
@@ -959,7 +1066,7 @@ function renderPanel(){
   else if(UI.tab==='char'){
     const st=stats();
     h=`<section class="card"><h2>人物</h2><div class="grid2"><div><div class="slots">${SLOTS.map(k=>{const it=S.eq[k];return `<button class="slot" data-act="${it?'item':'tab'}" data-v="${it?it.id:'bag'}">${iconBtn(it)}<span class="meta"><b class="${it?'r'+it.rar:'muted'}">${it?esc(it.name)+(it.enh?' +'+it.enh:''):'（空）'}</b><small>${SLOTN[k]}${it?`・物品等級 ${it.ilvl}`:''}</small></span></button>`}).join('')}</div></div>
-      <div><dl class="kv"><dt>職業</dt><dd>${CLASSES[S.cls].n}（${ROLEN[st.role]}）</dd><dt>平均物品等級</dt><dd>${gearIlvl()}</dd><dt>生命值</dt><dd>${fmt(st.hp)}</dd><dt>攻擊強度</dt><dd>${fmt(st.atk)}</dd><dt>護甲</dt><dd>${fmt(st.def)}</dd><dt>致命一擊</dt><dd>${st.crit.toFixed(1)}%</dd><dt>攻擊速度</dt><dd>${st.spd.toFixed(2)} 次／秒</dd><dt>每秒傷害（估計）</dt><dd>${fmt(st.dps)}</dd><dt>死亡次數</dt><dd>${S.stats.deaths}</dd><dt>通關地城</dt><dd>${S.stats.dungeons}</dd></dl>
+      <div><dl class="kv"><dt>種族</dt><dd>${RACES[S.race].n}（${RACES[S.race].d}）</dd><dt>職業</dt><dd>${CLASSES[S.cls].n}（${ROLEN[st.role]}）</dd>${Object.keys(SETS).filter(t=>setCount(t)).map(t=>`<dt>${setName(t,S.cls)}</dt><dd>${setCount(t)}/5 件</dd>`).join('')}<dt>平均物品等級</dt><dd>${gearIlvl()}</dd><dt>生命值</dt><dd>${fmt(st.hp)}</dd><dt>攻擊強度</dt><dd>${fmt(st.atk)}</dd><dt>護甲</dt><dd>${fmt(st.def)}</dd><dt>致命一擊</dt><dd>${st.crit.toFixed(1)}%</dd><dt>攻擊速度</dt><dd>${st.spd.toFixed(2)} 次／秒</dd><dt>每秒傷害（估計）</dt><dd>${fmt(st.dps)}</dd><dt>死亡次數</dt><dd>${S.stats.deaths}</dd><dt>通關地城</dt><dd>${S.stats.dungeons}</dd></dl>
       <h3>技能</h3><div class="list">${CLASSES[S.cls].sk.map(s=>`<div class="li" style="padding:7px 10px"><span class="main"><b class="${S.lv>=s[0]?'':'muted'}">${s[1]}</b> <span class="tag">${s[7]?'治療':s[5]?'群體':'單體'}</span></span><span class="small muted">${S.lv>=s[0]?(s[7]?`恢復 ${Math.round(s[2]*100)}% 生命`:`${Math.round(s[2]*100)}% 傷害`)+`・冷卻 ${s[4]} 秒`:`${s[0]} 級學會`}</span></div>`).join('')}</div></div></div></section>`;
   }
   else if(UI.tab==='talent'){
@@ -1063,7 +1170,8 @@ function renderCreate(){
     <div><h3 style="margin-top:0">陣營</h3><div class="fac">
       <button class="A" data-act="cFac" data-v="A" aria-pressed="${c.fac==='A'}"><b>聯盟</b><span class="small muted">從艾爾文森林出發，主城暴風城。</span></button>
       <button class="H" data-act="cFac" data-v="H" aria-pressed="${c.fac==='H'}"><b>部落</b><span class="small muted">從杜洛塔出發，主城奧格瑪。</span></button></div></div>
-    <div><h3>職業</h3><div class="pick">${Object.entries(CLASSES).map(([k,cl])=>`<button data-act="cCls" data-v="${k}" aria-pressed="${c.cls===k}"><b style="color:${cl.c}">${cl.n}</b><small>${[...new Set(cl.specs.map(s=>ROLEN[s[1]]))].join('／')}・${cl.melee?'近戰':'遠程'}・${RES[cl.res].n}</small></button>`).join('')}</div></div>
+    <div><h3>種族</h3><div class="pick">${racesFor(c.fac).map(k=>`<button data-act="cRace" data-v="${k}" aria-pressed="${c.race===k}"><b>${RACES[k].n}</b><small>${RACES[k].d}</small></button>`).join('')}</div></div>
+    <div><h3>職業</h3><div class="pick">${Object.entries(CLASSES).map(([k,cl])=>{const ok=RACES[c.race].cls.includes(k);return `<button data-act="cCls" data-v="${k}" aria-pressed="${c.cls===k}" ${ok?'':'disabled style="opacity:.35;cursor:not-allowed"'}><b style="color:${cl.c}">${cl.n}</b><small>${ok?`${[...new Set(cl.specs.map(s=>ROLEN[s[1]]))].join('／')}・${cl.melee?'近戰':'遠程'}・${RES[cl.res].n}`:`${RACES[c.race].n}不能選擇`}</small></button>`}).join('')}</div></div>
     <div><h3>名字</h3><input type="text" id="cName" maxlength="12" placeholder="最多 12 字" value="${esc(c.name)}"></div>
     <div class="row"><button class="btn main" data-act="cGo">進入艾澤拉斯</button><span class="small muted" id="cErr"></span></div></section>`;
   $('#cName').oninput=e=>UI.create.name=e.target.value;
@@ -1101,13 +1209,14 @@ const ACT={
   set:(d,e)=>{S.set[d.v]=e.target.checked;save()},
   exportSave:()=>{const code=btoa(unescape(encodeURIComponent(JSON.stringify(S))));$('#saveCode').value=code;$('#saveMsg').textContent='存檔碼已產生。'},
   copySave:()=>{const ta=$('#saveCode');if(!ta.value)ACT.exportSave();navigator.clipboard.writeText(ta.value).then(()=>{$('#saveMsg').textContent='已複製到剪貼簿。'}).catch(()=>{ta.select();$('#saveMsg').textContent='請手動複製選取的文字。'})},
-  importSave:()=>{try{const s=JSON.parse(decodeURIComponent(escape(atob($('#saveCode').value.trim()))));if(!s||s.v!==1||!CLASSES[s.cls])throw 0;S=s;D=null;newBattle();bgKey='';save();$('#saveMsg').textContent='';toast('存檔已匯入');renderAll()}catch(e){$('#saveMsg').textContent='存檔碼無法讀取，請確認貼上的是完整的存檔碼。'}},
+  importSave:()=>{try{const s=JSON.parse(decodeURIComponent(escape(atob($('#saveCode').value.trim()))));if(!s||s.v!==1||!CLASSES[s.cls])throw 0;S=fixSave(s);D=null;newBattle();bgKey='';save();$('#saveMsg').textContent='';toast('存檔已匯入');renderAll()}catch(e){$('#saveMsg').textContent='存檔碼無法讀取，請確認貼上的是完整的存檔碼。'}},
   askDelete:()=>showSheet(`<h2>刪除角色？</h2><p>「${esc(S.name)}」（${S.lv} 級${CLASSES[S.cls].n}）的所有進度都會清除，無法復原。</p><div class="row" style="margin-top:12px"><button class="btn danger" data-act="doDelete">確定刪除</button><button class="btn" data-act="closeSheet">取消</button></div>`),
   doDelete:()=>{try{localStorage.removeItem(KEY)}catch(e){}S=null;D=null;closeSheet();boot()},
-  cFac:d=>{UI.create.fac=d.v;renderCreate()},
-  cCls:d=>{UI.create.cls=d.v;renderCreate()},
+  cFac:d=>{UI.create.fac=d.v;UI.create.race=racesFor(d.v)[0];if(!RACES[UI.create.race].cls.includes(UI.create.cls))UI.create.cls=RACES[UI.create.race].cls[0];renderCreate()},
+  cRace:d=>{UI.create.race=d.v;if(!RACES[d.v].cls.includes(UI.create.cls))UI.create.cls=RACES[d.v].cls[0];renderCreate()},
+  cCls:d=>{if(!RACES[UI.create.race].cls.includes(d.v))return;UI.create.cls=d.v;renderCreate()},
   cGo:()=>{const n=(UI.create.name||'').trim();if(!n){$('#cErr').textContent='請輸入名字。';return}
-    newSave(n,UI.create.fac,UI.create.cls);start(true)},
+    newSave(n,UI.create.fac,UI.create.cls,UI.create.race);start(true)},
 };
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;if(b.tagName==='INPUT')return;if(!S&&!/^c[A-Z]/.test(b.dataset.act))return;const f=ACT[b.dataset.act];if(f)f(b.dataset,e)});
 document.addEventListener('change',e=>{const b=e.target.closest('input[data-act]');if(b&&ACT[b.dataset.act])ACT[b.dataset.act](b.dataset,e)});
@@ -1149,7 +1258,7 @@ boot();
 // 建立角色前的示範畫面
 function demo(){if(S)return;const t=performance.now()/1000;ctx.clearRect(0,0,W,H);
   const z=ZONES[0];if(bgKey!=='demo'){bgCache=buildBg('demo',z);bgKey='demo'}ctx.drawImage(bgCache,0,0);
-  const cls=UI.create.cls;drawHero(232,GY,cls,UI.create.fac,t,0,'',1.15);
+  const cls=UI.create.cls;drawHero(232,GY,cls,UI.create.race,t,0,'',1.5,{fac:UI.create.fac,wr:4,enh:0});
   drawMob({x:470,type:'beast',color:'#8a8f99',look:{},hurt:0,dying:0},t);drawMob({x:560,type:'humanoid',color:'#b08a55',look:{snout:1},hurt:0,dying:0},t);
   ctx.fillStyle='#000a';ctx.fillRect(W/2-170,14,340,32);ctx.fillStyle='#f3d27e';ctx.font='900 16px "Noto Serif TC",serif';ctx.textAlign='center';ctx.fillText('選擇陣營與職業，開始你的冒險',W/2,36);
   requestAnimationFrame(demo)}
