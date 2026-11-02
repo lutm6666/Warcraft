@@ -316,16 +316,28 @@ const TAL_MAX=[5,5,3,5,1], TAL_REQ=[0,3,6,10,15];
 const CAPS={warrior:['execute','lifesteal','shield'],paladin:['regen','shield','stun'],hunter:['pet','crit','stun'],rogue:['double','haste','crit'],mage:['double','crit','shield'],warlock:['regen','pet','dot'],priest:['double','regen','lifesteal'],druid:['crit','shield','regen']};
 const CAPD={execute:'斬殺：目標生命低於 20% 時傷害 +60%',lifesteal:'吸血：造成傷害的 6% 轉為自身生命',shield:'守護：生命低於 30% 時獲得 30% 最大生命的護盾（冷卻 30 秒）',regen:'恩典：戰鬥中每秒恢復 1.5% 生命',
   stun:'震懾：攻擊有 10% 機率擊暈目標 2 秒',pet:'狂暴寵物：寵物傷害加倍',crit:'致命精通：致命一擊傷害提高為 250%',double:'迅捷施法：技能有 15% 機率立即再施放一次',haste:'衝刺：攻擊速度 +20%',dot:'灼燒：技能使目標燃燒，3 秒內額外受到 30% 傷害'};
+const skCost=s=>s[3]*(1-((talFx().cost||0)/100));const skCd=s=>s[4]*(1-((talFx().cdr||0)/100));
+function skMult(s,aoe){const f=talFx();return 1+(f.skill[s[1]]||0)+(f.fx[s[6]]||0)+((aoe?f.aoe:f.single)||0)/100}
 function caps(){const o={};if(!S)return o;S.tal.forEach((t,i)=>{if(t[4]>0)o[CAPS[S.cls][i]]=1});return o}
+// 每層天賦的獨特效果：[效果, 每級數值, 參數]
+const TFX={
+ warrior:[[['skill',10,'英勇打擊'],['critDmg',8],['dot',6],['auto',5]],[['crit',1],['haste',3],['auto',6],['killHeal',1.5]],[['dodge',1],['hp',3],['def',8],['thorns',4]]],
+ paladin:[[['regen',8],['heal',6],['heal',10],['cost',4]],[['dodge',1],['def',5],['crit',1],['thorns',4]],[['atk',3],['crit',1],['skill',12,'正義聖印'],['critDmg',8]]],
+ hunter:[[['pet',8],['hpRegen',.2],['atk',3],['pet',8]],[['critDmg',6],['cost',5],['skill',15,'秘法射擊'],['auto',6]],[['crit',1],['stun',2],['aoe',8],['elite',5]]],
+ rogue:[[['crit',1],['critDmg',6],['dot',5],['opener',10]],[['auto',5],['crit',1],['double',3],['regen',8]],[['skill',10,'背刺'],['opener',10],['cdr',8],['dot',5]]],
+ mage:[[['cost',4],['hp',3],['skill',10,'魔爆術'],['regen',6]],[['skill',6,'火球術'],['dot',5],['crit',2],['aoe',5]],[['skill',6,'寒冰箭'],['single',4],['critDmg',10],['cdr',4]]],
+ warlock:[[['dot',5],['heal',10],['single',5],['fx',4,'shadow']],[['def',6],['hp',3],['pet',12],['dr',2]],[['skill',6,'暗影箭'],['cost',5],['critDmg',10],['fx',4,'fire']]],
+ priest:[[['cost',4],['atk',3],['dr',3],['regen',8]],[['crit',1],['heal',6],['cost',8],['killHeal',1.5]],[['fx',4,'shadow'],['crit',1],['skill',15,'精神鞭笞'],['leech',1.5]]],
+ druid:[[['fx',4,'nature'],['critDmg',6],['skill',12,'星火術'],['stun',2]],[['atk',3],['dodge',1],['def',10],['crit',1]],[['heal',6],['hpRegen',.2],['cost',8],['haste',3]]]};
+const FXN={shadow:'暗影',fire:'火焰',frost:'冰霜',nature:'自然',holy:'神聖',arcane:'秘法'};
+const TFD={atk:v=>`攻擊強度 +${v}%`,crit:v=>`致命一擊 +${v}%`,haste:v=>`攻擊速度 +${v}%`,hp:v=>`生命值 +${v}%`,def:v=>`護甲 +${v}%`,dodge:v=>`閃躲 +${v}%`,regen:v=>`資源回復 +${v}%`,
+  heal:v=>`治療效果 +${v}%`,aoe:v=>`群體技能傷害 +${v}%`,single:v=>`單體技能傷害 +${v}%`,pet:v=>`寵物傷害 +${v}%`,cdr:v=>`技能冷卻 -${v}%`,cost:v=>`技能消耗 -${v}%`,leech:v=>`造成傷害的 ${v}% 轉為生命`,
+  stun:v=>`攻擊有 ${v}% 機率擊暈目標`,double:v=>`技能有 ${v}% 機率連續施放`,thorns:v=>`受到攻擊時反彈 ${v}% 傷害`,killHeal:v=>`擊殺時恢復 ${v}% 生命`,elite:v=>`對精英與稀有怪傷害 +${v}%`,
+  opener:v=>`對滿血目標傷害 +${v}%`,auto:v=>`普通攻擊傷害 +${v}%`,critDmg:v=>`致命一擊傷害 +${v}%`,dot:v=>`技能附加持續傷害，3 秒內共 ${v}% 傷害`,hpRegen:v=>`戰鬥中每秒恢復 ${v}% 生命`,dr:v=>`受到傷害 -${v}%`,
+  skill:(v,a)=>`${a}傷害 +${v}%`,fx:(v,a)=>`${FXN[a]}系技能傷害 +${v}%`};
+function talFx(){const o={skill:{},fx:{}};if(!S)return o;const T=TFX[S.cls];S.tal.forEach((tr,ti)=>T[ti].forEach(([k,v,a],i)=>{const r=tr[i];if(!r)return;if(k==='skill')o.skill[a]=(o.skill[a]||0)+v*r/100;else if(k==='fx')o.fx[a]=(o.fx[a]||0)+v*r/100;else o[k]=(o[k]||0)+v*r}));return o}
 function talDesc(role,i,ti){if(i===4&&ti!=null&&S)return CAPD[CAPS[S.cls][ti]]+'；'+(role==='tank'?'受到傷害 -10%':role==='heal'?'傷害 +10%、治療 +25%':'所有傷害 +10%');
-  return [
-    ()=>'攻擊強度 +3%／級',
-    ()=>'致命一擊 +1%／級',
-    ()=>role==='tank'?'護甲 +8%／級':role==='heal'?'治療效果 +12%／級':'技能傷害 +5%／級',
-    ()=>role==='tank'?'生命值 +4%／級':role==='heal'?'資源回復 +10%、脫戰回血 +20%／級':'攻擊速度 +3%／級',
-    ()=>role==='tank'?'受到傷害 -10%':role==='heal'?'傷害 +10%、治療 +25%':'所有傷害 +10%',
-  ][i]();
-}
+  const e=TFX[S.cls][ti][i],r=S.tal[ti][i];const v=+(e[1]*r).toFixed(1);return TFD[e[0]](e[1],e[2])+'／級'+(r?`（目前：${TFD[e[0]](v,e[2])}）`:'')}
 const REPS={home:{A:'暴風城',H:'奧格瑪'},steamwheedle:'熱砂集團',thorium:'瑟銀兄弟會',argent:'銀色黎明',cenarion:'塞納里奧議會'};
 const REP_ILVL={home:26,steamwheedle:46,thorium:56,argent:61,cenarion:63};
 const STANDING=[[0,'中立'],[3000,'友善'],[9000,'尊敬'],[21000,'崇敬'],[42000,'崇拜']];
@@ -442,11 +454,10 @@ function mods(){
   const m={atk:0,crit:0,skill:0,haste:0,hp:0,def:0,heal:0,dmg:0,taken:0,regen:0};
   const cl=CLASSES[S.cls];
   S.tal.forEach((tr,ti)=>{const r=cl.specs[ti][1];
-    m.atk+=tr[0]*.03; m.crit+=tr[1];
-    if(r==='tank')m.def+=tr[2]*.08;else if(r==='heal')m.heal+=tr[2]*.12;else m.skill+=tr[2]*.05;
-    if(r==='tank')m.hp+=tr[3]*.04;else if(r==='heal')m.regen+=tr[3]*.1;else m.haste+=tr[3]*.03;
     if(tr[4]){if(r==='tank')m.taken+=.1;else if(r==='heal'){m.dmg+=.1;m.heal+=.25}else m.dmg+=.1}
   });
+  const f=talFx();m.atk+=(f.atk||0)/100;m.crit+=f.crit||0;m.haste+=(f.haste||0)/100;m.hp+=(f.hp||0)/100;m.def+=(f.def||0)/100;m.heal+=(f.heal||0)/100;m.regen+=(f.regen||0)/100;m.taken+=(f.dr||0)/100;m.dodge=f.dodge||0;
+  const avgSk=(f.aoe||0)*.3+(f.single||0)*.4+Object.values(f.skill).reduce((a,b)=>a+b*30,0)+(f.critDmg||0)*.1+(f.dot||0)*.5+(f.auto||0)*.3;m.skill=avgSk/100;
   return m;
 }
 const DMAX={weapon:75,head:60,chest:100,legs:75,hands:35,feet:50,trinket:0};
@@ -469,7 +480,7 @@ function stats(){
   const spd=cl.spd*(1+m.haste)*(caps().haste?1.2:1);
   const dmgMod=(1+m.dmg)*rm.d, skillMod=1+m.skill, takenMod=(1-m.taken)*rm.t, healMod=(1+m.heal)*(r==='heal'?1.5:1);
   const dps=atk*1.35*spd*(1+crit/100)*dmgMod*(1+m.skill*.5)*((S.cls==='hunter'||S.cls==='warlock')?1.22:1);
-  return {hp,atk,def,crit,spd,dmgMod,skillMod,takenMod,healMod,regen:m.regen,role:r,dps,dodge:6+(rb.dodge||0)};
+  return {hp,atk,def,crit,spd,dmgMod,skillMod,takenMod,healMod,regen:m.regen,role:r,dps,dodge:6+(rb.dodge||0)+(m.dodge||0)};
 }
 function gearIlvl(){let s=0;for(const k of SLOTS){const it=S.eq[k];if(it)s+=it.ilvl}return Math.round(s/SLOTS.length)}
 function refDps(L,il){const atk=12+2.65*(L-1)+(4+1.2*il)*2.0;return atk*1.35*.9*1.08*1.1}
@@ -586,9 +597,9 @@ function battleTick(dt){
     num(heroX(),150,'+'+fmt(h),'heal');fx('heal',heroX(),180);log('battle',`使用治療藥水，恢復 ${fmt(h)} 生命值`);if(S.cons.potion===0)log('bad','治療藥水用完了！到商店補貨吧。')}
   // 玩家行動
   B.at-=dt;
-  const pet=petInfo();if(pet&&!B.dead){B.petT=(B.petT??1)-dt;B.petP=Math.max(0,(B.petP||0)-dt*4);if(B.petT<=0){B.petT=1.6;B.petP=1;hit(arrived[0],pet.mult*(caps().pet?2:1),st,pet.fx,pet.n,0,true)}}
+  const pet=petInfo();if(pet&&!B.dead){B.petT=(B.petT??1)-dt;B.petP=Math.max(0,(B.petP||0)-dt*4);if(B.petT<=0){B.petT=1.6;B.petP=1;hit(arrived[0],pet.mult*(caps().pet?2:1)*(1+(talFx().pet||0)/100),st,pet.fx,pet.n,0,true)}}
   if(B.at<=0){B.at=1/st.spd;heroAct(st,cl,arrived)}
-  {const C=caps();if(C.regen)S.hp=Math.min(st.hp,S.hp+st.hp*.015*dt);
+  {const C=caps(),F=talFx();const hr=(C.regen?.015:0)+(F.hpRegen||0)/100;if(hr)S.hp=Math.min(st.hp,S.hp+st.hp*hr*dt);
    for(const m of arrived)if(m.dot&&m.hp>0){m.dot.t-=dt;m.hp-=m.dot.dps*dt;if(m.dot.t<=0)m.dot=null;if(m.hp<=0){m.hp=0;killMob(m)}}
    B.shCd=Math.max(0,(B.shCd||0)-dt);if(C.shield&&S.hp<st.hp*.3&&B.shCd<=0){B.shield=st.hp*.3;B.shCd=30;fx('shock',heroX()-60,GY);num(heroX(),110,'護盾','heal');log('battle','守護天賦觸發：獲得護盾')}}
   // 怪物攻擊
@@ -598,6 +609,7 @@ function battleTick(dt){
     if(Math.random()<st.dodge/100){num(heroX(),130,'閃躲','miss');continue}
     if(B.shield>0){const ab=Math.min(B.shield,d);B.shield-=ab;d-=ab;if(!d){num(heroX(),130,'吸收','miss');m.lunge=.25;continue}}
     S.hp-=d;num(heroX()+ri(-8,8),128,fmt(d),'hurt');m.lunge=.25;
+    {const th=(talFx().thorns||0)/100;if(th&&m.hp>0){const rd=Math.max(1,Math.round(d*th));m.hp-=rd;num(m.x,130,fmt(rd),'dmg');if(m.hp<=0){m.hp=0;killMob(m)}}}
     if(cl.res==='rage')S.res=Math.min(100,S.res+4);
     if(S.hp<=0){S.hp=0;B.dead=8;S.stats.deaths++;sfx('die');log('bad',`你被 ${m.name} 擊敗了……8 秒後復活，裝備耐久度 -10%`);durLoss(.1);B.mobs.forEach(x=>x.hp=Math.min(x.hp,x.max));return}
   }}
@@ -606,11 +618,11 @@ function battleTick(dt){
 function heroAct(st,cl,targets){
   const skills=cl.sk.filter(s=>S.lv>=s[0]&&isLearned(s)&&!(S.skOff||{})[s[1]]);
   let use=null;
-  const heal=skills.find(s=>s[7]&&S.hp<st.hp*.6&&!(B.cd[s[1]]>0)&&S.res>=s[3]);
+  const heal=skills.find(s=>s[7]&&S.hp<st.hp*.6&&!(B.cd[s[1]]>0)&&S.res>=skCost(s));
   if(heal)use=heal;
   else{
     const aoeWant=targets.length>=2;
-    const opts=skills.filter(s=>!s[7]&&!(B.cd[s[1]]>0)&&S.res>=s[3]).sort((a,b)=>{
+    const opts=skills.filter(s=>!s[7]&&!(B.cd[s[1]]>0)&&S.res>=skCost(s)).sort((a,b)=>{
       const va=a[2]*(a[5]&&aoeWant?Math.min(targets.length,4)*.8:1),vb=b[2]*(b[5]&&aoeWant?Math.min(targets.length,4)*.8:1);return vb-va});
     // 法力職業保留一點法力
     const val=s=>s[2]*(s[5]&&aoeWant?Math.min(targets.length,4)*.8:1);
@@ -624,22 +636,24 @@ function heroAct(st,cl,targets){
     if(cl.res==='rage')S.res=Math.min(100,S.res+9);
     if(cl.res==='mana')S.res=Math.min(100,S.res+1.5);
     return}
-  S.res-=use[3];B.cd[use[1]]=use[4];sfx(use[7]?'heal':'cast');
+  S.res-=skCost(use);B.cd[use[1]]=skCd(use);sfx(use[7]?'heal':'cast');
   if(use[7]){const h=Math.round(st.hp*use[2]*st.healMod);S.hp=Math.min(st.hp,S.hp+h);num(hx,140,'+'+fmt(h),'heal');fx('heal',hx,180);
     if(use[6]==='drain'){hit(targets[0],.8,st,'shadow',use[1])}
     log('battle',`${use[1]} → 恢復 ${fmt(h)} 生命值`);return}
   const tg=use[5]?targets:[targets[0]];
   if(use[6]==='whirl'||use[6]==='shock')fx(use[6],use[6]==='whirl'?hx:hx+120,190);
-  tg.forEach((t,i)=>hit(t,use[2]*st.skillMod,st,use[6],use[1],i*.05));
-  if(caps().double&&Math.random()<.15){const tg2=tg.filter(x=>x.hp>0);if(tg2.length){num(hx,100,'迅捷施法','heal');tg2.forEach((t,i)=>hit(t,use[2]*st.skillMod,st,use[6],use[1],.15+i*.05))}}
+  const sm=skMult(use,use[5]);tg.forEach((t,i)=>hit(t,use[2]*sm,st,use[6],use[1],i*.05));
+  if(Math.random()<((caps().double?.15:0)+(talFx().double||0)/100)){const tg2=tg.filter(x=>x.hp>0);if(tg2.length){num(hx,100,'迅捷施法','heal');tg2.forEach((t,i)=>hit(t,use[2]*sm,st,use[6],use[1],.15+i*.05))}}
 }
 function hit(m,mult,st,fxType,name,delay=0,isPet=false){
   const dm=lvlDiffMods(m.lv);
   const crit=Math.random()<st.crit/100;
-  const C=caps();let d=st.atk*mult*rnd(.88,1.12)*(crit?(C.crit&&!isPet?2.5:2):1)*st.dmgMod*dm.deal*(C.execute&&!isPet&&m.hp/m.max<.2?1.6:1);
+  const C=caps(),F=talFx();const auto=name==='普通攻擊';let d=st.atk*mult*rnd(.88,1.12)*(crit?(2+(isPet?0:(F.critDmg||0)/100+(C.crit?.5:0))):1)*st.dmgMod*dm.deal*(C.execute&&!isPet&&m.hp/m.max<.2?1.6:1)
+    *(isPet?1:(1+(auto?(F.auto||0):0)/100+(m.hp>=m.max?(F.opener||0):0)/100+((m.elite||m.rare)?(F.elite||0):0)/100));
   const mdef=m.lv*2;d*=1-mdef/(mdef+40+S.lv*8);d=Math.max(1,Math.round(d));
   m.hp-=d;m.hurt=1;
-  if(!isPet){if(C.lifesteal){S.hp=Math.min(st.hp,S.hp+d*.06)}if(C.stun&&Math.random()<.1&&m.hp>0){m.at+=2;num(m.x,100,'擊暈','miss',delay)}if(C.dot&&name!=='普通攻擊')m.dot={t:3,dps:d*.1}}
+  if(!isPet){const ls=(C.lifesteal?.06:0)+(F.leech||0)/100;if(ls)S.hp=Math.min(st.hp,S.hp+d*ls);if(Math.random()<(C.stun?.1:0)+(F.stun||0)/100&&m.hp>0){m.at+=2;num(m.x,100,'擊暈','miss',delay)}
+    const dt2=(C.dot?.3:0)+(F.dot||0)/100;if(dt2&&!auto)m.dot={t:3,dps:d*dt2/3}}
   const ranged=!isPet&&!CLASSES[S.cls].melee;
   const travel=ranged?.22:0;
   if(ranged)fx('proj',heroX()+20,148,{tx:m.x,ty:168,kind:fxType,delay});
@@ -652,7 +666,7 @@ function killMob(m){
   const dm=lvlDiffMods(m.lv);
   const xp=Math.round((8+m.lv*4.5)*m.xpK*dm.xp);
   const cp=Math.round((m.lv*m.lv*.5+m.lv*3+2)*rnd(.7,1.3)*(m.elite?3:m.rare?8:1));
-  S.stats.kills++;acc.kills++;
+  S.stats.kills++;acc.kills++;{const kh=(talFx().killHeal||0)/100;if(kh){const st2=stats();S.hp=Math.min(st2.hp,S.hp+st2.hp*kh)}}
   const rb=Math.min(S.rested||0,xp);if(rb)S.rested-=rb;
   gainXp(xp+rb);S.copper+=cp;S.stats.copper+=cp;acc.cp+=cp;
   log('xp',`擊殺 ${m.name} → +${fmt(xp)} EXP${rb?`（+${fmt(rb)} 休息獎勵）`:''}，${moneyTxt(cp)}`);
@@ -1333,8 +1347,8 @@ function renderActionBar(){const el=$('#abar');if(!el||!S)return;const cl=CLASSE
   const key=sk.map(s=>s[1]+((S.skOff||{})[s[1]]?0:1)).join();
   if(key!==abarKey){abarKey=key;el.innerHTML=sk.map((s,i)=>`<button data-act="skTog" data-v="${esc(s[1])}" class="${(S.skOff||{})[s[1]]?'off':''}" style="background-image:url(${skillIcon(s[6],s[1])})" title="${esc(s[1])}：點擊切換自動施放" aria-label="${esc(s[1])}"><span class="kb">${i+1}</span><span class="cd" id="cd${i}"></span><span class="nm">${esc(s[1])}</span></button>`).join('')||'<span class="small muted">尚未學會技能</span>'}
   sk.forEach((s,i)=>{const c=$('#cd'+i);if(!c)return;const left=B&&B.cd?B.cd[s[1]]||0:0;
-    c.style.background=left>0?`conic-gradient(#000000a8 ${left/s[4]*360}deg,transparent 0)`:'none';c.textContent=left>0?Math.ceil(left):'';
-    c.parentElement.classList.toggle('nores',S.res<s[3])})}
+    c.style.background=left>0?`conic-gradient(#000000a8 ${Math.min(1,left/skCd(s))*360}deg,transparent 0)`:'none';c.textContent=left>0?Math.ceil(left):'';
+    c.parentElement.classList.toggle('nores',S.res<skCost(s))})}
 function isLearned(s){return !S.learned||S.learned.includes(s[1])}
 const trainCost=s=>Math.max(10,s[0]*s[0]*15);
 function learnable(){return CLASSES[S.cls].sk.filter(s=>s[0]<=S.lv&&!isLearned(s))}
