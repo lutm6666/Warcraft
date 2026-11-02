@@ -45,6 +45,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .nav button{background:transparent;border:1px solid transparent;border-radius:7px;padding:8px 4px;color:var(--dim);font-weight:500;position:relative}
 .nav button:hover{color:var(--fg);background:var(--panel2)}
 .nav button[aria-current="true"]{color:var(--gold2);background:#2c2a26;border-color:#5a4a2a}
+.nav .qm{position:absolute;top:1px;right:6px;font:900 15px var(--display);color:#f5c518;text-shadow:0 0 2px #000,0 1px 0 #000;font-style:normal}
 .nav .dot{position:absolute;top:5px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--ember)}
 @media (max-width:560px){.nav{grid-template-columns:repeat(6,1fr)}.nav button{font-size:12.5px;padding:7px 1px}}
 
@@ -124,6 +125,7 @@ canvas#cv{width:100%;height:auto;display:block;image-rendering:pixelated;aspect-
 .log{height:220px;overflow-y:auto;background:#0f1218;border:1px solid #000;border-radius:7px;padding:8px 10px;font-size:12.5px;line-height:1.65;font-variant-numeric:tabular-nums}
 .log div{white-space:pre-wrap;word-break:break-all}
 .log time{color:var(--faint);margin-right:6px}
+.chat .c-general{color:#f0c8a0}.chat .c-trade{color:#f0a8a8}.chat .c-lfg{color:#9ad0ff}.chat .c-guild{color:#6ae070}.chat .c-sys{color:#f5c518}.chat .c-me{color:#ffffff}.chat b{font-weight:700}
 .t-battle{color:#cfc6b2}.t-xp{color:#b9a8ff}.t-loot{color:#9ad7a0}.t-sys{color:var(--gold2)}.t-bad{color:#f0948a}
 .statrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .stat{background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:7px 10px;min-width:0}
@@ -150,6 +152,14 @@ canvas#cv{width:100%;height:auto;display:block;image-rendering:pixelated;aspect-
 /* sheet / modal */
 .sheet{position:fixed;inset:0;background:#05060acc;display:grid;place-items:center;z-index:50;padding:16px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
 .sheet>.box{width:min(440px,100%);max-height:88vh;overflow-y:auto;background:var(--panel);border:1px solid #5a4a2a;border-radius:12px;padding:16px;box-shadow:0 20px 60px #000}
+.quest{background:linear-gradient(#e8d8b0,#d8c08a);color:#3a2410;margin:-16px;padding:18px;border-radius:12px;font-family:var(--display)}
+.quest h2{color:#5a1a0a;margin:0;font-size:19px}.quest h3{color:#5a1a0a;margin:12px 0 4px;font-size:14px}.quest p{margin:6px 0;line-height:1.7;font-family:var(--body);font-weight:500}
+.quest .muted,.quest small{color:#6a4a2a}.quest .qhead{display:flex;gap:10px;align-items:center;border-bottom:1px solid #a88a5a;padding-bottom:8px}
+.quest .qmark{font:900 30px var(--display);color:#f0c020;text-shadow:0 0 2px #000,0 2px 0 #6a4a00;width:28px;text-align:center}
+.quest .qch{display:grid;gap:6px}.quest .qpick{display:flex;gap:10px;align-items:center;text-align:left;background:#f4e8c8;border:1px solid #a88a5a;border-radius:8px;padding:6px 8px;color:#3a2410}
+.quest .qpick:hover{border-color:#5a1a0a;background:#fff4d8}.quest .qpick b{display:block;font-family:var(--body);text-shadow:0 0 1px #0006}.quest .qpick small{font-family:var(--body)}
+.quest .r1{color:#5a4a3a}.quest .r2{color:#1a8a20}.quest .r3{color:#1a5ac8}.quest .r4{color:#7a2ac0}
+.quest .btn{background:#8a5a2a;color:#fff4dc;border-color:#5a3a1a}.quest .btn.main{background:linear-gradient(#a8742a,#7d5218)}
 .tip{background:#0d1018;border:1px solid #3a4258;border-radius:8px;padding:10px 12px;line-height:1.55}
 .tip .nm{font-weight:700;font-size:15px}
 .tip .ln{font-variant-numeric:tabular-nums}
@@ -294,12 +304,20 @@ const racesFor=fac=>Object.keys(RACES).filter(k=>RACES[k].fac===fac);
 const SETS={T0:{tier:'地城一',rar:3,n:{warrior:'勇氣',paladin:'光鑄',hunter:'獵獸者',rogue:'暗影',mage:'博學者',warlock:'恐霧',priest:'虔誠',druid:'野性之心'},
    bon:[[2,'攻擊強度 +5%',{atk:.05}],[4,'致命一擊 +3%',{crit:3}],[5,'生命值 +8%',{hp:.08}]]},
  T1:{tier:'T1',rar:4,n:{warrior:'力量',paladin:'秩序',hunter:'巨人追獵者',rogue:'夜幕殺手',mage:'秘法師',warlock:'惡魔之心',priest:'預言',druid:'塞納里奧'},
-   bon:[[2,'攻擊強度 +8%',{atk:.08}],[4,'致命一擊 +5%',{crit:5}],[5,'所有傷害 +10%',{dmg:.1}]]}};
+   bon:[[2,'攻擊強度 +8%',{atk:.08}],[4,'致命一擊 +5%',{crit:5}],[5,'所有傷害 +10%',{dmg:.1}]]},
+ T2:{tier:'T2',rar:4,n:{warrior:'憤怒',paladin:'審判',hunter:'龍追者',rogue:'血牙',mage:'靈風',warlock:'復仇',priest:'卓越',druid:'怒風'},
+   bon:[[2,'攻擊強度 +10%',{atk:.1}],[4,'致命一擊 +6%',{crit:6}],[5,'所有傷害 +12%',{dmg:.12}]]},
+ T3:{tier:'T3',rar:4,n:{warrior:'無畏',paladin:'救贖',hunter:'地穴追獵者',rogue:'骨鐮',mage:'霜火',warlock:'瘟疫之心',priest:'信仰',druid:'夢行者'},
+   bon:[[2,'攻擊強度 +12%',{atk:.12}],[4,'致命一擊 +8%',{crit:8}],[5,'所有傷害 +15%、生命值 +10%',{dmg:.15,hp:.1}]]}};
 const SET_SLOTS=['head','chest','legs','hands','feet'];
 const SETNOUN={plate:{head:'頭盔',chest:'胸甲',legs:'腿甲',hands:'護手',feet:'戰靴',suf:'戰甲'},mail:{head:'頭盔',chest:'鎖甲',legs:'護腿',hands:'手套',feet:'長靴',suf:'護甲'},
   leather:{head:'頭罩',chest:'外衣',legs:'護腿',hands:'手套',feet:'長靴',suf:'套裝'},cloth:{head:'頭冠',chest:'法袍',legs:'長褲',hands:'手套',feet:'便鞋',suf:'法衣'}};
 const TAL_MAX=[5,5,3,5,1], TAL_REQ=[0,3,6,10,15];
-function talDesc(role,i){
+const CAPS={warrior:['execute','lifesteal','shield'],paladin:['regen','shield','stun'],hunter:['pet','crit','stun'],rogue:['double','haste','crit'],mage:['double','crit','shield'],warlock:['regen','pet','dot'],priest:['double','regen','lifesteal'],druid:['crit','shield','regen']};
+const CAPD={execute:'斬殺：目標生命低於 20% 時傷害 +60%',lifesteal:'吸血：造成傷害的 6% 轉為自身生命',shield:'守護：生命低於 30% 時獲得 30% 最大生命的護盾（冷卻 30 秒）',regen:'恩典：戰鬥中每秒恢復 1.5% 生命',
+  stun:'震懾：攻擊有 10% 機率擊暈目標 2 秒',pet:'狂暴寵物：寵物傷害加倍',crit:'致命精通：致命一擊傷害提高為 250%',double:'迅捷施法：技能有 15% 機率立即再施放一次',haste:'衝刺：攻擊速度 +20%',dot:'灼燒：技能使目標燃燒，3 秒內額外受到 30% 傷害'};
+function caps(){const o={};if(!S)return o;S.tal.forEach((t,i)=>{if(t[4]>0)o[CAPS[S.cls][i]]=1});return o}
+function talDesc(role,i,ti){if(i===4&&ti!=null&&S)return CAPD[CAPS[S.cls][ti]]+'；'+(role==='tank'?'受到傷害 -10%':role==='heal'?'傷害 +10%、治療 +25%':'所有傷害 +10%');
   return [
     ()=>'攻擊強度 +3%／級',
     ()=>'致命一擊 +1%／級',
@@ -350,7 +368,9 @@ const DUNGEONS=[
  {id:'sm',n:'血色修道院',lv:32,il:37,rep:'home',cd:600,bg:['#2a1414','#5a2a2a'],bosses:[['狂熱指揮官 杜蘭特','humanoid','#b02a2a'],['審判官 賽爾琳','humanoid','#d0a040',{hood:1}]]},
  {id:'zf',n:'祖爾法拉克',lv:44,il:48,rep:'steamwheedle',cd:600,bg:['#3a2a14','#8a6a3a'],bosses:[['巨蜥 塔札克','beast','#4a7a5a',{raptor:1}],['沙怒祭司 卡魯茲','humanoid','#3a8a7a',{tusk:1}]]},
  {id:'brd',n:'黑石深淵',lv:52,il:56,rep:'thorium',cd:600,bg:['#1e1210','#5a2a18'],bosses:[['熔爐監工 哈格瑞','humanoid','#5a4a3a',{tusk:1}],['黑鐵議長 莫拉斯','dragonkin','#3a3a4a']]},
- {id:'mc',n:'熔火之心',lv:60,il:66,rep:'thorium',cd:1800,raid:1,bg:['#1a0a06','#6a1a08'],bosses:[['熔核巨犬 伊格納','beast','#c04a1a'],['熔岩領主 卡爾杜','elemental','#ff6a1a'],['炎魔督軍 瑟拉格','elemental','#ff3a0a',{big:1,horns:1}]]},
+ {id:'mc',n:'熔火之心',lv:60,il:66,rep:'thorium',cd:1800,raid:1,set:'T1',bg:['#1a0a06','#6a1a08'],bosses:[['熔核巨犬 伊格納','beast','#c04a1a'],['熔岩領主 卡爾杜','elemental','#ff6a1a'],['炎魔督軍 瑟拉格','elemental','#ff3a0a',{big:1,horns:1}]]},
+ {id:'bwl',n:'黑翼之巢',lv:60,il:76,rep:'thorium',cd:1800,raid:1,req:'mc',set:'T2',bg:['#140a0a','#3a1414'],bosses:[['龍人督軍 拉澤克','dragonkin','#5a2a2a'],['暗影龍 瓦薩利','dragonkin','#2a2a3a',{big:1}],['黑焰領主 莫爾薩克','dragonkin','#1a1a24',{big:1,horns:1}]]},
+ {id:'naxx',n:'納克薩瑪斯',lv:60,il:88,rep:'argent',cd:1800,raid:1,req:'bwl',set:'T3',bg:['#0a140e','#1a3a2a'],bosses:[['縫合巨獸 格洛斯','undead','#a8b090',{big:1,ghoul:1}],['蛛后 瑟芮娜','spider','#3a3a3a',{}],['寒霜巫妖 維庫爾','undead','#a0c8e0',{hood:1}]]},
 ];
 const SUFFIX=[['野熊之',{hp:1.4,def:.3}],['靈猴之',{crit:1}],['猛虎之',{atk:.6,crit:.6}],['雄鷹之',{atk:.9}],['巨鯨之',{hp:1,def:.6}],['猛擊之',{atk:1.1}]];
 const OLDSUF={'之熊':'野熊之','之猴':'靈猴之','之虎':'猛虎之','之鷹':'雄鷹之','之巨鯨':'巨鯨之','之猛擊':'猛擊之'};
@@ -409,7 +429,7 @@ function newSave(name,fac,cls,race){
   return s;
 }
 function save(){if(!S)return;S.last=Date.now();try{localStorage.setItem(KEY,JSON.stringify(D?{...S,idle:true}:S))}catch(e){}}
-function fixSave(s){const fixD=it=>{if(it&&it.dmax==null){it.dmax=DMAX[it.slot]||0;it.dur=it.dmax}};(s.inv||[]).forEach(fixD);Object.values(s.eq||{}).forEach(fixD);const fixN=it=>{if(!it||!it.name)return;for(const o in OLDSUF)if(it.name.endsWith(o)){it.name=OLDSUF[o]+it.name.slice(0,-o.length);break}};(s.inv||[]).forEach(fixN);Object.values(s.eq||{}).forEach(fixN);if(!s.learned)s.learned=CLASSES[s.cls].sk.filter(k=>k[0]<=s.lv).map(k=>k[1]);if(!s.race||!RACES[s.race])s.race=racesFor(s.fac).find(r=>RACES[r].cls.includes(s.cls))||racesFor(s.fac)[0];return s}
+function fixSave(s){s.bg=null;const fixD=it=>{if(it&&it.dmax==null){it.dmax=DMAX[it.slot]||0;it.dur=it.dmax}};(s.inv||[]).forEach(fixD);Object.values(s.eq||{}).forEach(fixD);const fixN=it=>{if(!it||!it.name)return;for(const o in OLDSUF)if(it.name.endsWith(o)){it.name=OLDSUF[o]+it.name.slice(0,-o.length);break}};(s.inv||[]).forEach(fixN);Object.values(s.eq||{}).forEach(fixN);if(!s.learned)s.learned=CLASSES[s.cls].sk.filter(k=>k[0]<=s.lv).map(k=>k[1]);if(!s.race||!RACES[s.race])s.race=racesFor(s.fac).find(r=>RACES[r].cls.includes(s.cls))||racesFor(s.fac)[0];return s}
 function load(){try{const t=localStorage.getItem(KEY);if(t){const s=JSON.parse(t);if(s&&s.v===1)return fixSave(s)}}catch(e){}return null}
 
 /* ================= 角色數值 ================= */
@@ -446,7 +466,7 @@ function stats(){
   const atk=Math.round((cl.atk+cl.atkG*(L-1)+g.atk)*(1+m.atk));
   const def=Math.round((cl.def+cl.defG*(L-1)+g.def)*(1+m.def));
   const crit=Math.min(60,cl.crit+g.crit+m.crit);
-  const spd=cl.spd*(1+m.haste);
+  const spd=cl.spd*(1+m.haste)*(caps().haste?1.2:1);
   const dmgMod=(1+m.dmg)*rm.d, skillMod=1+m.skill, takenMod=(1-m.taken)*rm.t, healMod=(1+m.heal)*(r==='heal'?1.5:1);
   const dps=atk*1.35*spd*(1+crit/100)*dmgMod*(1+m.skill*.5)*((S.cls==='hunter'||S.cls==='warlock')?1.22:1);
   return {hp,atk,def,crit,spd,dmgMod,skillMod,takenMod,healMod,regen:m.regen,role:r,dps,dodge:6+(rb.dodge||0)};
@@ -566,13 +586,17 @@ function battleTick(dt){
     num(heroX(),150,'+'+fmt(h),'heal');fx('heal',heroX(),180);log('battle',`使用治療藥水，恢復 ${fmt(h)} 生命值`);if(S.cons.potion===0)log('bad','治療藥水用完了！到商店補貨吧。')}
   // 玩家行動
   B.at-=dt;
-  const pet=petInfo();if(pet&&!B.dead){B.petT=(B.petT??1)-dt;B.petP=Math.max(0,(B.petP||0)-dt*4);if(B.petT<=0){B.petT=1.6;B.petP=1;hit(arrived[0],pet.mult,st,pet.fx,pet.n,0,true)}}
+  const pet=petInfo();if(pet&&!B.dead){B.petT=(B.petT??1)-dt;B.petP=Math.max(0,(B.petP||0)-dt*4);if(B.petT<=0){B.petT=1.6;B.petP=1;hit(arrived[0],pet.mult*(caps().pet?2:1),st,pet.fx,pet.n,0,true)}}
   if(B.at<=0){B.at=1/st.spd;heroAct(st,cl,arrived)}
+  {const C=caps();if(C.regen)S.hp=Math.min(st.hp,S.hp+st.hp*.015*dt);
+   for(const m of arrived)if(m.dot&&m.hp>0){m.dot.t-=dt;m.hp-=m.dot.dps*dt;if(m.dot.t<=0)m.dot=null;if(m.hp<=0){m.hp=0;killMob(m)}}
+   B.shCd=Math.max(0,(B.shCd||0)-dt);if(C.shield&&S.hp<st.hp*.3&&B.shCd<=0){B.shield=st.hp*.3;B.shCd=30;fx('shock',heroX()-60,GY);num(heroX(),110,'護盾','heal');log('battle','守護天賦觸發：獲得護盾')}}
   // 怪物攻擊
   for(const m of arrived){m.at-=dt;if(m.at<=0){m.at=rnd(1.6,2.1);
     const dm=lvlDiffMods(m.lv);let d=m.atk*rnd(.85,1.15)*dm.take*st.takenMod;
     const red=st.def/(st.def+60+12*m.lv);d=Math.max(1,Math.round(d*(1-red)));
     if(Math.random()<st.dodge/100){num(heroX(),130,'閃躲','miss');continue}
+    if(B.shield>0){const ab=Math.min(B.shield,d);B.shield-=ab;d-=ab;if(!d){num(heroX(),130,'吸收','miss');m.lunge=.25;continue}}
     S.hp-=d;num(heroX()+ri(-8,8),128,fmt(d),'hurt');m.lunge=.25;
     if(cl.res==='rage')S.res=Math.min(100,S.res+4);
     if(S.hp<=0){S.hp=0;B.dead=8;S.stats.deaths++;sfx('die');log('bad',`你被 ${m.name} 擊敗了……8 秒後復活，裝備耐久度 -10%`);durLoss(.1);B.mobs.forEach(x=>x.hp=Math.min(x.hp,x.max));return}
@@ -607,13 +631,15 @@ function heroAct(st,cl,targets){
   const tg=use[5]?targets:[targets[0]];
   if(use[6]==='whirl'||use[6]==='shock')fx(use[6],use[6]==='whirl'?hx:hx+120,190);
   tg.forEach((t,i)=>hit(t,use[2]*st.skillMod,st,use[6],use[1],i*.05));
+  if(caps().double&&Math.random()<.15){const tg2=tg.filter(x=>x.hp>0);if(tg2.length){num(hx,100,'迅捷施法','heal');tg2.forEach((t,i)=>hit(t,use[2]*st.skillMod,st,use[6],use[1],.15+i*.05))}}
 }
 function hit(m,mult,st,fxType,name,delay=0,isPet=false){
   const dm=lvlDiffMods(m.lv);
   const crit=Math.random()<st.crit/100;
-  let d=st.atk*mult*rnd(.88,1.12)*(crit?2:1)*st.dmgMod*dm.deal;
+  const C=caps();let d=st.atk*mult*rnd(.88,1.12)*(crit?(C.crit&&!isPet?2.5:2):1)*st.dmgMod*dm.deal*(C.execute&&!isPet&&m.hp/m.max<.2?1.6:1);
   const mdef=m.lv*2;d*=1-mdef/(mdef+40+S.lv*8);d=Math.max(1,Math.round(d));
   m.hp-=d;m.hurt=1;
+  if(!isPet){if(C.lifesteal){S.hp=Math.min(st.hp,S.hp+d*.06)}if(C.stun&&Math.random()<.1&&m.hp>0){m.at+=2;num(m.x,100,'擊暈','miss',delay)}if(C.dot&&name!=='普通攻擊')m.dot={t:3,dps:d*.1}}
   const ranged=!isPet&&!CLASSES[S.cls].melee;
   const travel=ranged?.22:0;
   if(ranged)fx('proj',heroX()+20,148,{tx:m.x,ty:168,kind:fxType,delay});
@@ -634,7 +660,7 @@ function killMob(m){
   // 掉寶
   const dropC=.12*(m.elite?3:1)*(m.rare?8:1);
   if(Math.random()<dropC){const it=makeItem({ilvl:m.lv+ri(-1,1),rar:m.rare?Math.max(3,rollRarity(1)):rollRarity(m.elite?.5:0)});
-    log('loot',`撿取：【${it.name}】（${RAR[it.rar]}）`);if(it.rar>=3){toast(`獲得${RAR[it.rar]}裝備：${it.name}`);sfx('loot')}gainItem(it)}
+    log('loot',`撿取：【${it.name}】（${RAR[it.rar]}）`);if(it.rar>=3){toast(`獲得${RAR[it.rar]}裝備：${it.name}`);if(it.rar>=4)chatEvent('epic',it.name);sfx('loot')}gainItem(it)}
   if(Math.random()<.04){S.cons.potion=(S.cons.potion||0)+1;log('loot','撿取：治療藥水 ×1')}
   if(Math.random()<.008){const k=pick(['sw10','sa10']);S.cons[k]=(S.cons[k]||0)+1;log('loot',`撿取：${CONS[k].n} ×1`);toast(`稀有掉落：${CONS[k].n}`)}
   else if(Math.random()<.03){const k=pick(['sw60','sa60','sw100','sa100']);S.cons[k]=(S.cons[k]||0)+1;log('loot',`撿取：${CONS[k].n} ×1`)}
@@ -648,7 +674,7 @@ function gainXp(x){
   S.xp+=x;S.stats.xp+=x;acc.xp+=x;
   while(S.lv<60&&S.xp>=xpNeed(S.lv)){S.xp-=xpNeed(S.lv);S.lv++;
     const st=stats();S.hp=st.hp;if(B&&!D)fx('lvl',heroX(),GY);sfx('lvl');
-    log('sys',`等級提升！你現在是 ${S.lv} 級。`);toast(`升級！等級 ${S.lv}`);
+    log('sys',`等級提升！你現在是 ${S.lv} 級。`);chatEvent('lvl',S.lv);toast(`升級！等級 ${S.lv}`);
     const cl=CLASSES[S.cls];cl.sk.filter(s=>s[0]===S.lv&&!isLearned(s)).forEach(s=>{if(S.set.autoTrain&&learn(s,true))return;log('sys',`可以向職業訓練師學習：${s[1]}（${moneyTxt(trainCost(s))}）`);toast(`可學習新技能：${s[1]}`)});
     if(S.lv>=10)log('sys','獲得 1 點天賦點數。');
     UI.dirty=true}
@@ -659,10 +685,13 @@ function addRep(id,v,quiet){const before=standing(S.rep[id]||0).i;S.rep[id]=(S.r
   if(!quiet)log('sys',`${repName(id)} 聲望 +${v}`)}
 
 /* ================= 任務 ================= */
+function qAcc(q){return q.acc||S.set.autoQuest}
+const GIVERS={elwynn:'治安官 杜根',durotar:'營地指揮官 卡爾薩',westfall:'哨兵 葛雷斯',barrens:'十字路口哨官 瑪格拉',ashenvale:'哨兵隊長 艾瑟莉',stv:'獵人 巴克萊',tanaris:'熱砂工頭 吉茲',burning:'瑟銀信使 布洛克',epl:'銀色黎明勇士 艾琳娜',silithus:'塞納里奧使者 拉魯斯'};
+const QFLAV=['這片土地需要像你這樣的冒險者。','我已經派出三個人了，沒有一個回來。','動作快，在情況變得更糟之前。','完成之後回來找我，我不會虧待你的。'];
 function qState(z){if(!S.quests[z.id])S.quests[z.id]={i:0,p:0,daily:0};return S.quests[z.id]}
 function curQuest(z){const q=qState(z);if(q.i<z.q.length){const d=z.q[q.i];return {name:d[0],desc:d[1],mob:d[2],need:d[3],item:d[4]||null,daily:false}}
   return {name:'每日清剿：'+z.n,desc:'讓這片土地維持安全。擊敗這個區域的任何敵人。',mob:-1,need:30,item:null,daily:true}}
-function questProgress(z,mi,n){const q=qState(z),c=curQuest(z);if(q.p>=c.need)return;
+function questProgress(z,mi,n){const q=qState(z),c=curQuest(z);if(!qAcc(q))return;if(q.p>=c.need)return;
   if(c.mob!==-1&&c.mob!==mi)return;
   if(c.item){let got=0;for(let i=0;i<n;i++)if(Math.random()<.6)got++;n=got}
   if(!n)return;
@@ -671,15 +700,27 @@ function questProgress(z,mi,n){const q=qState(z),c=curQuest(z);if(q.p>=c.need)re
 }
 function questReward(z){const mid=(z.lv[0]+z.lv[1])/2,c=curQuest(z);const k=c.daily?.6:1;
   return {xp:Math.round(xpNeed(Math.max(1,Math.round(mid)))*.22*k),cp:Math.round((mid*mid*6+40)*k),rep:c.daily?150:250,item:!c.daily}}
-function turnIn(){const z=curZone(),q=qState(z),c=curQuest(z);if(q.p<c.need)return;
+function turnIn(pickIt){const z=curZone(),q=qState(z),c=curQuest(z);if(q.p<c.need)return;
   const r=questReward(z);gainXp(r.xp);S.copper+=r.cp;S.stats.copper+=r.cp;addRep(z.rep,r.rep);
   log('sys',`完成任務「${c.name}」：+${fmt(r.xp)} EXP、${moneyTxt(r.cp)}`);toast(`任務完成：${c.name}`);
-  if(r.item){const it=makeItem({ilvl:Math.max(z.lv[0],Math.min(S.lv,z.lv[1]))+1,rar:Math.random()<.25?3:2});log('loot',`任務獎勵：【${it.name}】`);gainItem(it)}
-  if(q.i<z.q.length)q.i++;q.p=0;UI.dirty=true;save()}
+  if(pickIt){log('loot',`任務獎勵：【${pickIt.name}】`);if(S.inv.length<S.bagCap||itemScore(pickIt)>itemScore(S.eq[pickIt.slot]))gainItem(pickIt);else{S.inv.push(pickIt)}}
+  if(q.i<z.q.length)q.i++;q.p=0;q.acc=false;q.choices=null;UI.dirty=true;save()}
+
+function qChoices(z){const q=qState(z);if(!q.choices){const il=Math.max(z.lv[0],Math.min(S.lv,z.lv[1]))+1;const sl=[...SET_SLOTS,'trinket','weapon'].sort(()=>Math.random()-.5).slice(0,3);
+  q.choices=sl.map((k,i)=>makeItem({slot:k,ilvl:il,rar:i===0&&Math.random()<.35?3:2}))}return q.choices}
+function questDialog(mode){const z=curZone(),q=qState(z),c=curQuest(z),r=questReward(z);
+  const unit=c.item?`收集 ${c.need} 個${c.item}`:c.mob===-1?`擊敗 ${c.need} 個任意敵人`:`擊敗 ${c.need} 隻${z.mobs[c.mob][0]}`;
+  const ch=mode==='done'&&r.item?qChoices(z):null;
+  showSheet(`<div class="quest"><div class="qhead"><span class="qmark">${mode==='done'?'?':'!'}</span><div><small>${esc(GIVERS[z.id]||'任務發布者')}</small><h2>${esc(c.name)}</h2></div></div>
+   <p>${esc(c.desc)}${mode==='new'?esc(QFLAV[hash(c.name)%QFLAV.length]):''}</p>
+   ${mode==='done'?`<p>「做得好，${esc(S.name)}。${esc(z.n)}的人們會記得你的幫助。」</p>`:`<h3>任務目標</h3><p>${unit}</p>`}
+   <h3>獎勵</h3><p>${fmt(r.xp)} 點經驗・${money(r.cp)}・${esc(repName(z.rep))} 聲望 +${r.rep}</p>
+   ${r.item?`<p class="small">${mode==='done'?'選擇你的獎勵：':'你將可以從這些物品中選擇一件：'}</p><div class="qch">${qChoices(z).map((it,i)=>`<button class="qpick" data-act="${mode==='done'?'qPick':'qPeek'}" data-v="${i}" aria-label="${esc(it.name)}">${iconBtn(it)}<span><b class="r${it.rar}">${esc(it.name)}</b><small>${SLOTN[it.slot]}・物品等級 ${it.ilvl}${itemScore(it)>itemScore(S.eq[it.slot])?' <span class="diff-up">▲ 提升</span>':''}</small></span></button>`).join('')}</div>`:''}
+   <div class="row" style="margin-top:14px">${mode==='new'?'<button class="btn main" data-act="qAccept">接受</button><button class="btn" data-act="closeSheet">拒絕</button>':r.item?'<span class="muted small">點選一件獎勵完成任務</span><span class="spacer"></span><button class="btn" data-act="closeSheet">稍後</button>':'<button class="btn main" data-act="qPick" data-v="-1">完成任務</button><button class="btn" data-act="closeSheet">稍後</button>'}</div></div>`)}
 
 /* ================= 地城 ================= */
 const DTRASH={dm:['迪菲亞礦工','humanoid','#8a6a4a',{mask:1}],sfk:['影牙幽魂','undead','#a8a8b8',{}],sm:['血色十字軍戰士','humanoid','#b02a2a',{}],
-  zf:['沙怒狂戰士','humanoid','#4a8a7a',{tusk:1}],brd:['黑鐵矮人','humanoid','#4a4a5a',{}],mc:['熔岩元素','elemental','#ff6a1a',{}]};
+  zf:['沙怒狂戰士','humanoid','#4a8a7a',{tusk:1}],brd:['黑鐵矮人','humanoid','#4a4a5a',{}],mc:['熔岩元素','elemental','#ff6a1a',{}],bwl:['黑翼龍人','dragonkin','#5a2020',{}],naxx:['天譴構造體','undead','#7a9a6a',{ghoul:1}]};
 function startWalk(d){const tr=DTRASH[d.dg.id];d.phase='walk';d.pt=d.ptMax=2.4;d.trash=[0,1,2].map(i=>({x:470+i*75,tx:470+i*75,type:tr[1],color:tr[2],look:tr[3],name:tr[0],hp:1,hurt:0,dying:0}))}
 function partyHit(d,frac){d.php=d.php.map(v=>Math.max(.05,v-frac*rnd(.7,1.2)))}
 function rollLoot(d,it,personal){const me=ri(1,100);const k=personal?0:ri(0,2);let best=0;for(let i=0;i<k;i++)best=Math.max(best,ri(1,100));
@@ -740,9 +781,43 @@ function renderAH(){const A=ahInit();const sellable=S.inv.filter(it=>it.rar>=2);
    <h3>上架</h3>${sellable.length||mats.length?`<div class="list">${sellable.map(it=>`<div class="li" style="padding:7px 12px"><span class="main"><b class="r${it.rar}">【${esc(it.name)}】</b><p>行情約 ${moneyTxt(marketPrice({kind:'item',item:it}))}・商人收購 ${moneyTxt(it.val)}</p></span><button class="btn sm main" data-act="ahPostItem" data-v="${it.id}">上架</button></div>`).join('')}
      ${mats.map(([n,c])=>`<div class="li" style="padding:7px 12px"><span class="main"><b class="${n==='黑蓮花'?'r4':''}">${esc(n)} ×${c}</b><p>行情約 ${moneyTxt(marketPrice({kind:'mat',mat:n,n:c}))}・商人收購 ${moneyTxt(MATV[n]*c)}</p></span><button class="btn sm main" data-act="ahPostMat" data-v="${esc(n)}">全部上架</button></div>`).join('')}</div>`:'<p class="muted small">背包裡沒有優秀以上的裝備或材料可以上架。</p>'}
    <h3>瀏覽（每 30 分鐘更新）</h3><div class="list">${ahBrowse().map((b,i)=>`<div class="li" style="padding:7px 12px"><span class="main"><b class="r${b.item.rar}">【${esc(b.item.name)}】</b><p>物品等級 ${b.item.ilvl}・需要等級 ${reqLv(b.item)}・賣家 ${esc(b.seller)}</p></span><span class="row"><button class="btn sm" data-act="ahView" data-v="${i}">查看</button>${money(b.price)}<button class="btn sm main" data-act="ahBuy" data-v="${i}" ${S.copper<b.price?'disabled':''}>直購</button></span></div>`).join('')}</div></section>`}
+// ===== 戰場與榮譽（軍階名稱為暫譯） =====
+const BGS=[{id:'wsg',n:'戰歌峽谷',lv:10,mode:'奪旗',goal:3,unit:'旗'},{id:'ab',n:'阿拉希盆地',lv:20,mode:'佔領資源點',goal:2000,unit:'資源'},{id:'av',n:'奧特蘭克山谷',lv:51,mode:'推進擊殺將軍',goal:600,unit:'增援'}];
+const RANKH=[0,500,1500,3000,5000,8000,12000,17000,23000,30000,38000,47000,57000,68000];
+const RANKN={A:['列兵','下士','中士','軍士長','士官長','騎士','騎士中尉','騎士隊長','騎士冠軍','少校','指揮官','元帥','戰場元帥','大元帥'],H:['斥候','步兵','中士','資深中士','一等軍士長','石衛士','血衛士','軍團士兵','百夫長','勇士','中校','將軍','督軍','高階督軍']};
+function rankOf(h){let r=0;RANKH.forEach((v,i)=>{if(h>=v)r=i});return r}
+function rankName(r){return RANKN[S.fac][r]}
+const PVPGOODS=[[5,'chest',3,63,3e5],[5,'legs',3,63,3e5],[6,'head',3,63,3e5],[6,'hands',3,63,25e4],[6,'feet',3,63,25e4],[9,'chest',4,71,8e5],[9,'legs',4,71,8e5],[10,'head',4,71,8e5],[11,'trinket',4,71,6e5],[12,'weapon',4,78,15e5]];
+function startBG(b){if(S.lv<b.lv||S.bg||D)return;S.bg={id:b.id,phase:'queue',t:rnd(6,14),dur:30,a:0,h:0};log('sys',`你已排入「${b.n}」的佇列。`);toast(`排隊中：${b.n}`);
+  B.foes=Array.from({length:3},()=>{const fr=racesFor(S.fac==='A'?'H':'A'),r=pick(fr);return {race:r,cls:pick(RACES[r].cls),hp:1}});renderAll()}
+function bgTick(dt){const bg=S.bg;if(!bg)return false;const b=BGS.find(x=>x.id===bg.id);
+  if(bg.phase==='queue'){bg.t-=dt;if(bg.t<=0){bg.phase='fight';bg.t=bg.dur;B.mobs=[];if(!B.foes)B.foes=[{race:racesFor(S.fac==='A'?'H':'A')[0],cls:'warrior',hp:1}];const st=stats();const ratio=st.dps/refDps(S.lv,S.lv+2);bg.p=clamp(.5+(ratio-1)*.6,.15,.85);bg.win=Math.random()<bg.p;
+      log('sys',`「${b.n}」開始了！目標：${b.mode}。`);toast(`戰場開始：${b.n}`);sfx('lvl')}return false}
+  if(bg.phase==='fight'){bg.t-=dt;const prog=1-bg.t/bg.dur;const me=S.fac==='A'?'a':'h',op=me==='a'?'h':'a';
+    const target=bg.win?{[me]:b.goal,[op]:Math.round(b.goal*rnd(.3,.85))}:{[op]:b.goal,[me]:Math.round(b.goal*rnd(.3,.85))};
+    bg.a=Math.round(target.a*prog);bg.h=Math.round(target.h*prog);
+    B.bgHit=(B.bgHit||0)-dt;if(B.bgHit<=0){B.bgHit=rnd(.5,1.1);B.hero.p=1;B.hero.type=CLASSES[S.cls].melee?'melee':'cast';const f=pick(B.foes);f.hp=Math.max(.05,f.hp-rnd(.1,.3));
+      const fi=B.foes.indexOf(f);const fx2=450+fi*85;fx('impact',fx2,170,{kind:pick(['slash','fire','frost','holy','arrow','shadow'])});num(fx2,118,fmt(stats().atk*rnd(1,2.2)),Math.random()<.25?'crit':'dmg');sfx('hit');
+      if(Math.random()<.35){num(heroX(),128,fmt(mobAtk(S.lv)*rnd(.5,1)),'hurt')}if(f.hp<=.05&&Math.random()<.5){log('battle',`你擊殺了敵方的 ${RACES[f.race].n}${CLASSES[f.cls].n}（榮譽擊殺）`);f.hp=1;bg.hk=(bg.hk||0)+1}}
+    B.hero.p=Math.max(0,B.hero.p-dt*4);
+    if(bg.t<=0){const L=S.lv;const hon=bg.win?Math.round(80+L*6+(bg.hk||0)*15):Math.round(25+L*2+(bg.hk||0)*10);const r0=rankOf(S.honor||0);S.honor=(S.honor||0)+hon;const r1=rankOf(S.honor);
+      const xp=L<60?Math.round(xpNeed(L)*(bg.win?.08:.03)):0;if(xp)gainXp(xp);S.bgStats=S.bgStats||{w:0,l:0};S.bgStats[bg.win?'w':'l']++;
+      log(bg.win?'sys':'bad',`「${b.n}」${bg.win?(S.fac==='A'?'聯盟':'部落')+'獲勝！':'失敗了…'}獲得 ${hon} 點榮譽${xp?`、${fmt(xp)} 經驗`:''}。`);
+      if(r1>r0){log('sys',`你的軍階提升為「${rankName(r1)}」！`);toast(`軍階提升：${rankName(r1)}`);chat('guild',pick(NPCN),`恭喜 ${rankName(r1)} ${S.name}！`)}
+      showSheet(`<h2>${esc(b.n)}：${bg.win?'勝利':'敗北'}</h2><p class="muted">最終比分 聯盟 ${bg.a} : ${bg.h} 部落・榮譽擊殺 ${bg.hk||0}</p><dl class="kv"><dt>榮譽</dt><dd>+${hon}</dd>${xp?`<dt>經驗</dt><dd>+${fmt(xp)}</dd>`:''}<dt>軍階</dt><dd>${rankName(r1)}</dd></dl><div class="row" style="margin-top:14px"><button class="btn main" data-act="closeSheet">回到掛機</button></div>`);
+      S.bg=null;B.mobs=[];B.spawn=.5;UI.dirty=true;save()}
+    return true}
+  return false}
+function renderPvP(){const hon=S.honor||0,r=rankOf(hon),nx=RANKH[r+1];const bs=S.bgStats||{w:0,l:0};
+  return `<section class="card" style="margin-top:12px"><h2>戰場與榮譽</h2>
+   <div class="li" style="display:block"><div class="row" style="justify-content:space-between"><b>軍階：${rankName(r)}</b><span class="small muted num">榮譽 ${fmt(hon)}${nx?` / ${fmt(nx)}`:''}・戰績 ${bs.w} 勝 ${bs.l} 敗</span></div><div class="prog"><i style="width:${nx?Math.min(100,(hon-RANKH[r])/(nx-RANKH[r])*100):100}%"></i></div></div>
+   <div class="list" style="margin-top:8px">${BGS.map(b=>{const ok=S.lv>=b.lv;const cur=S.bg&&S.bg.id===b.id;return `<div class="li"><span class="main"><b>${b.n}</b><span class="tag">${b.lv} 級以上</span>${cur?`<span class="tag warn">${S.bg.phase==='queue'?`排隊中 ${Math.ceil(S.bg.t)} 秒`:`進行中 ${Math.ceil(S.bg.t)} 秒`}</span>`:''}<p>${b.mode}・勝利得到大量榮譽，擊殺敵人有額外榮譽。</p></span><button class="btn ${ok&&!S.bg?'main':''}" data-act="bg" data-v="${b.id}" ${ok&&!S.bg&&!D?'':'disabled'}>${ok?'加入佇列':`需要 ${b.lv} 級`}</button></div>`}).join('')}</div>
+   <h3>軍需官</h3><div class="list">${PVPGOODS.map(([rk,sl,rar,il,p],i)=>{const ok=r>=rk;const nm=`${rankName(rk)}的${sl==='weapon'?NOUN.weapon[CLASSES[S.cls].w]:SETNOUN[ARMOR[S.cls]][sl]||'徽記'}`;
+     return `<div class="li" style="padding:7px 12px"><span class="main"><b class="r${rar}">${nm}</b><span class="tag ${ok?'ok':''}">${rankName(rk)}</span><p>物品等級 ${il}・${SLOTN[sl]}</p></span><span class="row">${money(p)}<button class="btn sm" data-act="pvpBuy" data-v="${i}" ${ok&&S.copper>=p?'':'disabled'}>購買</button></span></div>`}).join('')}</div></section>`}
 function dungeonReady(dg){const t=S.dlock[dg.id]||0;return Math.max(0,(t-Date.now())/1000)}
 function startDungeon(dg){
   if(S.lv<dg.lv){toast(`需要等級 ${dg.lv}`);return}
+  if(dg.req&&!(S.cleared||{})[dg.req]){toast(`需要先通關 ${DUNGEONS.find(x=>x.id===dg.req).n}`);return}
   if(dungeonReady(dg)>0){toast('副本冷卻中');return}
   const st=stats(),r=st.role,cl=CLASSES[S.cls];
   const pool=Object.keys(CLASSES).filter(k=>k!==S.cls);
@@ -787,11 +862,11 @@ function bossDown(){const d=D,dg=d.dg,bn=dg.bosses[d.bi][0];
   const n=dg.raid?2:1;
   for(let i=0;i<n;i++){const rr=Math.random();const rar=dg.raid?(rr<.04?5:rr<.75?4:3):(rr<.12?4:3);
     const it=makeItem({ilvl:dg.il+ri(0,2),rar,boss:true});d.loot.push(it);log('loot',`首領掉落：【${it.name}】（${RAR[it.rar]}）`);rollLoot(d,it,false)}
-  const tier=dg.raid?'T1':dg.il>=48?'T0':null;
+  const tier=dg.set||(dg.il>=48&&!dg.raid?'T0':null);
   if(tier&&(dg.raid||Math.random()<.5)){const it=makeSetItem(tier,pick(SET_SLOTS),dg.il);d.loot.push(it);log('loot',`套裝掉落：【${it.name}】（${setName(tier,S.cls)}）`);toast(`套裝：${it.name}`);rollLoot(d,it,true)}
   if(Math.random()<.35){const k=pick(['sw10','sa10','sw60','sa60']);S.cons[k]=(S.cons[k]||0)+1;log('loot',`首領掉落：${CONS[k].n}`)}
   d.bi++;
-  if(d.bi>=dg.bosses.length){d.phase='end';d.res='win';S.stats.dungeons++;S.dlock[dg.id]=Date.now()+dg.cd*1000;
+  if(d.bi>=dg.bosses.length){d.phase='end';d.res='win';S.cleared=S.cleared||{};if(!S.cleared[dg.id]){S.cleared[dg.id]=1;const nx=DUNGEONS.find(x=>x.req===dg.id);if(nx){log('sys',`首次通關「${dg.n}」！解鎖團隊副本「${nx.n}」。`);toast(`解鎖：${nx.n}`);chat('guild',pick(NPCN),`${S.name} 拿到${nx.n}的進度了！`)}}S.stats.dungeons++;S.dlock[dg.id]=Date.now()+dg.cd*1000;
     log('sys',`「${dg.n}」通關！`);setTimeout(endDungeon,900)}
   else startWalk(d);
   save()}
@@ -833,7 +908,7 @@ function offline(sec,report){
   gainXp(xp);S.copper+=cp;S.stats.copper+=cp;S.stats.kills+=kills;
   const z=curZone();addRep(z.rep,Math.round(kills*4),true);
   // 任務進度
-  const c=curQuest(z);if(c){const q=qState(z);q.p=Math.min(c.need,q.p+Math.round(kills/(c.mob===-1?1:3)*(c.item?.6:1)))}
+  const c=curQuest(z);if(c&&qAcc(qState(z))){const q=qState(z);q.p=Math.min(c.need,q.p+Math.round(kills/(c.mob===-1?1:3)*(c.item?.6:1)))}
   // 掉寶
   const n=Math.min(150,Math.floor(kills*.12));let kept=0,soldC=0,best=null;QUIET=true;
   for(let i=0;i<n;i++){const ml=clamp(S.lv+ri(-2,1),z.lv[0],z.lv[1]);const it=makeItem({ilvl:ml,rar:rollRarity()});
@@ -907,12 +982,12 @@ function Q(x,y,w,h,c){g.fillStyle=c;g.fillRect(h2(x),h2(y),h2(w),h2(h))}
 const RCOL=['#9d9d9d','#f2f2f2','#4fd65a','#4a95ff','#bd6bff','#ff9330'];
 const ARMOR={warrior:'plate',paladin:'plate',hunter:'mail',rogue:'leather',druid:'leather',mage:'cloth',warlock:'cloth',priest:'cloth'};
 function heroOpt(){const w=S&&S.eq.weapon;const gr=k=>S&&S.eq[k]?S.eq[k].rar:-1;return {fac:S?S.fac:'A',wr:w?w.rar:1,enh:w?w.enh:0,noW:!!S&&!w,
-  g:{head:gr('head'),chest:gr('chest'),legs:gr('legs'),hands:gr('hands'),feet:gr('feet'),setN:S?Math.max(setCount('T0'),setCount('T1')):0,setT:S&&setCount('T1')>=3?'T1':'T0'}}}
+  g:{head:gr('head'),chest:gr('chest'),legs:gr('legs'),hands:gr('hands'),feet:gr('feet'),...(()=>{if(!S)return {setN:0};for(const t of ['T3','T2','T1','T0']){const c=setCount(t);if(c>=3)return {setN:c,setT:t}}return {setN:0}})()}}}
 let DC=ctx;
 function drawHero(x,y,clsKey,raceKey,t,p,type,sc=1,o={}){
   const rc=RACES[raceKey]||RACES.human;const lunge=type==='melee'?Math.sin(p*Math.PI)*16*sc:0;
   DC.fillStyle='#00000055';DC.beginPath();DC.ellipse(x+lunge,y,15*sc*(rc.w||1),4*sc,0,0,7);DC.fill();
-  outlined(x+lunge,y,()=>{g.scale(sc*(rc.w||1),sc*rc.h);heroBody(clsKey,rc,t,p,type,o)},o.alpha??1);
+  outlined(x+lunge*(o.flip?-1:1),y,()=>{g.scale(sc*(rc.w||1)*(o.flip?-1:1),sc*rc.h);heroBody(clsKey,rc,t,p,type,o)},o.alpha??1);
 }
 function heroBody(ck,rc,t,p,type,o){
   const cl=CLASSES[ck],ar=ARMOR[ck];const b=Math.round(Math.sin(t*3.2)*2)/2;const fc=o.fac==='H'?'#a8281e':'#2a52b0',fcl=o.fac==='H'?'#d8a040':'#e0c060';
@@ -979,7 +1054,7 @@ function heroBody(ck,rc,t,p,type,o){
   else {for(const sx of [-11,6]){P(sx,-37+b,5,4,lt);Q(sx,-33.5+b,5,1,fcl)}}
   if(trim&&G.chest>=0){Q(-9,-35.5+b,18,.8,trim);Q(-9,-14.5+b,18,.6,trim);if(cr>=4){g.save();g.shadowColor=RCOL[cr];g.shadowBlur=6;Q(-1.5,-27+b,3,3,RCOL[cr]);g.restore();Q(-1,-26.5+b,1,1,'#fff')}}
   if(G.head>=3&&ar==='plate')Q(-7,-46+b,14,.8,'#f0c040');
-  if(G.setN>=3){const sc2=G.setT==='T1'?'#ff9a3a':'#7ab0ff';g.save();g.globalAlpha=.85;for(let i=0;i<6;i++){const a2=t*1.6+i*1.05;const rr=16+Math.sin(t*3+i)*2;Q(Math.cos(a2)*rr-.5,-28+Math.sin(a2)*rr*1.3,1.2,1.2,sc2)}g.restore()}
+  if(G.setN>=3){const sc2={T0:'#7ab0ff',T1:'#ff9a3a',T2:'#ff4a4a',T3:'#9aff9a'}[G.setT]||'#7ab0ff';g.save();g.globalAlpha=.85;for(let i=0;i<6;i++){const a2=t*1.6+i*1.05;const rr=16+Math.sin(t*3+i)*2;Q(Math.cos(a2)*rr-.5,-28+Math.sin(a2)*rr*1.3,1.2,1.2,sc2)}g.restore()}
   weapon(ck,cl,t,p,type,b,o);
   // 前臂與手套
   P(4,-33+b,6,10,ar==='plate'?metal:body);Q(4,-28+b,6,.5,ar==='plate'?metalD:dk);
@@ -1206,14 +1281,17 @@ function render(t,dt){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnable
     } else {ctx.fillStyle='#000a';ctx.fillRect(W/2-150,14,300,30);ctx.fillStyle='#f3d27e';ctx.font='900 15px "Noto Serif TC",serif';ctx.textAlign='center';
       ctx.fillText(`${D.dg.n}——前往首領 ${D.bi+1}／${D.dg.bosses.length}`,W/2,35)}
     drawFx(D.fx);drawParts(dt);drawNums(D.nums);ctx.save();ctx.translate(0,206);ctx.scale(.85,.85);drawFrames();ctx.restore();return}
-  const z=curZone();const key='z-'+z.id;if(bgKey!==key){bgCache=buildBg(key,z);bgKey=key}
+  const z=S.bg&&S.bg.phase==='fight'?zoneById({wsg:'ashenvale',ab:'westfall',av:'ashenvale'}[S.bg.id]):curZone();const key='z-'+z.id;if(bgKey!==key){bgCache=buildBg(key,z);bgKey=key}
   ctx.drawImage(bgCache,0,0);drawSky(z,t);
   if(z.deco!=='volcanic'&&z.deco!=='plague'){ctx.fillStyle='#ffffffb0';for(const c of clouds){c.x-=c.s*dt;if(c.x<-c.w)c.x=W+10;ctx.fillRect(c.x,c.y,c.w,10);ctx.fillRect(c.x+12,c.y-8,c.w-30,9)}}
-  for(const m of B.mobs){drawMob(m,t);}
+  const inBG=S.bg&&S.bg.phase==='fight';
+  if(inBG){B.foes.forEach((f,i)=>{const fx2=450+i*85;drawHero(fx2,GY,f.cls,f.race,t+i,Math.sin(t*5+i)>.6?1:0,CLASSES[f.cls].melee?'melee':'cast',1.1,{fac:S.fac==='A'?'H':'A',wr:3,flip:1});ctx.fillStyle='#000c';ctx.fillRect(fx2-18,GY-82,36,5);ctx.fillStyle='#d23a2a';ctx.fillRect(fx2-17,GY-81,34*f.hp,3)})}
+  else for(const m of B.mobs){drawMob(m,t);}
   const pt=petInfo();if(pt&&!(B.dead>0)){const px=heroX()+92;drawMob({x:px,type:pt.type,color:pt.color,look:pt.look,hurt:0,dying:0,flip:1,lunge:(B.petP||0)*.25},t,pt.sc/MOBSC)}
   if(B.dead>0){drawHero(heroX(),GY,S.cls,S.race,0,0,'',HEROSC,{...heroOpt(),alpha:.45});
     ctx.fillStyle='#000a';ctx.fillRect(W/2-120,90,240,44);ctx.fillStyle='#ffb0a8';ctx.font='900 16px "Noto Serif TC",serif';ctx.textAlign='center';ctx.fillText(`靈魂狀態——${Math.ceil(B.dead)} 秒後復活`,W/2,118)}
   else drawHero(heroX(),GY,S.cls,S.race,t,B.hero.p,B.hero.type,HEROSC,heroOpt());
+  if(B.shield>0&&!(B.dead>0)){ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle='#9ad8ff';ctx.fillStyle='#6ab8ff22';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(heroX(),GY-36,30,44,0,0,7);ctx.fill();ctx.globalAlpha=.6+Math.sin(t*6)*.3;ctx.stroke();ctx.restore()}
   for(const m of B.mobs)nameplate(m);
   // 玩家名牌
   ctx.font='700 11px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.fillStyle='#000a';ctx.fillText(S.name,heroX()+1,GY+23);ctx.fillStyle=S.fac==='A'?'#9ac0ff':'#ff9a8a';ctx.fillText(S.name,heroX(),GY+22);
@@ -1221,6 +1299,8 @@ function render(t,dt){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnable
   for(const n of B.nums)n.age+=dt;B.nums=B.nums.filter(n=>n.age<1);
   drawFx(B.fx);drawParts(dt);drawNums(B.nums);
   drawLightOver();drawWeather(z,dt);
+  if(S.bg){const b=BGS.find(x=>x.id===S.bg.id);ctx.save();ctx.fillStyle='#000c';ctx.fillRect(W/2-120,52,240,36);ctx.textAlign='center';ctx.font='900 13px "Noto Serif TC",serif';ctx.fillStyle='#f3d27e';
+    ctx.fillText(S.bg.phase==='queue'?`${b.n}・排隊中 ${Math.ceil(S.bg.t)} 秒`:`${b.n}・剩餘 ${Math.ceil(S.bg.t)} 秒`,W/2,67);if(S.bg.phase==='fight'){ctx.font='700 12px "Noto Sans TC",sans-serif';ctx.fillStyle='#8ab4ff';ctx.fillText(`聯盟 ${S.bg.a}`,W/2-50,83);ctx.fillStyle='#ff8a7a';ctx.fillText(`部落 ${S.bg.h}`,W/2+50,83)}ctx.restore()}
   if(WXN[wxState.k]||dayPhase().k!=='day'){ctx.save();ctx.font='700 10px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.fillStyle='#000a';const lbl=[{night:'夜晚',dawn:'黎明',dusk:'黃昏',day:''}[dayPhase().k],WXN[wxState.k]].filter(Boolean).join('・');ctx.fillRect(W/2-34,H-18,68,14);ctx.fillStyle='#e8dcc2';ctx.fillText(lbl,W/2,H-7.5);ctx.restore()}
   drawFrames();
   if(!S.idle&&!D){ctx.fillStyle='#000a';ctx.fillRect(W/2-90,14,180,28);ctx.fillStyle='#e8dcc2';ctx.font='700 13px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.fillText('掛機已暫停',W/2,33)}
@@ -1228,9 +1308,9 @@ function render(t,dt){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnable
 
 /* ================= 介面 ================= */
 const TABS=[['console','主控台'],['char','人物'],['talent','天賦'],['bag','背包'],['shop','商店'],['map','地圖'],['quest','任務'],['rep','聲望'],['dungeon','地城'],['prof','專業'],['set','設定']];
-function renderNav(){const z=S?curZone():null;let qReady=false;if(S){const q=qState(z),c=curQuest(z);qReady=q.p>=c.need}
+function renderNav(){const z=S?curZone():null;let qReady=false,qNew=false;if(S){const q=qState(z),c=curQuest(z);qReady=q.p>=c.need;qNew=!qAcc(q)}
   const talDot=S&&talPoints()>talUsed();const trDot=S&&learnable().some(s=>S.copper>=trainCost(s));
-  $('#nav').innerHTML=TABS.map(([k,n])=>`<button data-act="tab" data-v="${k}" aria-current="${UI.tab===k}">${n}${(k==='quest'&&qReady)||(k==='talent'&&talDot)||(k==='char'&&trDot)||(k==='shop'&&S&&lowDur())?'<i class="dot"></i>':''}</button>`).join('')}
+  $('#nav').innerHTML=TABS.map(([k,n])=>`<button data-act="tab" data-v="${k}" aria-current="${UI.tab===k}">${n}${k==='quest'&&(qReady||qNew)?`<i class="qm">${qReady?'?':'!'}</i>`:''}${(k==='talent'&&talDot)||(k==='char'&&trDot)||(k==='shop'&&S&&lowDur())?'<i class="dot"></i>':''}</button>`).join('')}
 const SKC={slash:['#8a8a90','#3a3a44'],shock:['#e0b040','#6a4a10'],whirl:['#c0c4cc','#40444e'],holy:['#ffe68a','#8a6a10'],heal:['#8af06a','#1a5a1a'],arrow:['#d8c090','#5a4020'],
   fire:['#ffb040','#8a2010'],frost:['#9ae4ff','#1a4a8a'],arcane:['#ff8aff','#5a1a7a'],shadow:['#b07aff','#2a1050'],nature:['#a0f07a','#2a5a1a'],drain:['#c08aff','#3a1a5a']};
 const SKCACHE={};
@@ -1360,7 +1440,11 @@ function renderPanel(){
       <div class="stat"><small>每小時金錢</small><b>${moneyTxt(R.cps*3600)}</b></div>
       <div class="stat"><small>戰力（每秒傷害）</small><b>${fmt(stats().dps)}</b></div></div>
       <div class="logbox" style="margin-top:12px"><div class="filters" id="logF">${[['all','全部'],['battle','戰鬥'],['xp','經驗'],['loot','掉寶'],['sys','系統']].map(([k,n])=>`<button data-act="logF" data-v="${k}" aria-pressed="${UI.logF===k}">${n}</button>`).join('')}</div>
-      <div class="log" id="log" aria-live="off"></div></div></section>`;
+      <div class="log" id="log" aria-live="off"></div></div>
+      <div class="logbox" style="margin-top:12px"><div class="row" style="justify-content:space-between"><b style="color:var(--gold2)">聊天頻道</b><span class="small muted">線上人數 ${ONLINE}</span></div>
+      <div class="filters" id="chatF">${CHCH.map(([k,n])=>`<button data-act="chatF" data-v="${k}" aria-pressed="${(UI.chatF||'all')===k}">${n}</button>`).join('')}</div>
+      <div class="log chat" id="chat" style="height:200px"></div>
+      <form class="row" id="chatForm" style="flex-wrap:nowrap"><input type="text" id="chatIn" maxlength="60" placeholder="在綜合頻道說點什麼…" autocomplete="off"><button class="btn sm main" type="submit">傳送</button></form></div></section>`;
   }
   else if(UI.tab==='char'){
     const st=stats();
@@ -1374,7 +1458,7 @@ function renderPanel(){
       <p class="muted small">10 級起每升一級得 1 點。投入最多點數的專精決定你的定位，地城會依定位幫你配隊。${S.lv<10?'<b>10 級開放天賦。</b>':''}</p>
       <div class="trees">${cl.specs.map((sp,ti)=>{const pts=S.tal[ti].reduce((a,b)=>a+b,0);return `<div class="tree"><h3><span>${sp[0]} <span class="tag ${sp[1]}">${ROLEN[sp[1]]}</span></span><span class="num muted">${pts}</span></h3>
         ${sp[2].map((tn,i)=>{const r=S.tal[ti][i],mx=TAL_MAX[i],lock=pts<TAL_REQ[i];const can=free>0&&r<mx&&!lock;
-          return `<button class="tal ${r>=mx?'max':''}" data-act="tal" data-t="${ti}" data-i="${i}" ${can?'':'disabled'}><b>${tn}</b><span>${r}/${mx}</span><small>${talDesc(sp[1],i)}${lock?`（需要此系 ${TAL_REQ[i]} 點）`:''}</small></button>`}).join('')}</div>`}).join('')}</div></section>`;
+          return `<button class="tal ${r>=mx?'max':''}" data-act="tal" data-t="${ti}" data-i="${i}" ${can?'':'disabled'}><b>${tn}</b><span>${r}/${mx}</span><small>${talDesc(sp[1],i,ti)}${lock?`（需要此系 ${TAL_REQ[i]} 點）`:''}</small></button>`}).join('')}</div>`}).join('')}</div></section>`;
   }
   else if(UI.tab==='bag'){
     const cells=[];for(let i=0;i<S.bagCap;i++){const it=S.inv[i];cells.push(it?`<button class="r${it.rar}" style="border-color:var(--r${it.rar});background:url(${itemImg(it)}) center/cover;image-rendering:pixelated" data-act="item" data-v="${it.id}" title="${esc(it.name)}" aria-label="${esc(it.name)}">${itemScore(it)>itemScore(S.eq[it.slot])?'<i class="up">▲</i>':''}${it.enh?`<i class="plus" style="position:absolute;right:1px;top:-2px;font-size:10px;font-family:var(--body);color:var(--gold2)">+${it.enh}</i>`:''}</button>`:`<button class="empty" tabindex="-1" aria-hidden="true"></button>`)}
@@ -1403,10 +1487,10 @@ function renderPanel(){
     const q=qState(z),c=curQuest(z),r=questReward(z);const done=q.p>=c.need;
     const unit=c.item?`收集 ${c.item}`:c.mob===-1?'擊敗任意敵人':`擊敗 ${z.mobs[c.mob][0]}`;
     h=`<section class="card"><h2>任務・${esc(z.n)}</h2>
-      <div class="li"><span class="main"><b>${esc(c.name)}</b>${c.daily?'<span class="tag">可重複</span>':`<span class="tag">${q.i+1}／${z.q.length}</span>`}<p>${esc(c.desc)}</p>
-      <p>${unit}：<b class="num">${q.p}／${c.need}</b></p><div class="prog"><i style="width:${q.p/c.need*100}%"></i></div>
-      <p>獎勵：${fmt(r.xp)} EXP、${moneyTxt(r.cp)}、${esc(repName(z.rep))} 聲望 +${r.rep}${r.item?'、優秀以上裝備':''}</p></span>
-      <button class="btn main" data-act="turnIn" ${done?'':'disabled'}>${done?'回報任務':'進行中'}</button></div>
+      <div class="li"><span class="main"><b>${esc(c.name)}</b>${c.daily?'<span class="tag">可重複</span>':`<span class="tag">${q.i+1}／${z.q.length}</span>`}<p>${esc(GIVERS[z.id]||'')}：${esc(c.desc)}</p>
+      <p>${!qAcc(q)?'<b style="color:#f5c518">尚未接受</b>・':''}${unit}：<b class="num">${q.p}／${c.need}</b></p><div class="prog"><i style="width:${q.p/c.need*100}%"></i></div>
+      <p>獎勵：${fmt(r.xp)} EXP、${moneyTxt(r.cp)}、${esc(repName(z.rep))} 聲望 +${r.rep}${r.item?'、三選一裝備':''}</p></span>
+      ${done?'<button class="btn main" data-act="turnIn">回報任務</button>':!qAcc(q)?'<button class="btn main" data-act="turnIn">查看任務</button>':'<span class="tag warn">進行中</span>'}</div>
       <p class="muted small" style="margin-top:10px">任務在掛機時自動推進，換地圖後會切換成該區的任務線。每個地區有 3 個主線任務，完成後解鎖可重複的每日清剿。</p>
       <h3>其他地區</h3><div class="list">${zonesFor(S.fac).filter(zz=>zz.id!==z.id&&S.quests[zz.id]).map(zz=>{const qq=qState(zz),cc=curQuest(zz);return `<div class="li" style="padding:8px 12px"><span class="main"><b>${zz.n}</b><p>${esc(cc.name)}（${qq.p}／${cc.need}）</p></span></div>`}).join('')||'<p class="muted small">尚未在其他地區接任務。</p>'}</div></section>`;
   }
@@ -1424,10 +1508,10 @@ function renderPanel(){
   else if(UI.tab==='dungeon'){
     const st=stats();
     h=`<section class="card"><h2>地城與團隊副本</h2><p class="muted small">系統會幫你配齊隊伍（坦克、治療、輸出），你目前擔任 <b>${ROLEN[st.role]}</b>。首領在激怒前沒被擊倒就會團滅。戰力以你的每秒傷害對照建議裝等計算。</p><div class="list">
-      ${DUNGEONS.map(dg=>{const cd=dungeonReady(dg),ratio=st.dps/refDps(dg.lv,dg.il);const lvOk=S.lv>=dg.lv;
-        const tg=!lvOk?`<span class="tag">需要 ${dg.lv} 級</span>`:ratio>=.95?'<span class="tag ok">戰力充足</span>':ratio>=.72?'<span class="tag warn">勉強可行</span>':'<span class="tag bad">戰力不足</span>';
-        return `<div class="li"><span class="main"><b>${dg.n}</b>${dg.raid?'<span class="tag">團隊 20 人</span>':''}${tg}<p>建議等級 ${dg.lv}・掉落物品等級 ${dg.il}+・首領：${dg.bosses.map(b=>b[0]).join('、')}</p>${lvOk?`<p>你的戰力：<b class="num">${Math.round(ratio*100)}%</b>（建議 75% 以上）</p>`:''}</span>
-          <button class="btn ${cd>0||!lvOk?'':'main'}" data-act="dungeon" data-v="${dg.id}" ${cd>0||!lvOk||D?'disabled':''}>${cd>0?'冷卻 '+durStr(cd):'進入'}</button></div>`}).join('')}</div></section>`;
+      ${DUNGEONS.map(dg=>{const cd=dungeonReady(dg),ratio=st.dps/refDps(dg.lv,dg.il);const att=!dg.req||(S.cleared||{})[dg.req];const lvOk=S.lv>=dg.lv&&att;
+        const tg=!att?`<span class="tag bad">需要通關 ${DUNGEONS.find(x=>x.id===dg.req).n}</span>`:S.lv<dg.lv?`<span class="tag">需要 ${dg.lv} 級</span>`:ratio>=.95?'<span class="tag ok">戰力充足</span>':ratio>=.72?'<span class="tag warn">勉強可行</span>':'<span class="tag bad">戰力不足</span>';
+        return `<div class="li"><span class="main"><b>${dg.n}</b>${dg.raid?'<span class="tag">團隊 20 人</span>':''}${(S.cleared||{})[dg.id]?'<span class="tag ok">已通關</span>':''}${dg.set?`<span class="tag">${setName(dg.set,S.cls)}</span>`:''}${tg}<p>建議等級 ${dg.lv}・掉落物品等級 ${dg.il}+・首領：${dg.bosses.map(b=>b[0]).join('、')}</p>${lvOk?`<p>你的戰力：<b class="num">${Math.round(ratio*100)}%</b>（建議 75% 以上）</p>`:''}</span>
+          <button class="btn ${cd>0||!lvOk?'':'main'}" data-act="dungeon" data-v="${dg.id}" ${cd>0||!lvOk||D?'disabled':''}>${cd>0?'冷卻 '+durStr(cd):'進入'}</button></div>`}).join('')}</div></section>`+renderPvP();
   }
   else if(UI.tab==='prof'){
     S.profs=S.profs||[];S.psk=S.psk||{};const z=curZone(),zt=zoneTier(z);
@@ -1444,6 +1528,7 @@ function renderPanel(){
     h=`<section class="card"><h2>設定</h2><div class="grid2"><div class="list">
       <label class="ck"><input type="checkbox" id="setGray" data-act="set" data-v="sellGray" ${S.set.sellGray?'checked':''}>自動販賣粗糙（灰色）物品</label>
       <label class="ck"><input type="checkbox" id="setWhite" data-act="set" data-v="sellWhite" ${S.set.sellWhite?'checked':''}>自動販賣普通（白色）物品</label>
+      <label class="ck"><input type="checkbox" id="setQa" data-act="set" data-v="autoQuest" ${S.set.autoQuest?'checked':''}>自動接受任務（離線時也會推進）</label>
       <label class="ck"><input type="checkbox" id="setRp" data-act="set" data-v="autoRepair" ${S.set.autoRepair?'checked':''}>死亡後自動修理裝備（錢夠時）</label>
       <label class="ck"><input type="checkbox" id="setTr" data-act="set" data-v="autoTrain" ${S.set.autoTrain?'checked':''}>升級時自動向訓練師學習新技能</label>
       <label class="ck"><input type="checkbox" id="setEq" data-act="set" data-v="autoEquip" ${S.set.autoEquip?'checked':''}>撿到更好的裝備時自動穿上</label>
@@ -1454,11 +1539,36 @@ function renderPanel(){
       <h3>角色</h3><button class="btn danger sm" data-act="askDelete">刪除角色並重新開始</button></div></div></section>`;
   }
   el.innerHTML=h;
-  if(UI.tab==='console'){logDirty=true;renderLog()}
+  if(UI.tab==='console'){logDirty=true;renderLog();chatDirty=true;renderChat()}
   if(UI.tab==='set'){const r=$('#setPot');r.oninput=()=>{S.set.potAt=+r.value;$('#potV').textContent=r.value+'%'};}
 }
 function renderConsoleStats(){const el=$('#cStats');if(!el)return;const R=S.rates.kps>0?S.rates:estimateRates();
   el.innerHTML=`<div class="stat"><small>累計擊殺</small><b>${fmt(S.stats.kills)}</b></div><div class="stat"><small>每小時經驗</small><b>${fmt(R.xps*3600)}</b></div><div class="stat"><small>每小時金錢</small><b>${moneyTxt(R.cps*3600)}</b></div><div class="stat"><small>戰力（每秒傷害）</small><b>${fmt(stats().dps)}</b></div>`}
+// ===== 聊天頻道（模擬伺服器） =====
+const CHCH=[['all','全部'],['general','綜合'],['trade','交易'],['lfg','尋求組隊'],['guild','公會'],['sys','系統']];
+const CHN={general:'綜合',trade:'交易',lfg:'尋求組隊',guild:'公會',sys:'系統',me:'綜合'};
+const NPCN=['冰風','阿瑞克','小麥','月影','鐵錘','風行者','雷霆','灰燼','夜歌','奶茶不加冰','黑手','血色蘋果','石頭湯','暗夜貓','大地之怒','麻糬','光之子','不會打團','烤肉醬','老司機'];
+let CHAT=[],chatDirty=true,chatT=4;const ONLINE=ri(180,260);
+function chat(ch,who,text){CHAT.push({t:timeStr(),ch,who,text});if(CHAT.length>120)CHAT.shift();chatDirty=true}
+function chatFill(tpl){const z=S?curZone():ZONES[0];const m=pick(z.mobs);const dg=pick(DUNGEONS);const mats=[...PROFS.mining.mats,...PROFS.herb.mats,...PROFS.skin.mats,...CLOTH];
+  return tpl.replace(/\{zone\}/g,z.n).replace(/\{mob\}/g,m[0]).replace(/\{dungeon\}/g,dg.n).replace(/\{boss\}/g,pick(dg.bosses)[0]).replace(/\{mat\}/g,pick(mats)).replace(/\{cls\}/g,pick(Object.values(CLASSES)).n)
+    .replace(/\{role\}/g,pick(['坦','補','輸出','法師','牧師'])).replace(/\{price\}/g,`${ri(1,30)}金`).replace(/\{player\}/g,pick(NPCN)).replace(/\{item\}/g,()=>{try{return makeItem({ilvl:ri(20,60),rar:ri(2,4)}).name}catch(e){return '神秘的武器'}}).replace(/\{n\}/g,ri(1,7))}
+const CHT={general:['有人知道{zone}的{mob}哪裡比較多嗎','{zone}又下雨了…','剛剛被{mob}追著打，好險','求問{cls}天賦怎麼點比較好','{dungeon}的{boss}好難打','有人在{zone}看到稀有怪嗎','終於存到 90 金買坐騎了！','黑蓮花一天都沒看到','拍賣場什麼都好貴'],
+  trade:['收{mat}，一組 {price}','賣【{item}】，私我出價','代工附魔，自備材料','賣{mat} ×20，{price} 帶走','收黑蓮花，價格好談','賣繃帶，一組 {price}'],
+  lfg:['{dungeon} 缺{role}，來就開','{dungeon} 2=3，缺{role}','{zone}任務組人，一起清{mob}','{dungeon} 速刷，缺{role}，裝等不限','團隊副本缺治療，私我'],
+  guild:['晚安各位','今天團本誰要去？','公會倉庫放了一些{mat}，需要的自己拿','有人要一起去{zone}嗎','剛剛又被{mob}殺了…','明天八點熔火之心集合']};
+function chatTick(dt){chatT-=dt;if(chatT>0)return;chatT=rnd(5,13);const r=Math.random();
+  if(r<.12){const ok=Math.random()<.45;const sc=pick(['武器附魔卷軸 10%','護甲附魔卷軸 60%','武器附魔卷軸 60%','護甲附魔卷軸 10%']);
+    chat('sys','',ok?chatFill(`✦ {player} 使用${sc}，成功將【{item}】強化至 +{n}！`):chatFill(`{player} 使用${sc}強化【{item}】，失敗。`));return}
+  if(r<.17){chat('sys','',chatFill('{player} 的隊伍擊敗了 {boss}！'));return}
+  const ch=pick(['general','general','trade','trade','lfg','guild']);chat(ch,pick(NPCN),chatFill(pick(CHT[ch])))}
+function chatEvent(kind,v){if(kind==='lvl'){setTimeout(()=>{chat('guild',pick(NPCN),v>=60?`恭喜 ${S.name} 滿級！！`:'gz');if(Math.random()<.6)chat('guild',pick(NPCN),pick(['gz','恭喜','gzgz',`${S.name} 升好快`]))},800)}
+  if(kind==='epic')setTimeout(()=>chat('guild',pick(NPCN),pick(['哇紫裝！','歐皇','分我一點運氣',`${v} 好看耶`])),900)}
+function renderChat(){const el=$('#chat');if(!el||!chatDirty)return;chatDirty=false;const f=UI.chatF||'all';
+  const list=CHAT.filter(c=>f==='all'||c.ch===f||(f==='general'&&c.ch==='me')).slice(-80);const atBottom=el.scrollTop+el.clientHeight>=el.scrollHeight-30;
+  el.innerHTML=list.map(c=>`<div class="c-${c.ch}"><time>${c.t}</time>${c.ch==='sys'?'':`[${CHN[c.ch]}] `}${c.who?`<b>[${esc(c.who)}]</b>：`:''}${esc(c.text)}</div>`).join('');if(atBottom)el.scrollTop=el.scrollHeight}
+document.addEventListener('submit',e=>{if(e.target.id!=='chatForm')return;e.preventDefault();const i=$('#chatIn');const v=i.value.trim();if(!v||!S)return;chat('me',S.name,v);i.value='';
+  if(Math.random()<.5)setTimeout(()=>chat('general',pick(NPCN),pick(['哈哈','+1','同意',`${S.name} 你在哪？`,'真的假的','笑死','我也是'])),rnd(1500,4000))});
 function renderLog(){const el=$('#log');if(!el||!logDirty)return;logDirty=false;
   const f=UI.logF;const items=LOG.filter(l=>f==='all'||l.type===f||(f==='sys'&&l.type==='bad')).slice(-90);
   const atBottom=el.scrollTop+el.clientHeight>=el.scrollHeight-30;
@@ -1495,6 +1605,7 @@ function renderCreate(){
 const ACT={
   tab:d=>{UI.tab=d.v;closeSheet();renderAll();window.scrollTo({top:0,behavior:'smooth'})},
   toggleIdle:()=>{S.idle=!S.idle;if(!S.idle)B.mobs=[];log('sys',S.idle?'開始自動掛機。':'掛機暫停。');renderStatus()},
+  chatF:d=>{UI.chatF=d.v;document.querySelectorAll('#chatF button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===d.v));chatDirty=true;renderChat()},
   logF:d=>{UI.logF=d.v;document.querySelectorAll('#logF button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===d.v));logDirty=true;renderLog()},
   repair:()=>{repairAll(false);renderAll();save()},
   prof:d=>{S.profs=S.profs||[];S.psk=S.psk||{};if(S.profs.length>=2||S.profs.includes(d.v)||S.copper<1000)return;S.copper-=1000;S.profs.push(d.v);S.psk[d.v]=S.psk[d.v]||1;toast(`學會 ${PROFS[d.v].n}`);renderAll();save()},
@@ -1509,6 +1620,8 @@ const ACT={
   ahView:d=>{const b=ahBrowse()[+d.v];if(!b)return;showSheet(`${itemTip(b.item,S.eq[b.item.slot]||null)}<div class="row" style="margin-top:12px"><span class="spacer"></span><button class="btn" data-act="closeSheet">關閉</button></div>`)},
   ahBuy:d=>{const A=ahInit(),b=A.browse.list[+d.v];if(!b||S.copper<b.price)return;if(S.inv.length>=S.bagCap){toast('背包已滿');return}S.copper-=b.price;b.item.id=S.nid++;S.inv.push(b.item);A.browse.list.splice(+d.v,1);log('loot',`拍賣場：以 ${moneyTxt(b.price)} 買下【${b.item.name}】`);toast('購買成功');renderAll();save()},
   snd:()=>{try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume()}catch(e){toast('這個瀏覽器不支援音效');return}sfxOn=!sfxOn;const b=$('#sndBtn');b.textContent=sfxOn?'♪ 音效：開':'♪ 音效：關';b.setAttribute('aria-pressed',sfxOn);if(sfxOn)sfx('loot')},
+  bg:d=>{const b=BGS.find(x=>x.id===d.v);if(b)startBG(b)},
+  pvpBuy:d=>{const [rk,sl,rar,il,p]=PVPGOODS[+d.v];if(rankOf(S.honor||0)<rk||S.copper<p)return;if(S.inv.length>=S.bagCap){toast('背包已滿');return}S.copper-=p;const it=makeItem({slot:sl,ilvl:il,rar,name:`${rankName(rk)}的${sl==='weapon'?NOUN.weapon[CLASSES[S.cls].w]:SETNOUN[ARMOR[S.cls]][sl]||'徽記'}`});S.inv.push(it);toast(`購買 ${it.name}`);renderAll();save()},
   learn:d=>{const sk=CLASSES[S.cls].sk.find(s=>s[1]===d.v);if(sk&&learn(sk)){renderAll();save()}},
   buyMount:()=>{const p=900000;if(S.lv<40||S.mount||S.copper<p)return;S.copper-=p;S.mount=true;toast('學會騎術，獲得坐騎！');log('sys','你學會了初級騎術並買下第一隻坐騎。敵人重生加快 40%。');renderAll();save()},
   skTog:d=>{S.skOff=S.skOff||{};S.skOff[d.v]=!S.skOff[d.v];toast(S.skOff[d.v]?`${d.v}：停止自動施放`:`${d.v}：恢復自動施放`);abarKey='';renderActionBar();save()},
@@ -1525,7 +1638,10 @@ const ACT={
   openChest:()=>{if(!(S.cons.chest>0))return;S.cons.chest--;const r=Math.random();const rar=r<.01?5:r<.1?4:r<.4?3:2;const it=makeItem({ilvl:S.lv+2,rar});log('loot',`神秘寶箱開出：【${it.name}】（${RAR[rar]}）`);toast(`開出${RAR[rar]}：${it.name}`);
     if(S.inv.length>=S.bagCap){S.copper+=it.val;toast('背包已滿，已自動販賣')}else S.inv.push(it);renderAll();save();openItem(it.id)},
   travel:d=>{S.zone=d.v;B.mobs=[];B.spawn=.6;bgKey='';log('sys',`前往 ${curZone().n}。`);UI.tab='console';renderAll();save()},
-  turnIn:()=>{turnIn();renderAll()},
+  turnIn:()=>{const z=curZone(),q=qState(z);if(q.p>=curQuest(z).need)questDialog('done');else if(!qAcc(q))questDialog('new')},
+  qAccept:()=>{const z=curZone(),q=qState(z);q.acc=true;log('sys',`接受任務：${curQuest(z).name}`);toast(`接受任務：${curQuest(z).name}`);closeSheet();renderAll();save()},
+  qPeek:()=>{},
+  qPick:d=>{const z=curZone(),i=+d.v;const it=i>=0?qChoices(z)[i]:null;closeSheet();turnIn(it);renderAll()},
   tal:d=>{const t=+d.t,i=+d.i;const pts=S.tal[t].reduce((a,b)=>a+b,0);if(talPoints()-talUsed()<=0||S.tal[t][i]>=TAL_MAX[i]||pts<TAL_REQ[i])return;S.tal[t][i]++;renderAll();save()},
   talReset:()=>{const c=S.lv*S.lv*20;if(S.copper<c){toast('金錢不足');return}S.copper-=c;S.tal=[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];toast('天賦已重置');renderAll();save()},
   repBuy:d=>{const id=d.r,gi=+d.g,il=REP_ILVL[id],s=standing(S.rep[id]||0);
@@ -1562,9 +1678,9 @@ let lastLogic=Date.now();
 function logic(){if(!S||!started)return;const now=Date.now();let dt=(now-lastLogic)/1000;lastLogic=now;
   if(dt>15){if(!D)offline(dt,dt>120);dt=0}
   while(dt>0){const s=Math.min(.1,dt);dt-=s;
-    if(D)dungeonTick(s);else{if((S.mount||S.epicMount)&&B.spawn>0)B.spawn-=s*(S.epicMount?.6:.4);battleTick(s);if(S.idle&&!B.dead)updateRates(s)}}
+    if(D)dungeonTick(s);else if(bgTick(s)){}else{if((S.mount||S.epicMount)&&B.spawn>0)B.spawn-=s*(S.epicMount?.6:.4);battleTick(s);if(S.idle&&!B.dead)updateRates(s)}}
   saveT+=.1;uiT+=.1;
-  renderStatus();renderLog();
+  renderStatus();renderLog();if(S&&started){chatTick(.1);renderChat()}
   if(uiT>=1){uiT=0;if(UI.dirty&&!$('#sheet').innerHTML&&!['set','talent'].includes(UI.tab)&&!(UI.tab==='console'))renderAll();else if(UI.dirty){renderNav();UI.dirty=false}
     if(['dungeon','quest','rep'].includes(UI.tab)&&!$('#sheet').innerHTML)renderPanel();
     if(UI.tab==='console')renderConsoleStats()}
