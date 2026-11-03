@@ -128,6 +128,7 @@ canvas#cv{width:100%;height:auto;display:block;image-rendering:pixelated;aspect-
 .log div{white-space:pre-wrap;word-break:break-all}
 .log time{color:var(--faint);margin-right:6px}
 .chat .c-general{color:#f0c8a0}.chat .c-trade{color:#f0a8a8}.chat .c-lfg{color:#9ad0ff}.chat .c-guild{color:#6ae070}.chat .c-sys{color:#f5c518}.chat .c-me{color:#ffffff}.chat b{font-weight:700}
+.t-yell{color:#ff6a5a;font-weight:700}
 .t-battle{color:#cfc6b2}.t-xp{color:#b9a8ff}.t-loot{color:#9ad7a0}.t-sys{color:var(--gold2)}.t-bad{color:#f0948a}
 .statrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .stat{background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:7px 10px;min-width:0}
@@ -378,6 +379,19 @@ const ZONES=[
   mobs:[['異種蠍','insect','#8a6a3a',58,60],['暮光邪教徒','humanoid','#5a3a7a',58,60,{hood:1}],['塵土風元素','elemental','#d8d0c0',59,60]],
   q:[['蟲巢的威脅','塞納里奧議會要求削減異種蠍數量。',0,16],['暮光密文','從邪教徒身上找出他們的密文。',1,14,'暮光密文'],['風暴之源','擊潰在沙漠肆虐的風元素。',2,14]]},
 ];
+ZONES.splice(1,0,
+ {id:'dunmorogh',fac:'A',n:'丹莫洛',lv:[1,10],rep:'home',deco:'snow',sky:['#a8c4e0','#e8f0f8'],hill:'#c8d4e0',ground:'#e8eef4',soil:'#6a6a72',
+  mobs:[['雪原狼','beast','#c8ccd4',1,4],['碎石穴居人','humanoid','#8a7a9a',3,7,{snout:1}],['冰爪熊','beast','#e0e4ea',6,10,{bear:1}]],
+  q:[['寒風中的狼嚎','鐵爐堡山腳下的狼群越來越大膽，替矮人獵人清除牠們。',0,10],['穴居人的骨棒','穴居人占據了南邊的洞窟，帶回他們的骨棒證明戰果。',1,8,'穴居人骨棒'],['冰原霸主','冰爪熊開始襲擊補給車隊，前去討伐。',2,10]]},
+ {id:'teldrassil',fac:'A',n:'泰達希爾',lv:[1,10],rep:'home',deco:'forest',sky:['#5a6ab0','#a8b4e0'],hill:'#3a4a7a',ground:'#4a6a5a',soil:'#3a3048',
+  mobs:[['夜刃幼豹','beast','#4a4068',1,4],['腐化林精','elemental','#6a8a4a',3,7],['毒牙蜘蛛','spider','#3a2a4a',6,10]],
+  q:[['月光下的試煉','德魯伊要求新生的哨兵證明自己，清除失控的夜刃幼豹。',0,10],['淨化林地','腐化林精散發著汙濁的氣息，收集它們的殘枝交給德魯伊。',1,8,'腐化的枝條'],['巢穴之毒','毒牙蜘蛛在古樹根部築巢，剷除牠們。',2,10]]},
+ {id:'tirisfal',fac:'H',n:'提瑞斯法林地',lv:[1,10],rep:'home',deco:'plague',sky:['#6a6a5a','#b0ac90'],hill:'#4a4a3a',ground:'#5a5a42',soil:'#3a3428',
+  mobs:[['腐屍狼','beast','#7a7a6a',1,4,{ghoul:1}],['無腦的殭屍','undead','#8aa07a',3,7,{ghoul:1}],['血色十字軍新兵','humanoid','#b02a2a',6,10]],
+  q:[['甦醒之後','你在墓地中醒來。被遺忘者需要你證明價值，清除遊蕩的腐屍狼。',0,10],['失控的同胞','並非所有亡者都保有自我，結束無腦殭屍的痛苦並帶回牠們的遺物。',1,8,'褪色的徽章'],['十字軍的威脅','血色十字軍在林地邊緣紮營，削弱他們的兵力。',2,10]]},
+ {id:'mulgore',fac:'H',n:'莫高雷',lv:[1,10],rep:'home',deco:'plains',sky:['#90c0e8','#e0f0f8'],hill:'#6a9a4a',ground:'#8ab04a',soil:'#6a4a2a',
+  mobs:[['平原陸行鳥雛','bird','#c0a070',1,4],['草原土狼','beast','#a08060',3,7],['豺狼人盜獵者','humanoid','#7a6a4a',6,10,{snout:1}]],
+  q:[['大地之母的祝福','長者要你走遍草原，幫忙驅趕騷擾牧群的陸行鳥。',0,10],['土狼的獠牙','部族的獵人需要土狼的獠牙製作護符。',1,8,'土狼獠牙'],['盜獵者','豺狼人在獵殺神聖的科多獸，把他們趕出莫高雷。',2,10]]});
 const DUNGEONS=[
  {id:'dm',n:'死亡礦坑',lv:16,il:20,rep:'home',cd:600,bg:['#2a2018','#4a3a2a'],bosses:[['叛逃工匠 戈爾登','construct','#8a6a4a'],['灰帆艦長 莫雷茲','humanoid','#7a2a2a',{mask:1}]]},
  {id:'sfk',n:'影牙城堡',lv:21,il:25,rep:'home',cd:600,bg:['#1a1c26','#3a3c4e'],bosses:[['狼人管家 渥夫雷','beast','#5a5a6a'],['虛骨巫師 艾斯坦','undead','#bfb5a0']]},
@@ -435,7 +449,7 @@ let B=null; // 戰鬥（不存檔）
 let D=null; // 地城（不存檔）
 let LOG=[];
 function newSave(name,fac,cls,race){
-  const s={v:1,cid:Date.now(),name,fac,cls,race,lv:1,xp:0,copper:500,hp:1,res:0,zone:fac==='A'?'elwynn':'durotar',
+  const s={v:1,cid:Date.now(),name,fac,cls,race,lv:1,xp:0,copper:500,hp:1,res:0,zone:({human:'elwynn',dwarf:'dunmorogh',gnome:'dunmorogh',nelf:'teldrassil',orc:'durotar',troll:'durotar',undead:'tirisfal',tauren:'mulgore'})[race]||(fac==='A'?'elwynn':'durotar'),
     inv:[],eq:{},cons:{potion:5,sw100:2,sa100:2,food:10,drink:10},tal:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]],
     quests:{},rep:{home:0,steamwheedle:0,thorium:0,argent:0,cenarion:0},dlock:{},bagCap:32,
     stats:{kills:0,xp:0,copper:0,deaths:0,dungeons:0,born:Date.now()},
@@ -559,18 +573,22 @@ const zonesFor=fac=>ZONES.filter(z=>!z.fac||z.fac===fac);
 function curZone(){return zoneById(S.zone)}
 function repName(id){const r=REPS[id];return typeof r==='string'?r:r[S.fac]}
 function standing(v){let s=STANDING[0],i=0;STANDING.forEach((x,j)=>{if(v>=x[0]){s=x;i=j}});const next=STANDING[i+1];return {n:s[1],i,lo:s[0],hi:next?next[0]:s[0]+21000}}
-const XMOBS={elwynn:[['魚人潮行者','murloc','#4a8a9a',4,8],['狗頭人礦工','humanoid','#a08050',7,10,{snout:1}]],durotar:[['杜洛塔猛禽','bird','#8a6a4a',3,7],['刺背野豬人','humanoid','#7a4a2a',5,9,{tusk:1}]],
+const XMOBS={dunmorogh:[['冰霜野豬','beast','#9aa0b0',4,8,{tusk:1}],['麻煩製造者狗頭人','humanoid','#a08050',7,10,{snout:1}]],teldrassil:[['月光枭獸幼崽','bird','#6a6a9a',4,8],['墮落的林地精靈','humanoid','#7a5aa0',7,10,{hood:1}]],
+  tirisfal:[['瘟疫蝙蝠','bird','#5a4a5a',4,8],['骷髏苦工','undead','#d8d0b8',7,10]],mulgore:[['平原野豬','beast','#8a6a4a',4,8,{tusk:1}],['風暴巨鷹','bird','#a08a6a',7,10]],elwynn:[['魚人潮行者','murloc','#4a8a9a',4,8],['狗頭人礦工','humanoid','#a08050',7,10,{snout:1}]],durotar:[['杜洛塔猛禽','bird','#8a6a4a',3,7],['刺背野豬人','humanoid','#7a4a2a',5,9,{tusk:1}]],
   westfall:[['西部荒野禿鷹','bird','#6a5a4a',11,15],['迪菲亞攔路賊','humanoid','#a03a2a',15,19,{mask:1}]],barrens:[['草原斑馬','beast','#d8d0c0',10,13],['乾枯蠍子','spider','#b07a3a',14,18,{tail:1}]],
   ashenvale:[['灰谷狼','beast','#6a6a7a',21,25],['森林蜘蛛','spider','#3a3a2a',24,28]],stv:[['叢林大猩猩','beast','#3a3a3a',32,36,{bear:1}],['荊棘谷猛虎','beast','#d08a3a',34,38]],
   tanaris:[['海灘魚人','murloc','#7aa8a0',41,45],['沙漠禿鷹','bird','#8a6a4a',44,48]],burning:[['熔火構造體','construct','#8a3a1a',51,54],['黑色雛龍','dragonkin','#2a2a3a',50,53]],
   epl:[['瘟疫蝙蝠','bird','#5a4a5a',55,58],['被詛咒的狼','beast','#6a8a6a',56,59]],silithus:[['砂岩巨人','elemental','#c8a060',58,60],['蟲群護衛','insect','#6a5a8a',58,60]]};
 ZONES.forEach(z=>{if(XMOBS[z.id])z.mobs.push(...XMOBS[z.id])});
-const NRARE={elwynn:['獨眼狼王 灰鬃','beast','#5a5a62',{}],durotar:['赤牙野豬王','beast','#a03a20',{tusk:1}],westfall:['生鏽的收割者','construct','#7a5a3a',{}],barrens:['平原霸主 金鬃','beast','#d0a040',{}],
+const NRARE={dunmorogh:['寒鬃狼王','beast','#e8ecf4',{}],teldrassil:['黑影潛伏者','beast','#2a2440',{}],tirisfal:['墓地守望者 葛拉夫','undead','#a0a890',{hood:1}],mulgore:['雷蹄長老','beast','#7a5a3a',{tusk:1}],elwynn:['獨眼狼王 灰鬃','beast','#5a5a62',{}],durotar:['赤牙野豬王','beast','#a03a20',{tusk:1}],westfall:['生鏽的收割者','construct','#7a5a3a',{}],barrens:['平原霸主 金鬃','beast','#d0a040',{}],
   ashenvale:['腐根古樹','elemental','#4a6a2a',{}],stv:['血頂獵頭者 札洛克','humanoid','#2a6a5a',{tusk:1}],tanaris:['沙暴之王','elemental','#d0a060',{horns:1}],burning:['熔岩犬王 余燼','beast','#c0401a',{}],
   epl:['腐爛者 莫格','undead','#9a8aa0',{big:1,ghoul:1}],silithus:['蟲巢衛士 卡瑞克','insect','#8a4a8a',{}]};
 const JUNK={beast:['破損的獠牙','柔軟的毛皮','動物的骨頭'],bird:['柔軟的羽毛','禽鳥爪'],humanoid:['破舊的布料','生鏽的匕首','一枚破硬幣'],spider:['黏稠的蛛絲','乾癟的毒腺'],murloc:['魚人的鰭','滑溜的鱗片'],
   elemental:['元素碎片','冒煙的石頭'],undead:['腐爛的骨頭','發霉的裹屍布'],construct:['生鏽的齒輪','斷裂的螺栓'],dragonkin:['龍鱗碎片','燒焦的爪子'],insect:['甲殼碎片','昆蟲的觸鬚']};
 function makeMob(z){
+  if(zLore(z.id)[0]==='C'&&S.lv>=20&&Math.random()<.035){const ef=S.fac==='A'?'H':'A';const race=pick(racesFor(ef));const cls=pick(RACES[race].cls);const lv=clamp(S.lv+ri(-2,2),1,60);const hp=Math.round(mobHp(lv)*2.2);const nm=pick(NPCN);
+    if(!B.pvpMsg||Date.now()-B.pvpMsg>45e3){B.pvpMsg=Date.now();log('bad',`敵對陣營的${RACES[race].n}${CLASSES[cls].n}「${nm}」出現了！`);if(Math.random()<.6)chat('general',pick(NPCN),`${z.n}有${ef==='H'?'部落':'聯盟'}在殺人，小心！`)}
+    return {name:nm,base:nm,pvp:true,race,cls,fac:ef,type:'player',color:CLASSES[cls].c,look:{},lv,hp,max:hp,atk:mobAtk(lv)*1.6,elite:false,rare:false,x:780,tx:0,at:rnd(.6,1.6),hurt:0,dying:0,mi:-3,xpK:2}}
   if(NRARE[z.id]&&Math.random()<.008){const r=NRARE[z.id];const lv=Math.min(60,z.lv[1]+1);const hp=Math.round(mobHp(lv)*6);
     if(!B.rareMsg||Date.now()-B.rareMsg>60e3){B.rareMsg=Date.now();log('sys',`稀有精英「${r[0]}」出現了！`);toast(`稀有精英出現：${r[0]}`);chat('general',pick(NPCN),`${z.n}有${r[0]}！快來！`)}
     return {name:r[0],base:r[0],type:r[1],color:r[2],look:r[3],lv,hp,max:hp,atk:mobAtk(lv)*1.8,elite:false,rare:true,named:true,x:780,tx:0,at:rnd(.6,1.6),hurt:0,dying:0,mi:-2,xpK:8}}
@@ -602,6 +620,43 @@ function classMech(){if(!S)return {};const si=specIdx();
 function meleeNow(){return CLASSES[S.cls].melee||classMech().form==='bear'}
 const FOODN=['硬麵包','新鮮麵包','松軟麵包','香甜麵包','肉桂捲'],DRINKN=['清泉水','冰涼牛奶','甜露水','晨露果汁','月莓汁'];
 const foodName=()=>FOODN[clamp(Math.floor(S.lv/12),0,4)],drinkName=()=>DRINKN[clamp(Math.floor(S.lv/12),0,4)];
+// ===== 區域世界觀（以自己的文字撰寫） =====
+const ZLORE={dunmorogh:['A','鐵爐堡外終年積雪的高地，矮人與地精在此訓練新兵。寒風刺骨，穴居人與冰爪熊在山谷間出沒。'],
+ teldrassil:['A','夜精靈在海上種下的巨大世界之樹，林間永遠籠罩著月光般的暮色，但腐化已悄悄滲入根部。'],
+ tirisfal:['H','曾是人類王國的農地，如今是被遺忘者的家園。灰暗的林地瀰漫著死亡氣息，血色十字軍仍在邊境狂熱地獵殺亡者。'],
+ mulgore:['H','牛頭人世代居住的翠綠草原，雷霆崖矗立在高原之上，部族在這裡與大地和諧共生。'],
+ elwynn:['A','暴風城外圍的寧靜森林，農場與伐木場散布其間。狼群與狗頭人日漸猖獗，迪菲亞兄弟會的陰影也開始蔓延到這裡。'],
+ durotar:['H','獸人在新大陸落腳後開墾的紅土荒原，乾燥炎熱，奧格瑪就建立在這片土地的北方盡頭。'],
+ westfall:['A','曾經是王國的糧倉，如今田地荒廢。被拖欠工錢的石匠組成迪菲亞兄弟會，與豺狼人一起把這裡變成無法地帶。'],
+ barrens:['H','貫穿卡林多中部的廣闊草原，商路交會的十字路口是部落旅人的必經之地，野豬人則在南方虎視眈眈。'],
+ ashenvale:['C','夜精靈世代守護的古老森林。戰歌氏族的伐木營地不斷向林中推進，哨兵與獸人之間的衝突從未停止。'],
+ stv:['C','悶熱潮濕的熱帶叢林，巨魔部族、海盜與大型獵物在此爭奪地盤；南端的藏寶海灣是地精經營的中立港口。'],
+ tanaris:['C','沙丘與古老遺跡構成的大沙漠，熱砂集團的加基森是少數的綠洲與貿易中心，沙怒巨魔盤踞在西邊的神廟。'],
+ burning:['C','黑石山腳下被戰火燒焦的平原，天空終年被煙塵染紅，黑龍軍團與黑石獸人在此集結。'],
+ epl:['C','天譴軍團肆虐後只剩死亡的大地，瘟疫汙染了每一寸土壤，銀色黎明在禮拜堂堅守最後的防線。'],
+ silithus:['C','被蟲族侵蝕的南方荒漠，風沙中聳立著古老的安其拉之門，塞納里奧議會在此日夜監視。']};
+function zLore(id){return ZLORE[id]||['C','']}
+function terr(id){const t=zLore(id)[0];return t==='A'?{n:'聯盟領地',c:'#7aa8ff'}:t==='H'?{n:'部落領地',c:'#ff7a6a'}:{n:'爭奪中的領土',c:'#f0d060'}}
+function zoneCard(id){const z=zoneById(id);if(!z||!B)return;const t=terr(id);B.zcard={t:4,n:z.n,sub:t.n,c:t.c}}
+function drawZoneCard(dt){const c=B&&B.zcard;if(!c)return;c.t-=dt;if(c.t<=0){B.zcard=null;return}const a=c.t>3.3?(4-c.t)/.7:c.t<1?c.t:1;
+  ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,a));ctx.textAlign='center';ctx.font='900 30px "Noto Serif TC",serif';ctx.lineWidth=5;ctx.strokeStyle='#1a1006';ctx.strokeText(c.n,W/2,108);
+  const gr=ctx.createLinearGradient(0,82,0,110);gr.addColorStop(0,'#fff2b8');gr.addColorStop(1,'#e0a840');ctx.fillStyle=gr;ctx.fillText(c.n,W/2,108);
+  ctx.font='700 13px "Noto Sans TC",sans-serif';ctx.lineWidth=3;ctx.strokeText(`（${c.sub}）`,W/2,130);ctx.fillStyle=c.c;ctx.fillText(`（${c.sub}）`,W/2,130);ctx.restore()}
+// ===== 種族天賦 =====
+const RACIAL={human:{n:'外交',d:'聲望獲得 +10%'},
+ dwarf:{n:'石像形態',d:'生命低於 40% 時受到傷害 -50%，持續 8 秒（冷卻 60 秒）',eff:'dr',th:.4,dur:8,cd:60},
+ nelf:{n:'影遁',d:'生命低於 30% 時隱身 4 秒，敵人停止攻擊並快速回血（冷卻 60 秒）',eff:'stealth',th:.3,dur:4,cd:60},
+ gnome:{n:'逃脫大師',d:'生命低於 50% 時閃躲 +25%，持續 6 秒（冷卻 45 秒）',eff:'dodge',th:.5,dur:6,cd:45},
+ orc:{n:'血性狂暴',d:'戰鬥中攻擊強度 +25%，持續 12 秒（冷卻 60 秒）',eff:'atk',trig:'fight',dur:12,cd:60},
+ tauren:{n:'戰爭踐踏',d:'面對 2 隻以上敵人時擊暈所有敵人 2 秒（冷卻 30 秒）',eff:'stun',trig:'aoe',cd:30},
+ troll:{n:'狂暴',d:'生命低於 60% 時攻擊速度 +20%，持續 10 秒（冷卻 60 秒）',eff:'haste',th:.6,dur:10,cd:60},
+ undead:{n:'亡靈意志',d:'生命低於 35% 時擺脫恐懼並恢復 15% 生命（冷卻 60 秒）',eff:'heal',th:.35,cd:60}};
+const rAct=e=>!!(B&&B.rac&&B.rac.t>0&&B.rac.eff===e);
+function racialTick(st,arrived,dt){const Rc=RACIAL[S.race];B.racCd=Math.max(0,(B.racCd||0)-dt);if(B.rac){B.rac.t-=dt;if(B.rac.t<=0)B.rac=null}
+  if(Rc&&Rc.eff&&B.racCd<=0&&!B.rac){const hp=S.hp/st.hp;const go=Rc.trig==='fight'?true:Rc.trig==='aoe'?arrived.length>=2:hp<Rc.th;
+    if(go){B.racCd=Rc.cd;if(Rc.eff==='stun'){arrived.forEach(m=>m.at+=2);fx('shock',heroX()-60,GY)}else if(Rc.eff==='heal'){S.hp=Math.min(st.hp,S.hp+st.hp*.15);fx('heal',heroX(),180)}else{B.rac={eff:Rc.eff,t:Rc.dur};if(Rc.eff!=='stealth')fx('lvl',heroX(),GY)}
+      num(heroX(),88,Rc.n,'heal');log('battle',`種族天賦：${Rc.n}`)}}
+  if(rAct('stealth'))S.hp=Math.min(st.hp,S.hp+st.hp*.08*dt)}
 function heroX(){return meleeNow()?232:168}
 function mobSlotX(i){return 410+i*88}
 function spawnGroup(){const z=curZone();const n=1+(Math.random()<.55?1:0)+(S.lv>=12&&Math.random()<.45?1:0)+(S.lv>=30&&Math.random()<.35?1:0);
@@ -630,6 +685,7 @@ function battleTick(dt){
     if(B.eat||B.drink)return;
     B.spawn-=dt;if(B.spawn<=0)spawnGroup();return}
   if(!S.idle)return;
+  B.eat=0;B.drink=0;
   const arrived=live.filter(m=>m.x<=m.tx+2);
   if(!arrived.length)return;
   // 冷卻
@@ -641,17 +697,19 @@ function battleTick(dt){
   // 玩家行動
   B.at-=dt;
   const pet=petInfo();if(pet&&!B.dead){B.petT=(B.petT??1)-dt;B.petP=Math.max(0,(B.petP||0)-dt*4);if(B.petT<=0){B.petT=1.6;B.petP=1;hit(arrived[0],pet.mult*(caps().pet?2:1)*(1+(talFx().pet||0)/100),st,pet.fx,pet.n,0,true)}}
-  if(B.at<=0){B.at=1/st.spd;heroAct(st,cl,arrived)}
+  if(B.at<=0){B.at=1/st.spd/(rAct('haste')?1.2:1);heroAct(st,cl,arrived)}
   {const C=caps(),F=talFx();const hr=(C.regen?.015:0)+((F.hpRegen||0)+(classMech().hpRegen||0))/100;if(hr)S.hp=Math.min(st.hp,S.hp+st.hp*hr*dt);
    for(const m of arrived)if(m.dot&&m.hp>0){m.dot.t-=dt;m.hp-=m.dot.dps*dt;if(m.dot.t<=0)m.dot=null;if(m.hp<=0){m.hp=0;killMob(m)}}
-   B.shCd=Math.max(0,(B.shCd||0)-dt);if(C.shield&&S.hp<st.hp*.3&&B.shCd<=0){B.shield=st.hp*.3;B.shCd=30;fx('shock',heroX()-60,GY);num(heroX(),110,'護盾','heal');log('battle','守護天賦觸發：獲得護盾')}}
+   racialTick(st,arrived,dt);
+  B.shCd=Math.max(0,(B.shCd||0)-dt);if(C.shield&&S.hp<st.hp*.3&&B.shCd<=0){B.shield=st.hp*.3;B.shCd=30;fx('shock',heroX()-60,GY);num(heroX(),110,'護盾','heal');log('battle','守護天賦觸發：獲得護盾')}}
   // 怪物攻擊
   for(const m of arrived){m.at-=dt;if(m.at<=0){m.at=rnd(1.6,2.1);
     const dm=lvlDiffMods(m.lv);let d=m.atk*rnd(.85,1.15)*dm.take*st.takenMod;
-    const red=st.def/(st.def+60+12*m.lv);d=Math.max(1,Math.round(d*(1-red)));
-    if(Math.random()<st.dodge/100){num(heroX(),130,'閃躲','miss');continue}
+    const red=st.def/(st.def+60+12*m.lv);d=Math.max(1,Math.round(d*(1-red)*(rAct('dr')?.5:1)));
+    if(rAct('stealth'))continue;if(Math.random()<(st.dodge+(rAct('dodge')?25:0))/100){num(heroX(),130,'閃躲','miss');continue}
     if(B.shield>0){const ab=Math.min(B.shield,d);B.shield-=ab;d-=ab;if(!d){num(heroX(),130,'吸收','miss');m.lunge=.25;continue}}
     S.hp-=d;num(heroX()+ri(-8,8),128,fmt(d),'hurt');m.lunge=.25;
+    if(m.pvp){const cl2=CLASSES[m.cls];if(!cl2.melee){fx('proj',m.x-12,150,{tx:heroX()+10,ty:165,kind:cl2.w==='bow'?'arrow':cl2.sk[0][6]});fx('impact',heroX(),170,{kind:cl2.sk[0][6],delay:.22})}if(Math.random()<.3)log('battle',`${m.name} 對你施放了${pick(cl2.sk.filter(x=>x[0]<=m.lv&&!x[7]))[1]}`)}
     {const th=((talFx().thorns||0)+(classMech().thorns||0))/100;if(th&&m.hp>0){const rd=Math.max(1,Math.round(d*th));m.hp-=rd;num(m.x,130,fmt(rd),'dmg');if(m.hp<=0){m.hp=0;killMob(m)}}}
     if(cl.res==='rage')S.res=Math.min(100,S.res+4);
     if(S.hp<=0){S.hp=0;S.stats.deaths++;sfx('die');const now=Date.now();S.dlog=(S.dlog||[]).filter(x=>now-x<300e3);S.dlog.push(now);
@@ -698,6 +756,7 @@ function hit(m,mult,st,fxType,name,delay=0,isPet=false){
   const crit=Math.random()<st.crit/100;
   const C=caps(),F=talFx();const auto=name==='普通攻擊';let d=st.atk*mult*rnd(.88,1.12)*(crit?(2+(isPet?0:(F.critDmg||0)/100+(C.crit?.5:0))):1)*st.dmgMod*dm.deal*(C.execute&&!isPet&&m.hp/m.max<.2?1.6:1)
     *(isPet?1:(1+(auto?(F.auto||0):0)/100+(m.hp>=m.max?(F.opener||0):0)/100+((m.elite||m.rare)?(F.elite||0):0)/100));
+  if(!isPet&&rAct('atk'))d*=1.25;
   const mdef=m.lv*2;d*=1-mdef/(mdef+40+S.lv*8);d=Math.max(1,Math.round(d));
   m.hp-=d;m.hurt=1;
   if(!isPet){const ls=(C.lifesteal?.06:0)+(F.leech||0)/100;if(ls)S.hp=Math.min(st.hp,S.hp+d*ls);if(Math.random()<(C.stun?.1:0)+(F.stun||0)/100&&m.hp>0){m.at+=2;num(m.x,100,'擊暈','miss',delay)}
@@ -721,6 +780,7 @@ function killMob(m){
   gather(m,curZone());
   // 掉寶
   const dropC=m.named?1:.12*(m.elite?3:1)*(m.rare?8:1);
+  if(m.pvp){const hon=10+Math.round(m.lv*.8);const r0=rankOf(S.honor||0);S.honor=(S.honor||0)+hon;num(heroX(),82,`榮譽擊殺 +${hon}`,'crit');log('sys',`榮譽擊殺：${m.name}（${RACES[m.race].n}${CLASSES[m.cls].n}），獲得 ${hon} 點榮譽。`);const r1=rankOf(S.honor);if(r1>r0){log('sys',`你的軍階提升為「${rankName(r1)}」！`);toast(`軍階提升：${rankName(r1)}`)}}
   if(m.named)log('sys',`擊敗稀有精英「${m.name}」！`);
   if(JUNK[m.type]&&Math.random()<.35){const jn=pick(JUNK[m.type]);const jv=Math.round(m.lv*4+5);if(S.set.sellGray){S.copper+=jv;S.stats.copper+=jv}else{S.junk=S.junk||{};S.junk[jn]=(S.junk[jn]||0)+1;S.junkV=S.junkV||{};S.junkV[jn]=jv}log('loot',`撿取：${jn}`)}
   if(Math.random()<dropC){const it=makeItem({ilvl:m.lv+ri(-1,1),rar:m.named?(Math.random()<.15?4:3):m.rare?Math.max(3,rollRarity(1)):rollRarity(m.elite?.5:0),boss:m.named});
@@ -744,13 +804,13 @@ function gainXp(x){
     UI.dirty=true}
   if(S.lv>=60)S.xp=0;
 }
-function addRep(id,v,quiet){const before=standing(S.rep[id]||0).i;S.rep[id]=(S.rep[id]||0)+v;const after=standing(S.rep[id]).i;
+function addRep(id,v,quiet){if(S.race==='human')v=Math.round(v*1.1);const before=standing(S.rep[id]||0).i;S.rep[id]=(S.rep[id]||0)+v;const after=standing(S.rep[id]).i;
   if(after>before){log('sys',`${repName(id)} 聲望提升至「${STANDING[after][1]}」！`);toast(`${repName(id)}：${STANDING[after][1]}`);UI.dirty=true}
   if(!quiet)log('sys',`${repName(id)} 聲望 +${v}`)}
 
 /* ================= 任務 ================= */
 function qAcc(q){return q.acc||S.set.autoQuest}
-const GIVERS={elwynn:'治安官 杜根',durotar:'營地指揮官 卡爾薩',westfall:'哨兵 葛雷斯',barrens:'十字路口哨官 瑪格拉',ashenvale:'哨兵隊長 艾瑟莉',stv:'獵人 巴克萊',tanaris:'熱砂工頭 吉茲',burning:'瑟銀信使 布洛克',epl:'銀色黎明勇士 艾琳娜',silithus:'塞納里奧使者 拉魯斯'};
+const GIVERS={dunmorogh:'山地兵 葛林姆',teldrassil:'哨兵 艾瑞希',tirisfal:'亡者導師 莫德',mulgore:'長者 灰角',elwynn:'治安官 杜根',durotar:'營地指揮官 卡爾薩',westfall:'哨兵 葛雷斯',barrens:'十字路口哨官 瑪格拉',ashenvale:'哨兵隊長 艾瑟莉',stv:'獵人 巴克萊',tanaris:'熱砂工頭 吉茲',burning:'瑟銀信使 布洛克',epl:'銀色黎明勇士 艾琳娜',silithus:'塞納里奧使者 拉魯斯'};
 const QFLAV=['這片土地需要像你這樣的冒險者。','我已經派出三個人了，沒有一個回來。','動作快，在情況變得更糟之前。','完成之後回來找我，我不會虧待你的。'];
 function qState(z){if(!S.quests[z.id])S.quests[z.id]={i:0,p:0,daily:0};return S.quests[z.id]}
 function curQuest(z){const q=qState(z);if(q.i<z.q.length){const d=z.q[q.i];return {name:d[0],desc:d[1],mob:d[2],need:d[3],item:d[4]||null,daily:false}}
@@ -932,6 +992,20 @@ function altGain(m,xp,cp,repId,rv){const a=m.alt;a.copper=(a.copper||0)+cp;a.rep
   if(a.lv<60){a.xp+=xp;const lv0=a.lv;while(a.lv<60&&a.xp>=xpNeed(a.lv)){a.xp-=xpNeed(a.lv);a.lv++}if(a.lv>=60)a.xp=0;if(a.lv>lv0){log('sys',`分身 ${a.name} 升到 ${a.lv} 級！`);m.lvUp=a.lv}}
   m.gxp=(m.gxp||0)+xp;m.gcp=(m.gcp||0)+cp}
 function altGive(m,it){const a=m.alt;if(a.inv.length<a.bagCap){a.inv.push(it);(m.items=m.items||[]).push(it)}else{a.copper+=it.val;(m.items=m.items||[]).push({...it,name:it.name+'（背包滿，已賣出）'})}}
+// ===== 首領喊話（台詞原創） =====
+const YELLS={dm:[['誰准你們踏進我的工坊？齒輪會把你們碾成碎片！','機器……過熱了……','我的傑作……還沒完成……'],['全員上甲板！把這些老鼠丟進海裡！','你們以為這艘船是誰的？','船……沉了……']],
+ sfk:[['主人不在時，我負責招待不速之客。','月亮升起了……我感覺得到……','嗚……主人……'],['你們的骨頭將成為我的收藏品。','死亡不過是另一種開始！','我會……再回來……']],
+ sm:[['異端！為了聖光，淨化他們！','我的信仰不會動搖！','聖光……拋棄了我……'],['跪下懺悔，或者在烈焰中被審判！','異端的血會洗淨這座修道院！','審判……尚未……結束……']],
+ zf:[['嘶——又有新鮮的獵物送上門了。','鱗甲不會被你們刺穿！','嘶……'],['沙之神在注視著你們，然後吞噬你們。','風暴啊，聽從我的召喚！','神……沉默了……']],
+ brd:[['偷懶的傢伙們！熔爐不會自己燒起來！','把他們丟進熔爐裡！','熔爐……熄滅了……'],['議會判決你們有罪，刑罰是死亡。','黑鐵永不屈服！','議會……會為我復仇……']],
+ mc:[['烈焰會吞噬一切踏入此地的生命！','燃燒吧！全部燃燒吧！','火焰……熄滅……'],['大地在我腳下顫抖，你們也將粉碎。','岩漿會將你們熔成灰燼！','我……回歸大地……'],['渺小的凡人，竟敢踏入熔岩之心！','感受烈焰的憤怒吧！','這……不可能……我的火焰……']],
+ bwl:[['巢穴的守衛不會讓任何人通過！','為了黑龍軍團！','主人……原諒我……'],['暗影會吞噬你們的光明。','你們的恐懼就是我的力量！','暗影……散去了……'],['終於有值得一戰的對手了。','黑焰將焚盡你們的靈魂！','怎麼可能……被凡人……']],
+ naxx:[['新的零件！新的零件！','格洛斯……餓了！','格洛斯……累了……'],['我的孩子們，晚餐送上門了。','纏住他們！一個都別放走！','我的……孩子們……'],['寒冰會讓你們永遠沉睡。','感受永恆的寒冷吧！','亡者……終將……歸來……']]};
+function yell(d,k){const L=(YELLS[d.dg.id]||[])[d.bi];if(!L)return;const txt=L[k];const bn=d.dg.bosses[d.bi][0];d.yell={t:k===2?3:3.5,txt,bn};log('yell',`【${bn}】喊道：「${txt}」`)}
+function drawYell(dt){const y=D&&D.yell;if(!y)return;y.t-=dt;if(y.t<=0){D.yell=null;return}
+  ctx.save();ctx.globalAlpha=Math.min(1,y.t*2);ctx.font='700 11px "Noto Sans TC",sans-serif';const w=Math.min(300,ctx.measureText(y.txt).width+20);const x=Math.min(W-w-8,560-w/2),yy=58;
+  ctx.fillStyle='#1a0808e8';ctx.strokeStyle='#ff5a4a';ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect?ctx.roundRect(x,yy,w,24,8):ctx.rect(x,yy,w,24);ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.moveTo(552,yy+24);ctx.lineTo(560,yy+33);ctx.lineTo(568,yy+24);ctx.fill();ctx.fillStyle='#ff8a7a';ctx.textAlign='center';ctx.fillText(y.txt,x+w/2,yy+16,w-12);ctx.restore()}
 function startDungeon(dg){
   if(S.lv<dg.lv){toast(`需要等級 ${dg.lv}`);return}
   if(dg.req&&!(S.cleared||{})[dg.req]){toast(`需要先通關 ${DUNGEONS.find(x=>x.id===dg.req).n}`);return}
@@ -960,7 +1034,7 @@ function dungeonTick(dt){
   if(d.phase==='walk'){d.pt-=dt/sp;const pr=1-d.pt/d.ptMax;
     (d.trash||[]).forEach((m,i)=>{const dieAt=(i+1)/3.4;if(m.hp>0){m.hp=Math.max(0,1-pr/dieAt);m.hurt=Math.max(0,m.hurt-dt);if(Math.random()<dt*.5){m.hurt=.2;num2(m.x+ri(-10,10),130,fmt(d.dps/d.members.length*ri(1,2)),Math.random()<.2?'crit':'dmg');d.fx.push({type:'impact',x:m.x,y:165,age:0,life:.3,kind:pick(['slash','fire','frost','arrow','holy'])})}}else m.dying+=dt/sp});
     d.php=d.php.map((v,i)=>Math.min(1,v+.08*dt/sp));
-    if(d.pt<=0){d.phase='fight';d.t=0;d.hp=d.max=d.bossHp*(d.bi===d.dg.bosses.length-1?1.15:1);d.mech=0;log('sys',`首領戰：${d.dg.bosses[d.bi][0]}`)}return}
+    if(d.pt<=0){d.phase='fight';d.t=0;d.hp=d.max=d.bossHp*(d.bi===d.dg.bosses.length-1?1.15:1);d.mech=0;log('sys',`首領戰：${d.dg.bosses[d.bi][0]}`);yell(d,0)}return}
   if(d.phase!=='fight')return;
   d.t+=dt;
   const dmg=d.dps*rnd(.85,1.15)*dt;d.hp-=dmg;
@@ -969,13 +1043,13 @@ function dungeonTick(dt){
   const pct=d.hp/d.max;const ti=d.members.findIndex(m=>m.role==='tank');
   d.php=d.php.map((v,i)=>Math.min(1,Math.max(.05,v-(i===ti?.06:.008)*dt+.05*dt)));
   if((d.mech===0&&pct<.6)||(d.mech===1&&pct<.3)){d.mech++;const sk=pick(['烈焰新星','狂暴怒吼','暗影爆發','震地猛擊','毒雲']);partyHit(d,.38);
-    d.fx.push({type:'shock',x:60,y:GY,age:0,life:.45});log('bad',`${d.dg.bosses[d.bi][0]} 施放了【${sk}】！全隊受到重創，治療正在搶救。`)}
+    d.fx.push({type:'shock',x:60,y:GY,age:0,life:.45});if(d.mech===1)yell(d,1);log('bad',`${d.dg.bosses[d.bi][0]} 施放了【${sk}】！全隊受到重創，治療正在搶救。`)}
   if(d.t>d.enrage){d.phase='end';d.res='wipe';
     log('bad',`首領進入激怒狀態……團隊全滅。裝備耐久度 -10%，建議提升裝等或天賦後再來。`);durLoss(.1);
     setTimeout(endDungeon,600);return}
   if(d.hp<=0){d.hp=0;bossDown()}
 }
-function bossDown(){const d=D,dg=d.dg,bn=dg.bosses[d.bi][0];
+function bossDown(){const d=D,dg=d.dg,bn=dg.bosses[d.bi][0];yell(d,2);
   log('sys',`擊敗首領：${bn}！（${d.t.toFixed(0)} 秒）`);toast(`擊敗 ${bn}`);
   const xp=Math.round((8+dg.lv*4.5)*(dg.raid?60:25));const cp=Math.round((dg.lv*dg.lv*.5+dg.lv*3)*(dg.raid?80:30));
   gainXp(xp);S.copper+=cp;S.stats.copper+=cp;d.xp+=xp;d.cp+=cp;addRep(dg.rep,dg.raid?120:80,true);d.rep+=dg.raid?120:80;
@@ -1082,6 +1156,7 @@ function buildBg(key,z,dg){
     else if(t==='jungle'){g.fillStyle='#5a4028';g.fillRect(x-3*s,GY-56*s,6*s,56*s);g.fillStyle='#2a7a3a';for(let a=0;a<6;a++){g.save();g.translate(x,GY-56*s);g.rotate(a*1.05);g.fillRect(0,-3*s,28*s,6*s);g.restore()}}
     else if(t==='desert'){g.fillStyle='#4a7a3a';g.fillRect(x-4*s,GY-40*s,8*s,40*s);g.fillRect(x-14*s,GY-28*s,6*s,14*s);g.fillRect(x-14*s,GY-20*s,10*s,5*s);g.fillRect(x+8*s,GY-34*s,6*s,14*s);g.fillRect(x+4*s,GY-24*s,10*s,5*s)}
     else if(t==='volcanic'){g.fillStyle='#2a1a16';g.beginPath();g.moveTo(x-20*s,GY);g.lineTo(x-8*s,GY-30*s);g.lineTo(x+6*s,GY-18*s);g.lineTo(x+20*s,GY);g.fill();g.fillStyle='#ff6a2a';g.fillRect(x-6*s,GY-24*s,3*s,10*s)}
+    else if(t==='snow'){g.fillStyle='#4a3020';g.fillRect(x-2*s,GY-26*s,4*s,26*s);for(let i=0;i<3;i++){g.fillStyle='#2e4a3a';g.beginPath();g.moveTo(x-18*s+i*4*s,GY-18*s-i*14*s);g.lineTo(x+18*s-i*4*s,GY-18*s-i*14*s);g.lineTo(x,GY-44*s-i*14*s);g.fill();g.fillStyle='#f4f8fc';g.beginPath();g.moveTo(x-10*s+i*3*s,GY-28*s-i*14*s);g.lineTo(x+10*s-i*3*s,GY-28*s-i*14*s);g.lineTo(x,GY-44*s-i*14*s);g.fill()}}
     else if(t==='plague'){g.strokeStyle='#2a2620';g.lineWidth=4*s;g.beginPath();g.moveTo(x,GY);g.lineTo(x,GY-40*s);g.lineTo(x-14*s,GY-56*s);g.moveTo(x,GY-30*s);g.lineTo(x+16*s,GY-46*s);g.stroke()}
     else if(t==='hive'){g.fillStyle='#8a5a8a';g.beginPath();g.moveTo(x-10*s,GY);g.lineTo(x,GY-60*s);g.lineTo(x+10*s,GY);g.fill();g.fillStyle='#c08ac0';g.fillRect(x-2*s,GY-44*s,4*s,20*s)}};
   for(let i=0;i<7;i++)tree(R()*W,.7+R()*.5);
@@ -1276,6 +1351,7 @@ function mobBody(m,t,x){
   }
 }
 function drawMob(m,t,scale=1){
+  if(m.pvp){const a=m.dying?Math.max(0,1-m.dying/.45):1;const lg=m.lunge?Math.sin(m.lunge/.25*Math.PI)*12:0;drawHero(m.x-lg,GY,m.cls,m.race,t,m.lunge?1:0,CLASSES[m.cls].melee?'melee':'cast',1.15,{fac:m.fac,wr:3,flip:1,alpha:a,g:{head:3,chest:3,legs:3,hands:3,feet:3,setN:0}});return}
   const x=m.x,y=GY;const sc=(m.look.big?1.3:1)*(m.elite?1.2:1)*(m.rare?1.3:1)*scale*MOBSC;
   const a=m.dying?Math.max(0,1-m.dying/.45):1;const lx=x-(m.lunge?Math.sin(m.lunge/.25*Math.PI)*12:0)*(m.flip?-1:1);
   ctx.save();ctx.globalAlpha=a;ctx.fillStyle='#00000055';ctx.beginPath();ctx.ellipse(lx,y,18*sc,4*sc,0,0,7);ctx.fill();ctx.restore();
@@ -1289,7 +1365,7 @@ function nameplate(m,scale=1){
   const live=m.hp>0;const w=56,x=m.x-w/2,y=GY-(m.look.big?92:72)*(m.elite?1.15:1)*(m.rare?1.2:1)*scale*MOBSC;
   const diff=m.lv-S.lv;const col=diff>=5?'#ff5a4a':diff>=3?'#ff9a3a':diff>=-2?'#f2e04a':diff>=-6?'#5bd25b':'#a0a0a0';
   ctx.font='700 10px "Noto Sans TC",sans-serif';ctx.textAlign='center';
-  ctx.fillStyle='#000a';ctx.fillText(m.name,m.x+1,y-5);ctx.fillStyle=m.rare?'#d0d6ff':m.elite?'#ffd27a':'#f2ead8';ctx.fillText(m.name,m.x,y-6);
+  ctx.fillStyle='#000a';ctx.fillText(m.name,m.x+1,y-5);ctx.fillStyle=m.pvp?'#ff6a5a':m.rare?'#d0d6ff':m.elite?'#ffd27a':'#f2ead8';ctx.fillText(m.name,m.x,y-6);
   if(!live)return;
   ctx.fillStyle='#000';ctx.fillRect(x-1,y-1,w+2,7);ctx.fillStyle='#3a1a1a';ctx.fillRect(x,y,w,5);ctx.fillStyle='#d23a2a';ctx.fillRect(x,y,w*m.hp/m.max,5);
   ctx.fillStyle=col;ctx.font='700 10px "Noto Sans TC",sans-serif';ctx.fillText(m.lv,x-9,y+5);
@@ -1345,7 +1421,7 @@ let clouds=[];for(let i=0;i<5;i++)clouds.push({x:Math.random()*W,y:20+Math.rando
 // ===== 晝夜與天氣 =====
 function dayPhase(){const d=new Date();const h=d.getHours()+d.getMinutes()/60;
   if(h>=19.5||h<5)return {k:'night',a:.5,c:'#0a1030'};if(h<6.5)return {k:'dawn',a:.25,c:'#ff9a5a'};if(h>=17.5)return {k:'dusk',a:.28,c:'#ff7a3a'};return {k:'day',a:0,c:'#000'}}
-const WX={jungle:['rain','rain','clear'],forest:['drizzle','clear','clear'],desert:['sand','clear','clear'],hive:['sand','clear'],volcanic:['ember','ember'],plague:['fog','fog','clear'],plains:['clear','drizzle'],savanna:['clear','clear','sand']};
+const WX={snow:['snow','snow','clear'],jungle:['rain','rain','clear'],forest:['drizzle','clear','clear'],desert:['sand','clear','clear'],hive:['sand','clear'],volcanic:['ember','ember'],plague:['fog','fog','clear'],plains:['clear','drizzle'],savanna:['clear','clear','sand']};
 let wxState={zone:'',k:'clear',until:0,parts:[]};const STARS=Array.from({length:40},()=>({x:Math.random()*720,y:Math.random()*120,s:Math.random()<.2?1.5:1}));
 function updWeather(z){const now=Date.now();if(wxState.zone!==z.id||now>wxState.until){const opts=WX[z.deco]||['clear'];wxState={zone:z.id,k:pick(opts),until:now+rnd(3,7)*60e3,parts:[]};}return wxState.k}
 function drawSky(z,t){const ph=dayPhase();if(ph.a>0&&z.deco!=='volcanic'){ctx.save();ctx.globalAlpha=ph.a;ctx.fillStyle=ph.c;ctx.fillRect(0,0,W,GY);ctx.restore();
@@ -1358,6 +1434,7 @@ function drawWeather(z,dt){const k=updWeather(z);const P=wxState.parts;
   else if(k==='drizzle'){if(P.length<60)spawn(2,()=>({x:Math.random()*W*1.2,y:-10,vx:-30,vy:360,l:6}))}
   else if(k==='sand'){if(P.length<140)spawn(5,()=>({x:W+10,y:Math.random()*H,vx:-260-Math.random()*120,vy:20,l:2}))}
   else if(k==='ember'){if(P.length<70)spawn(2,()=>({x:Math.random()*W,y:H+5,vx:(Math.random()-.5)*30,vy:-40-Math.random()*50,l:2}))}
+  else if(k==='snow'){if(P.length<120)spawn(3,()=>({x:Math.random()*W*1.2,y:-10,vx:-20+Math.random()*10,vy:40+Math.random()*30,l:2}))}
   else if(k==='fog'){if(P.length<8)spawn(1,()=>({x:-200,y:120+Math.random()*90,vx:15+Math.random()*15,vy:0,l:180}))}
   ctx.save();
   for(const q of P){q.x+=q.vx*dt;q.y+=q.vy*dt}
@@ -1366,9 +1443,10 @@ function drawWeather(z,dt){const k=updWeather(z);const P=wxState.parts;
     if(k==='rain'){ctx.fillStyle='#1a2a4022';ctx.fillRect(0,0,W,H)}}
   else if(k==='sand'){ctx.fillStyle='#e8c88a99';for(const q of wxState.parts)ctx.fillRect(q.x,q.y,3,1);ctx.fillStyle='#d8a85a22';ctx.fillRect(0,0,W,H)}
   else if(k==='ember'){ctx.globalCompositeOperation='lighter';for(const q of wxState.parts){ctx.fillStyle=Math.random()<.5?'#ffb040':'#ff6a1a';ctx.fillRect(q.x,q.y,2,2)}}
+  else if(k==='snow'){ctx.fillStyle='#ffffffdd';for(const q of wxState.parts){q.x+=Math.sin(q.y*.05)*.3;ctx.fillRect(q.x,q.y,2,2)}}
   else if(k==='fog'){for(const q of wxState.parts){const gr=ctx.createRadialGradient(q.x,q.y,10,q.x,q.y,q.l);gr.addColorStop(0,'#a8d07a33');gr.addColorStop(1,'#a8d07a00');ctx.fillStyle=gr;ctx.fillRect(q.x-q.l,q.y-q.l,q.l*2,q.l*2)}}
   ctx.restore()}
-const WXN={clear:'',rain:'暴雨',drizzle:'細雨',sand:'沙塵',ember:'火星',fog:'毒霧'};
+const WXN={snow:'降雪',clear:'',rain:'暴雨',drizzle:'細雨',sand:'沙塵',ember:'火星',fog:'毒霧'};
 // ===== 合成音效 =====
 let AC=null,sfxOn=false,sfxBudget=0;
 function sfx(kind){if(!sfxOn||!AC)return;const now=AC.currentTime;if(kind==='hit'||kind==='crit'){if(sfxBudget>8)return;sfxBudget++}
@@ -1395,7 +1473,7 @@ function render(t,dt){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnable
     [2,1,0,4,3].filter(i=>D.members[i]).forEach(i=>{const [x,y]=POS[i];const v=D.php[i]??1;const m=D.members[i];if(m.alt||m.me){ctx.save();ctx.font='700 9px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.fillStyle='#000a';ctx.fillText(m.me?S.name:m.name,x+1,y-89);ctx.fillStyle=m.me?'#f3d27e':'#9ad0ff';ctx.fillText(m.me?S.name:m.name,x,y-90);ctx.restore()}ctx.fillStyle='#000c';ctx.fillRect(x-17,y-80,34,6);ctx.fillStyle=v<.35?'#e04a3a':'#2ac83a';ctx.fillRect(x-16,y-79,32*v,4);
       ctx.fillStyle=m.role==='tank'?'#8ab4ff':m.role==='heal'?'#7ee08a':'#ff9a7a';ctx.fillRect(x-17,y-86,4,4)});
     if(D.phase==='walk'&&D.trash)for(const m of D.trash){if(m.dying>.45)continue;drawMob({...m,hp:m.hp>0?1:0},t,.95);if(m.hp>0){ctx.fillStyle='#000c';ctx.fillRect(m.x-20,GY-80,40,6);ctx.fillStyle='#d23a2a';ctx.fillRect(m.x-19,GY-79,38*m.hp,4)}}
-    if(D.members.length>5){ctx.fillStyle='#f3d27e';ctx.font='700 12px "Noto Sans TC",sans-serif';ctx.textAlign='left';ctx.fillText(`＋${D.members.length-5} 名團隊成員`,60,GY+40)}
+    if(D.members.length>5){ctx.fillStyle='#f3d27e';ctx.font='700 12px "Noto Sans TC",sans-serif';ctx.textAlign='left';ctx.fillText(`＋${D.members.length-5} 名團隊成員`,360,GY+44)}
     if(D.phase==='fight'||D.phase==='end'){
       const bd=D.dg.bosses[Math.min(D.bi,D.dg.bosses.length-1)];
       const bm={x:560,type:bd[1],color:bd[2],look:bd[3]||{},hurt:0,lunge:Math.sin(t*2)>.9?.12:0,dying:0};
@@ -1408,7 +1486,7 @@ function render(t,dt){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnable
       ctx.fillStyle='#fff';ctx.textAlign='center';ctx.font='700 10px "Noto Sans TC",sans-serif';ctx.fillText(`${(Math.max(0,D.hp)/D.max*100).toFixed(1)}%`,x+w/2,42);
     } else {ctx.fillStyle='#000a';ctx.fillRect(W/2-150,14,300,30);ctx.fillStyle='#f3d27e';ctx.font='900 15px "Noto Serif TC",serif';ctx.textAlign='center';
       ctx.fillText(`${D.dg.n}——前往首領 ${D.bi+1}／${D.dg.bosses.length}`,W/2,35)}
-    drawFx(D.fx);drawParts(dt);drawNums(D.nums);ctx.save();ctx.translate(0,206);ctx.scale(.85,.85);drawFrames();ctx.restore();return}
+    drawFx(D.fx);drawParts(dt);drawNums(D.nums);drawYell(dt);ctx.save();ctx.translate(0,206);ctx.scale(.85,.85);drawFrames();ctx.restore();return}
   const z=S.bg&&S.bg.phase==='fight'?zoneById({wsg:'ashenvale',ab:'westfall',av:'ashenvale'}[S.bg.id]):curZone();const key='z-'+z.id;if(bgKey!==key){bgCache=buildBg(key,z);bgKey=key}
   const MOB=cv.clientWidth&&cv.clientWidth<600;if(MOB){const ZM=1.3,OX=-128,OY=-26;ctx.setTransform(DPR*ZM,0,0,DPR*ZM,DPR*ZM*OX,DPR*ZM*OY)}
   ctx.drawImage(bgCache,0,0);drawSky(z,t);
@@ -1420,7 +1498,7 @@ function render(t,dt){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnable
   if(B.dead>0){drawHero(heroX(),GY,S.cls,S.race,0,0,'',HEROSC,{...heroOpt(),alpha:.45});
     ctx.fillStyle='#000a';ctx.fillRect(W/2-120,90,240,44);ctx.fillStyle='#ffb0a8';ctx.font='900 16px "Noto Serif TC",serif';ctx.textAlign='center';ctx.fillText(B.spirit?`靈魂醫者復活中——${Math.ceil(B.dead)} 秒`:`靈魂狀態：跑回屍體——${Math.ceil(B.dead)} 秒`,W/2,118)}
   else if(classMech().form==='bear'){const lg=Math.sin(B.hero.p*Math.PI)*14;drawMob({x:heroX()+lg,type:'beast',color:'#6a4428',look:{bear:1},hurt:0,dying:0,flip:1,lunge:0},t,1.15/MOBSC)}
-  else drawHero(heroX(),GY,S.cls,S.race,t,B.hero.p,B.hero.type,HEROSC,heroOpt());
+  else drawHero(heroX(),GY,S.cls,S.race,t,B.hero.p,B.hero.type,HEROSC,{...heroOpt(),alpha:rAct('stealth')?.4:1});
   if((B.eat||B.drink)&&!(B.dead>0)){ctx.save();ctx.font='700 11px "Noto Sans TC",sans-serif';ctx.textAlign='center';const tx=B.eat&&B.drink?'吃喝中':B.eat?'進食中':'喝水中';ctx.fillStyle='#000c';ctx.fillRect(heroX()-24,GY-96,48,16);ctx.fillStyle='#f3d27e';ctx.fillText(tx,heroX(),GY-84);ctx.restore()}
   if(B.shield>0&&!(B.dead>0)){ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle='#9ad8ff';ctx.fillStyle='#6ab8ff22';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(heroX(),GY-36,30,44,0,0,7);ctx.fill();ctx.globalAlpha=.6+Math.sin(t*6)*.3;ctx.stroke();ctx.restore()}
   for(const m of B.mobs)nameplate(m);
@@ -1430,7 +1508,7 @@ function render(t,dt){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnable
   for(const n of B.nums)n.age+=dt;B.nums=B.nums.filter(n=>n.age<1);
   drawFx(B.fx);drawParts(dt);drawNums(B.nums);
   ctx.setTransform(DPR,0,0,DPR,0,0);
-  drawLightOver();drawWeather(z,dt);
+  drawLightOver();drawWeather(z,dt);drawZoneCard(dt);
   if(S.bg){const b=BGS.find(x=>x.id===S.bg.id);ctx.save();ctx.fillStyle='#000c';ctx.fillRect(W/2-120,52,240,36);ctx.textAlign='center';ctx.font='900 13px "Noto Serif TC",serif';ctx.fillStyle='#f3d27e';
     ctx.fillText(S.bg.phase==='queue'?`${b.n}・排隊中 ${Math.ceil(S.bg.t)} 秒`:`${b.n}・剩餘 ${Math.ceil(S.bg.t)} 秒`,W/2,67);if(S.bg.phase==='fight'){ctx.font='700 12px "Noto Sans TC",sans-serif';ctx.fillStyle='#8ab4ff';ctx.fillText(`聯盟 ${S.bg.a}`,W/2-50,83);ctx.fillStyle='#ff8a7a';ctx.fillText(`部落 ${S.bg.h}`,W/2+50,83)}ctx.restore()}
   if(WXN[wxState.k]||dayPhase().k!=='day'){ctx.save();ctx.font='700 10px "Noto Sans TC",sans-serif';ctx.textAlign='center';ctx.fillStyle='#000a';const lbl=[{night:'夜晚',dawn:'黎明',dusk:'黃昏',day:''}[dayPhase().k],WXN[wxState.k]].filter(Boolean).join('・');ctx.fillRect(W/2-34,H-18,68,14);ctx.fillStyle='#e8dcc2';ctx.fillText(lbl,W/2,H-7.5);ctx.restore()}
@@ -1462,7 +1540,7 @@ function skillIcon(fxk,name){const key=fxk+name;if(SKCACHE[key])return SKCACHE[k
   else if(fxk==='shock'||fxk==='whirl'){for(let r=5;r<18;r+=5){x.beginPath();x.arc(20,20,r,0,fxk==='whirl'?4.5:7);x.stroke()}}
   x.strokeStyle='#00000088';x.lineWidth=2;x.strokeRect(1,1,38,38);return SKCACHE[key]=c.toDataURL()}
 let abarKey='';
-function renderActionBar(){const el=$('#abar');if(!el||!S)return;{const cm=classMech();const bb=$('#buffs');const sick=S.resSick&&Date.now()<S.resSick;const k2=cm.n+(B?B.cp||0:0)+(B&&B.shield>0?1:0)+(sick?Math.ceil((S.resSick-Date.now())/1000):0);if(bb&&bb.dataset.k!==k2){bb.dataset.k=k2;bb.innerHTML=(cm.n?`<span title="${esc(cm.d)}">${esc(cm.n)}<small>${esc(cm.d)}</small></span>`:'')+(S.cls==='rogue'?`<span>連擊點 ${'●'.repeat(B.cp||0)}${'○'.repeat(5-(B.cp||0))}</span>`:'')+(B&&B.shield>0?'<span>護盾</span>':'')+(sick?`<span style="border-color:#a03030;color:#f0948a">復活虛弱 ${Math.ceil((S.resSick-Date.now())/1000)} 秒<small>傷害 -50%、生命 -25%</small></span>`:'')}}const cl=CLASSES[S.cls];const sk=cl.sk.filter(s=>S.lv>=s[0]&&isLearned(s));
+function renderActionBar(){const el=$('#abar');if(!el||!S)return;{const cm=classMech();const bb=$('#buffs');const sick=S.resSick&&Date.now()<S.resSick;const k2=cm.n+(B?B.cp||0:0)+(B&&B.rac?B.rac.eff:'')+(B&&B.shield>0?1:0)+(sick?Math.ceil((S.resSick-Date.now())/1000):0);if(bb&&bb.dataset.k!==k2){bb.dataset.k=k2;bb.innerHTML=(cm.n?`<span title="${esc(cm.d)}">${esc(cm.n)}<small>${esc(cm.d)}</small></span>`:'')+(S.cls==='rogue'?`<span>連擊點 ${'●'.repeat(B.cp||0)}${'○'.repeat(5-(B.cp||0))}</span>`:'')+(B&&B.rac?`<span style="border-color:#5bbf5b;color:#9ae09a">${esc(RACIAL[S.race].n)}</span>`:'')+(B&&B.shield>0?'<span>護盾</span>':'')+(sick?`<span style="border-color:#a03030;color:#f0948a">復活虛弱 ${Math.ceil((S.resSick-Date.now())/1000)} 秒<small>傷害 -50%、生命 -25%</small></span>`:'')}}const cl=CLASSES[S.cls];const sk=cl.sk.filter(s=>S.lv>=s[0]&&isLearned(s));
   const key=sk.map(s=>s[1]+((S.skOff||{})[s[1]]?0:1)).join();
   if(key!==abarKey){abarKey=key;el.innerHTML=sk.map((s,i)=>`<button data-act="skTog" data-v="${esc(s[1])}" class="${(S.skOff||{})[s[1]]?'off':''}" style="background-image:url(${skillIcon(s[6],s[1])})" title="${esc(s[1])}：點擊或按 ${i+1} 切換自動施放" aria-label="${esc(s[1])}"><span class="kb">${i+1}</span><span class="cd" id="cd${i}"></span><span class="nm">${esc(s[1])}</span></button>`).join('')||'<span class="small muted">尚未學會技能</span>'}
   sk.forEach((s,i)=>{const c=$('#cd'+i);if(!c)return;const left=B&&B.cd?B.cd[s[1]]||0:0;
@@ -1585,7 +1663,7 @@ function renderPanel(){
   else if(UI.tab==='char'){
     const st=stats();
     h=`<section class="card"><h2>人物</h2><div class="grid2"><div><canvas id="doll" width="640" height="440" style="width:100%;max-width:320px;aspect-ratio:320/220;display:block;margin:0 auto 10px;border-radius:10px;border:1px solid var(--line);image-rendering:pixelated" aria-label="角色外觀"></canvas><div class="slots">${SLOTS.map(k=>{const it=S.eq[k];return `<button class="slot" ${broken(it)?'style="border-color:#a03030;background:#2a1414"':''} data-act="${it?'item':'tab'}" data-v="${it?it.id:'bag'}">${iconBtn(it)}<span class="meta"><b class="${it?'r'+it.rar:'muted'}">${it?esc(it.name)+(it.enh?' +'+it.enh:''):'（空）'}</b><small>${SLOTN[k]}${it?`・物品等級 ${it.ilvl}`:''}</small></span></button>`}).join('')}</div></div>
-      <div><dl class="kv"><dt>總遊戲時間</dt><dd>${playedStr(S.played)}</dd><dt>本級遊戲時間</dt><dd>${playedStr(S.playLv)}</dd><dt>種族</dt><dd>${RACES[S.race].n}（${RACES[S.race].d}）</dd><dt>職業</dt><dd>${CLASSES[S.cls].n}（${ROLEN[st.role]}）</dd>${Object.keys(SETS).filter(t=>setCount(t)).map(t=>`<dt>${setName(t,S.cls)}</dt><dd>${setCount(t)}/5 件</dd>`).join('')}<dt>平均物品等級</dt><dd>${gearIlvl()}</dd><dt>生命值</dt><dd>${fmt(st.hp)}</dd><dt>${primN(S.cls)}（攻擊）</dt><dd>${fmt(st.atk)}</dd><dt>護甲</dt><dd>${fmt(st.def)}</dd><dt>致命一擊</dt><dd>${st.crit.toFixed(1)}%</dd><dt>攻擊速度</dt><dd>${st.spd.toFixed(2)} 次／秒</dd><dt>每秒傷害（估計）</dt><dd>${fmt(st.dps)}</dd><dt>死亡次數</dt><dd>${S.stats.deaths}</dd><dt>通關地城</dt><dd>${S.stats.dungeons}</dd></dl>
+      <div><dl class="kv"><dt>總遊戲時間</dt><dd>${playedStr(S.played)}</dd><dt>本級遊戲時間</dt><dd>${playedStr(S.playLv)}</dd><dt>種族</dt><dd>${RACES[S.race].n}（${RACES[S.race].d}）</dd><dt>種族天賦</dt><dd>${RACIAL[S.race].n}</dd><dt></dt><dd class="small muted" style="font-weight:400;text-align:right">${RACIAL[S.race].d}</dd><dt>職業</dt><dd>${CLASSES[S.cls].n}（${ROLEN[st.role]}）</dd>${Object.keys(SETS).filter(t=>setCount(t)).map(t=>`<dt>${setName(t,S.cls)}</dt><dd>${setCount(t)}/5 件</dd>`).join('')}<dt>平均物品等級</dt><dd>${gearIlvl()}</dd><dt>生命值</dt><dd>${fmt(st.hp)}</dd><dt>${primN(S.cls)}（攻擊）</dt><dd>${fmt(st.atk)}</dd><dt>護甲</dt><dd>${fmt(st.def)}</dd><dt>致命一擊</dt><dd>${st.crit.toFixed(1)}%</dd><dt>攻擊速度</dt><dd>${st.spd.toFixed(2)} 次／秒</dd><dt>每秒傷害（估計）</dt><dd>${fmt(st.dps)}</dd><dt>死亡次數</dt><dd>${S.stats.deaths}</dd><dt>通關地城</dt><dd>${S.stats.dungeons}</dd></dl>
       <h3>職業訓練師</h3><div class="list">${CLASSES[S.cls].sk.map(s=>`<div class="li" style="padding:7px 10px"><span class="main" style="display:flex;align-items:center;gap:8px"><img src="${skillIcon(s[6],s[1])}" width="28" height="28" alt="" style="border-radius:3px;image-rendering:pixelated;${isLearned(s)&&S.lv>=s[0]?'':'filter:grayscale(1);opacity:.6'}"><b class="${S.lv>=s[0]&&isLearned(s)?'':'muted'}">${s[1]}</b> <span class="tag">${s[7]?'治療':s[5]?'群體':'單體'}</span></span><span class="small muted">${S.lv>=s[0]?(s[7]?`恢復 ${Math.round(s[2]*100)}% 生命`:`${Math.round(s[2]*100)}% 傷害`)+`・冷卻 ${s[4]} 秒`:`${s[0]} 級可學`}${S.lv>=s[0]&&!isLearned(s)?` <button class="btn sm main" data-act="learn" data-v="${esc(s[1])}" ${S.copper<trainCost(s)?'disabled':''}>學習 ${moneyTxt(trainCost(s))}</button>`:''}</span></div>`).join('')}</div></div></div></section>`;
   }
   else if(UI.tab==='talent'){
@@ -1618,7 +1696,7 @@ function renderPanel(){
   else if(UI.tab==='map'){
     h=`<section class="card"><h2>地圖</h2><p class="muted small">怪物等級比你高 3 級以上時，你造成的傷害會降低、受到的傷害會提高。等級標示：<span style="color:#5bd25b">綠＝輕鬆</span>、<span style="color:#f2e04a">黃＝適中</span>、<span style="color:#ff5a4a">紅＝危險</span>。</p><div class="list">
       ${zonesFor(S.fac).map(zz=>{const mid=(zz.lv[0]+zz.lv[1])/2,d=zz.lv[0]-S.lv;const tg=S.lv>=zz.lv[0]&&S.lv<=zz.lv[1]?'<span class="tag ok">推薦</span>':d>=3?'<span class="tag bad">危險</span>':S.lv>zz.lv[1]+4?'<span class="tag">經驗低</span>':'';
-        return `<div class="li ${zz.id===S.zone?'here':''}"><span class="main"><b>${zz.n}</b> <span class="tag">${zz.lv[0]}–${zz.lv[1]}</span>${tg}<p>${zz.mobs.map(m=>m[0]).join('、')}・聲望：${esc(repName(zz.rep))}</p></span>${zz.id===S.zone?'<span class="muted small">目前位置</span>':`<button class="btn sm main" data-act="travel" data-v="${zz.id}">前往</button>`}</div>`}).join('')}</div></section>`;
+        return `<div class="li ${zz.id===S.zone?'here':''}"><span class="main"><b>${zz.n}</b> <span class="tag">${zz.lv[0]}–${zz.lv[1]}</span><span class="tag" style="color:${terr(zz.id).c};border-color:${terr(zz.id).c}66">${terr(zz.id).n}</span>${tg}<p>${esc(zLore(zz.id)[1])}</p><p>${zz.mobs.map(m=>m[0]).join('、')}・聲望：${esc(repName(zz.rep))}</p></span>${zz.id===S.zone?'<span class="muted small">目前位置</span>':`<button class="btn sm main" data-act="travel" data-v="${zz.id}">前往</button>`}</div>`}).join('')}</div></section>`;
   }
   else if(UI.tab==='quest'){
     const q=qState(z),c=curQuest(z),r=questReward(z);const done=q.p>=c.need;
@@ -1748,7 +1826,7 @@ function renderCreate(){
     <div><h3 style="margin-top:0">陣營</h3><div class="fac">
       <button class="A" data-act="cFac" data-v="A" aria-pressed="${c.fac==='A'}"><b>聯盟</b><span class="small muted">從艾爾文森林出發，主城暴風城。</span></button>
       <button class="H" data-act="cFac" data-v="H" aria-pressed="${c.fac==='H'}"><b>部落</b><span class="small muted">從杜洛塔出發，主城奧格瑪。</span></button></div></div>
-    <div><h3>種族</h3><div class="pick">${racesFor(c.fac).map(k=>`<button data-act="cRace" data-v="${k}" aria-pressed="${c.race===k}"><b>${RACES[k].n}</b><small>${RACES[k].d}</small></button>`).join('')}</div></div>
+    <div><h3>種族</h3><div class="pick">${racesFor(c.fac).map(k=>`<button data-act="cRace" data-v="${k}" aria-pressed="${c.race===k}"><b>${RACES[k].n}</b><small>${RACES[k].d}・${RACIAL[k].n}</small></button>`).join('')}</div><p class="small muted" style="margin:8px 0 0">種族天賦「${RACIAL[c.race].n}」：${RACIAL[c.race].d}</p></div>
     <div><h3>職業</h3><div class="pick">${Object.entries(CLASSES).map(([k,cl])=>{const ok=RACES[c.race].cls.includes(k);return `<button data-act="cCls" data-v="${k}" aria-pressed="${c.cls===k}" ${ok?'':'disabled style="opacity:.35;cursor:not-allowed"'}><b style="color:${cl.c}">${cl.n}</b><small>${ok?`${[...new Set(cl.specs.map(s=>ROLEN[s[1]]))].join('／')}・${cl.melee?'近戰':'遠程'}・${RES[cl.res].n}`:`${RACES[c.race].n}不能選擇`}</small></button>`}).join('')}</div></div>
     <div><h3>名字</h3><input type="text" id="cName" maxlength="12" placeholder="最多 12 字" value="${esc(c.name)}"></div>
     <div class="row"><button class="btn main" data-act="cGo">進入艾澤拉斯</button>${altList().length?'<button class="btn" data-act="chars">選擇現有角色</button>':''}<span class="small muted" id="cErr"></span></div></section>`;
@@ -1796,7 +1874,7 @@ const ACT={
   buyBag:()=>{const p=[10000,50000,200000,800000][Math.min(3,(S.bagCap-32)/8)];if(S.copper<p||S.bagCap>=64)return;S.copper-=p;S.bagCap+=8;toast('背包擴充 +8 格');renderAll();save()},
   openChest:()=>{if(!(S.cons.chest>0))return;S.cons.chest--;const r=Math.random();const rar=r<.01?5:r<.1?4:r<.4?3:2;const it=makeItem({ilvl:S.lv+2,rar});log('loot',`神秘寶箱開出：【${it.name}】（${RAR[rar]}）`);toast(`開出${RAR[rar]}：${it.name}`);
     if(S.inv.length>=S.bagCap){S.copper+=it.val;toast('背包已滿，已自動販賣')}else S.inv.push(it);renderAll();save();openItem(it.id)},
-  travel:d=>{S.zone=d.v;B.mobs=[];B.spawn=.6;bgKey='';log('sys',`前往 ${curZone().n}。`);UI.tab='console';renderAll();save()},
+  travel:d=>{S.zone=d.v;B.mobs=[];B.spawn=.6;bgKey='';log('sys',`前往 ${curZone().n}。`);zoneCard(d.v);UI.tab='console';renderAll();save()},
   turnIn:()=>{const z=curZone(),q=qState(z);if(q.p>=curQuest(z).need)questDialog('done');else if(!qAcc(q))questDialog('new')},
   qAccept:()=>{const z=curZone(),q=qState(z);q.acc=true;log('sys',`接受任務：${curQuest(z).name}`);toast(`接受任務：${curQuest(z).name}`);closeSheet();renderAll();save()},
   qPeek:()=>{},
@@ -1851,7 +1929,7 @@ function logic(){if(!S||!started)return;const now=Date.now();let dt=(now-lastLog
     if(UI.tab==='console')renderConsoleStats()}
   if(saveT>=10){saveT=0;ahProcess();save()}
 }
-function start(fresh){started=true;newBattle();bgKey='';lastLogic=Date.now();
+function start(fresh){started=true;newBattle();bgKey='';lastLogic=Date.now();zoneCard(S.zone);
   if(fresh){log('sys',`歡迎來到艾澤拉斯，${S.name}。角色已開始自動戰鬥。`);log('sys','提示：背包裡有附魔卷軸，商店可補充治療藥水。')}
   renderAll();save()}
 // ===== 多角色 =====
